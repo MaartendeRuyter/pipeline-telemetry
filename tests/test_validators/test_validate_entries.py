@@ -8,7 +8,7 @@ from pipeline_telemetry.settings.exceptions import \
     FieldNameMandatory, ExpectedCountMustBePositiveInt
 from pipeline_telemetry.settings.errors import ErrorCode
 
-from tests.data.test_data import TEST_ERROR_CODE
+from test_data import TEST_ERROR_CODE
 
 
 def test_validate_entries_class_exists():

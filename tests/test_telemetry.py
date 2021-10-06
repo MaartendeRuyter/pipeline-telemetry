@@ -10,7 +10,7 @@ from pipeline_telemetry.storage import \
     TelemetryInMemoryStorage, AbstractTelemetryStorage
 from pipeline_telemetry.settings import exceptions, settings
 
-from tests.data.test_data import DEFAULT_TELEMETRY_PARAMS
+from test_data import DEFAULT_TELEMETRY_PARAMS
 
 #pylint: disable=protected-access
 
@@ -206,8 +206,9 @@ def test_close_telemetry_instance_sets_run_time(mocker):
     """
     check that closing the telemetry sets the run_time
     """
-    mocker.patch('telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
-                 return_value=None)
+    mocker.patch(
+        'pipeline_telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
+        return_value=None)
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     telemetry_result = telemetry_inst.save_and_close()
@@ -218,8 +219,9 @@ def test_close_telemetry_instance_calls_store_telemetry(mocker):
     """
     check that closing the telemetry sets the run_time
     """
-    mocker.patch('telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
-                 return_value=None)
+    mocker.patch(
+        'pipeline_telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
+        return_value=None)
     _store_telemetry_spy = mocker.spy(
         TelemetryInMemoryStorage, 'store_telemetry')
     Telemetry(**DEFAULT_TELEMETRY_PARAMS).save_and_close()

@@ -6,7 +6,7 @@ from pipeline_telemetry.validators.has_key import HasKey
 from pipeline_telemetry.settings.exceptions import FieldNameMandatory
 from pipeline_telemetry.settings.errors import ErrorCode
 
-from tests.data.test_data import TEST_ERROR_CODE
+from test_data import TEST_ERROR_CODE
 
 #pylint: disable=protected-access
 
