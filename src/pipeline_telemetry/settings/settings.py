@@ -1,0 +1,16 @@
+"""[summary]
+"""
+
+CREATE_DATA_SUB_PROCESS_TYPES = [
+        'RETRIEVE_RAW_DATA', 'DATA_CONVERSION', 'DATA_STORAGE']
+
+UPLOAD_DATA_SUB_PROCESS_TYPES = [
+        'DATA_SELECTION', 'DATA_CONVERSION', 'DATA_UPLOAD']
+
+
+BASE_SUB_PROCESS_TYPES = {
+    'create_data_from_url': CREATE_DATA_SUB_PROCESS_TYPES,
+    'create_data_from_api': CREATE_DATA_SUB_PROCESS_TYPES,
+    'create_data_from_file': CREATE_DATA_SUB_PROCESS_TYPES,
+    'upload_data': UPLOAD_DATA_SUB_PROCESS_TYPES
+ }
