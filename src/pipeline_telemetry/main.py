@@ -5,9 +5,9 @@ classes
     - CheckForErrors
 """
 from datetime import datetime
-from telemetry.settings import exceptions
-from telemetry.settings.settings import BASE_SUB_PROCESS_TYPES
-from telemetry.storage import \
+from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings.settings import BASE_SUB_PROCESS_TYPES
+from pipeline_telemetry.storage import \
     AbstractTelemetryStorage, TelemetryInMemoryStorage
 
 # default telemetry field names

@@ -5,10 +5,10 @@ module to test telemetry main class for pipeline telemetry module
 from datetime import datetime
 import pytest
 
-from telemetry.main import Telemetry, FAIL_COUNT
-from telemetry.storage import \
+from pipeline_telemetry.main import Telemetry, FAIL_COUNT
+from pipeline_telemetry.storage import \
     TelemetryInMemoryStorage, AbstractTelemetryStorage
-from telemetry.settings import exceptions, settings
+from pipeline_telemetry.settings import exceptions, settings
 
 from tests.data.test_data import DEFAULT_TELEMETRY_PARAMS
 

@@ -3,8 +3,8 @@ module to test the class methods fro Telemetry class of telemetry module
 
 """
 import pytest
-from telemetry.main import Telemetry, BASE_COUNT_KEY
-from telemetry.settings import exceptions
+from pipeline_telemetry.main import Telemetry, BASE_COUNT_KEY
+from pipeline_telemetry.settings import exceptions
 
 
 def test_telemetry_class_method_add_process_type():

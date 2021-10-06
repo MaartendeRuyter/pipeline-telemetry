@@ -2,9 +2,9 @@
 module to test validate module of data-validator
 """
 import pytest
-from telemetry.settings import exceptions
-from telemetry.validators.dict_validator import DictValidator
-from telemetry.validators.has_key import HasKey
+from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.validators.dict_validator import DictValidator
+from pipeline_telemetry.validators.has_key import HasKey
 
 from ..data.test_data import InstructionTestClass
 #pylint: disable=protected-access

@@ -2,7 +2,7 @@
 module to test custom exceptions in pipeline telemetry module
 """
 import pytest
-from telemetry.settings import exceptions
+from pipeline_telemetry.settings import exceptions
 
 def raise_exception(exception, value):
     """ test helper method to raise exception """

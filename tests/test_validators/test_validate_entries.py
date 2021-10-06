@@ -3,10 +3,10 @@ module to test has_key instruction class
 """
 #pylint: disable=protected-access
 import pytest
-from telemetry.validators.validate_entries import ValidateEntries
-from telemetry.settings.exceptions import \
+from pipeline_telemetry.validators.validate_entries import ValidateEntries
+from pipeline_telemetry.settings.exceptions import \
     FieldNameMandatory, ExpectedCountMustBePositiveInt
-from telemetry.settings.errors import ErrorCode
+from pipeline_telemetry.settings.errors import ErrorCode
 
 from tests.data.test_data import TEST_ERROR_CODE
 

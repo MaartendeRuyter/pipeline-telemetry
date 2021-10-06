@@ -3,11 +3,11 @@ Module pipeline_telemetry
 Providing Telemetry class and functionality to store pipeline telemetry detals
 Main usage:
 
-    >>> from telemetry.main import Telemetry
+    >>> from pipeline_telemetry.main import Telemetry
     >>> telemetry = Telemetry(
             process_name, process_type, telemetry_rules, storage_class)
-    >>> telemetry.add(sub_process_type, data, errors)
-    >>> telemetry.save_and_close()
+    >>> pipeline_telemetry.add(sub_process_type, data, errors)
+    >>> pipeline_telemetry.save_and_close()
 
 In this example a telemetry object is created, the result of a sub_process is
 then added with either the data resulting from this sub process or the error
