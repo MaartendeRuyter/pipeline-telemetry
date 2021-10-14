@@ -67,7 +67,8 @@ class Telemetry():
 
     @classmethod
     def add_process_type(cls, process_type: dict) -> None:
-        """Add a custom process type and sub process types to the class
+        """
+        Add a custom process type and sub process types to the class.
 
         Args:
             process_type (dict):
@@ -103,29 +104,29 @@ class Telemetry():
 
     @property
     def process_name(self) -> str:
-        """ process_name property """
+        """Process_name property."""
         return self._telemetry.get(PROCESS_NAME)
 
     @property
     def telemetry(self) -> dict:
-        """ telemetry property """
+        """Telemetry property."""
         return self._telemetry
 
     @property
     def process_types(self) -> list:
-        """ returns a list of process_types """
+        """Returns a list of process_types."""
         # process types are the keys in sub_process_list
         return list(self._sub_process_types.keys())
 
     @property
     def sub_process_types(self) -> dict:
-        """ returns a dict of process_type including their sub_process type """
+        """Returns a dict of process_type including their sub_process type."""
         return self._sub_process_types
 
     def save_and_close(self) -> dict:
         """
-        closes and stores the telemetry instance and returns the
-        telemetry value
+        Closes and stores the telemetry instance and returns the
+        telemetry value.
 
         Returns:
             dict: telemetry result
@@ -141,7 +142,8 @@ class Telemetry():
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_base_count(self, sub_process: str) -> None:
-        """Increases the base count for a subprocess
+        """
+        Increases the base count for a subprocess.
 
         Args:
             sub_process (str): name of subprocess
@@ -170,7 +172,8 @@ class Telemetry():
     def increase_sub_process_custom_count(
             self, custom_counter: str, sub_process: str,
             increment: int = 1) -> None:
-        """Increases a custom counter for a subprocess
+        """
+        Increases a custom counter for a subprocess.
 
         Args:
             sub_process (str): name of subprocess
@@ -192,7 +195,8 @@ class Telemetry():
     @_raise_exception_if_telemetry_closed
     def increase_custom_count(
             self, custom_counter: str, increment: int = 1) -> None:
-        """Increases a custom counter for the telemetry object
+        """
+        Increases a custom counter for the telemetry object.
 
         Args:
             custom_counter (str): name of custom counter
