@@ -32,5 +32,4 @@ Arguments
 
     -
 """
-from .validators import has_key
-from .validators import validate_entries
+from .validators import has_key, validate_entries  # noqa: F401

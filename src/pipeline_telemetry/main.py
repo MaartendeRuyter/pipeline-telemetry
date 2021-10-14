@@ -5,10 +5,11 @@ classes
     - CheckForErrors
 """
 from datetime import datetime
+
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.settings import BASE_SUB_PROCESS_TYPES
-from pipeline_telemetry.storage import \
-    AbstractTelemetryStorage, TelemetryInMemoryStorage
+from pipeline_telemetry.storage import AbstractTelemetryStorage, \
+    TelemetryInMemoryStorage
 
 # default telemetry field names
 BASE_COUNT_KEY = 'base_counter'
@@ -131,8 +132,8 @@ class Telemetry():
         """
         if self._telemetry.get(RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
-        self._telemetry[RUN_TIME] = (datetime.now() - \
-            self._telemetry.get(START_TIME)).total_seconds()
+        self._telemetry[RUN_TIME] = (datetime.now() -
+                                     self._telemetry.get(START_TIME)).total_seconds()
 
         self._storage_class.store_telemetry(self._telemetry)
 

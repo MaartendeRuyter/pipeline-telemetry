@@ -4,8 +4,8 @@ import jmespath
 from errors.base import add_error_data
 
 from ..settings import exceptions
+from ..settings.errors import ErrorCode, ValidationErrors
 from ..validators.dict_validator import DictValidator
-from ..settings.errors import ValidationErrors, ErrorCode
 
 
 class HasKey():
@@ -21,7 +21,7 @@ class HasKey():
 
     @classmethod
     def validate(
-        cls, dict_to_validate: dict, rule_content: dict) -> list[ErrorCode]:
+            cls, dict_to_validate: dict, rule_content: dict) -> list[ErrorCode]:
         """
         Public method run the validation
         prior to validation the rule will be validated.
@@ -74,5 +74,6 @@ class HasKey():
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """ returns error code object in list with fieldname as error data """
         return [add_error_data(error=error_code, error_data=fieldname)]
+
 
 DictValidator.register_instruction(HasKey)

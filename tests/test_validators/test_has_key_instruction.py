@@ -2,17 +2,19 @@
 module to test has_key instruction class
 """
 import pytest
-from pipeline_telemetry.validators.has_key import HasKey
-from pipeline_telemetry.settings.exceptions import FieldNameMandatory
-from pipeline_telemetry.settings.errors import ErrorCode
-
 from test_data import TEST_ERROR_CODE
 
-#pylint: disable=protected-access
+from pipeline_telemetry.settings.errors import ErrorCode
+from pipeline_telemetry.settings.exceptions import FieldNameMandatory
+from pipeline_telemetry.validators.has_key import HasKey
+
+# pylint: disable=protected-access
+
 
 def test_has_key_class_exists():
     """ check that HasKey class exists """
     assert HasKey
+
 
 def test_has_key_class_is_singelton():
     """ check that HasKey is a singleton class """
@@ -58,7 +60,7 @@ def test_validation_error_method():
     """
     validation_error_list = HasKey._validation_error(
         TEST_ERROR_CODE, 'test_error_data')
-    validation_error= validation_error_list[0]
+    validation_error = validation_error_list[0]
     assert isinstance(validation_error_list, list)
     assert isinstance(validation_error, ErrorCode)
     assert validation_error.error_data == 'test_error_data'

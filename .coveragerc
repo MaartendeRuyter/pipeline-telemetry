@@ -7,10 +7,12 @@ source =
 branch = true
 source =
     pipeline_telemetry
-    tests
 parallel = true
+omit =
+    src/pipeline_telemetry/__main__.py
+    src/pipeline_telemetry/cli.py
 
 [report]
 show_missing = true
-precision = 2
+precision = 0
 omit = *migrations*

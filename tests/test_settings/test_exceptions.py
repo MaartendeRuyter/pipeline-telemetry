@@ -2,7 +2,9 @@
 module to test custom exceptions in pipeline telemetry module
 """
 import pytest
+
 from pipeline_telemetry.settings import exceptions
+
 
 def raise_exception(exception, value):
     """ test helper method to raise exception """
@@ -92,10 +94,10 @@ def test_process_type_must_be_dict_exception():
 
     assert 'Provided custom process_type is not of type dict' in str(exception)
 
+
 def test_expected_count_must_be_positive_int_exception():
     """ test ExpectedCountMustBePositiveInt exception """
     with pytest.raises(exceptions.ExpectedCountMustBePositiveInt) as exception:
         raise exceptions.ExpectedCountMustBePositiveInt
 
     assert 'Ruleset does not contain `expected_count` or' in str(exception)
-

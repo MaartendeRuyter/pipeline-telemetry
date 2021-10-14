@@ -3,16 +3,17 @@ module to test telemetry main class for pipeline telemetry module
 
 """
 from datetime import datetime
+
 import pytest
-
-from pipeline_telemetry.main import Telemetry, FAIL_COUNT
-from pipeline_telemetry.storage import \
-    TelemetryInMemoryStorage, AbstractTelemetryStorage
-from pipeline_telemetry.settings import exceptions, settings
-
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
-#pylint: disable=protected-access
+from pipeline_telemetry.main import FAIL_COUNT, Telemetry
+from pipeline_telemetry.settings import exceptions, settings
+from pipeline_telemetry.storage import AbstractTelemetryStorage, \
+    TelemetryInMemoryStorage
+
+# pylint: disable=protected-access
+
 
 def test_telemetry_exists():
     """ check that Telemetry class exists """
@@ -253,9 +254,10 @@ def test_get_storage_class_returns_instance_of_storage_class():
     check that _get_storage_class method returns an instance of
     Storage class provided
     """
-    #pylint: disable=too-few-public-methods
+    # pylint: disable=too-few-public-methods
     class TestStorage(AbstractTelemetryStorage):
         """ test class """
+
         def store_telemetry(self, telemetry):
             """ test method """
             return None

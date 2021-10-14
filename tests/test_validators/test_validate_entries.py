@@ -1,14 +1,14 @@
 """
 module to test has_key instruction class
 """
-#pylint: disable=protected-access
+# pylint: disable=protected-access
 import pytest
-from pipeline_telemetry.validators.validate_entries import ValidateEntries
-from pipeline_telemetry.settings.exceptions import \
-    FieldNameMandatory, ExpectedCountMustBePositiveInt
-from pipeline_telemetry.settings.errors import ErrorCode
-
 from test_data import TEST_ERROR_CODE
+
+from pipeline_telemetry.settings.errors import ErrorCode
+from pipeline_telemetry.settings.exceptions import \
+    ExpectedCountMustBePositiveInt, FieldNameMandatory
+from pipeline_telemetry.validators.validate_entries import ValidateEntries
 
 
 def test_validate_entries_class_exists():
@@ -34,7 +34,7 @@ def test_validate_rule_method_without_expected_count_raises_exception():
     not provided in rule
     """
     rule_content = {'field_name': 'test'}
-    with pytest.raises(ExpectedCountMustBePositiveInt) as exception: 
+    with pytest.raises(ExpectedCountMustBePositiveInt) as exception:
         ValidateEntries._validate_rule(rule_content)
 
     assert 'Ruleset does not contain `expected_count`' in str(exception)
@@ -84,7 +84,7 @@ def test_validation_error_method():
     """
     validation_error_list = ValidateEntries._validation_error(
         TEST_ERROR_CODE, 'test_error_data')
-    validation_error= validation_error_list[0]
+    validation_error = validation_error_list[0]
     assert isinstance(validation_error_list, list)
     assert isinstance(validation_error, ErrorCode)
     assert validation_error.error_data == 'test_error_data'
@@ -95,7 +95,7 @@ def test_validate_valid_dict():
     Test that a dict with a field with a list with the expected count (length)
     returns empty error list
     """
-    valid_dict = {'correct_key': [1,2,3,4]}
+    valid_dict = {'correct_key': [1, 2, 3, 4]}
     rule_content = {'field_name': 'correct_key', 'expected_count': 4}
     validation_result = ValidateEntries.validate(
         dict_to_validate=valid_dict, rule_content=rule_content
@@ -131,6 +131,7 @@ def test_validate_invalid_dict():
     assert validation_result[0].code == 'VALIDATE_ENTRIES_ERR_001'
     assert validation_result[0].error_data == 'correct_key'
 
+
 def test_validate_dict_with_wrong_type_in_field():
     """
     Test that a dict without right key returns a list with error_code
@@ -146,13 +147,14 @@ def test_validate_dict_with_wrong_type_in_field():
     assert validation_result[0].code == 'VALIDATE_ENTRIES_ERR_002'
     assert validation_result[0].error_data == 'correct_key'
 
+
 def test_validate_dict_with_wrong_number_of_entries():
     """
     Test that a dict without right key returns a list with error_code
     VALIDATE_ENTRIES_ERR_003 and the field_name in the error_data
 
     """
-    invalid_dict = {'correct_key': [1,2,3]}
+    invalid_dict = {'correct_key': [1, 2, 3]}
     rule_content = {'field_name': 'correct_key', 'expected_count': 2}
     validation_result = ValidateEntries.validate(
         dict_to_validate=invalid_dict, rule_content=rule_content

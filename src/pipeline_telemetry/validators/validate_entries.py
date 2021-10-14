@@ -4,8 +4,8 @@ import jmespath
 from errors.base import add_error_data
 
 from ..settings import exceptions
+from ..settings.errors import ErrorCode, ValidationErrors
 from ..validators.dict_validator import DictValidator
-from ..settings.errors import ValidationErrors, ErrorCode
 
 
 class ValidateEntries():
@@ -25,7 +25,7 @@ class ValidateEntries():
 
     @classmethod
     def validate(
-        cls, dict_to_validate: dict, rule_content: dict) -> list[ErrorCode]:
+            cls, dict_to_validate: dict, rule_content: dict) -> list[ErrorCode]:
         """
         Public method run the validation
         prior to validation the rule will be validated.
@@ -80,14 +80,12 @@ class ValidateEntries():
         if not isinstance(expected_count, int) or expected_count < 0:
             raise exceptions.ExpectedCountMustBePositiveInt()
 
-
     @classmethod
     def _get_field_name(cls, rule_content):
         """
         retrieves the field name in scope from the rule content
         """
         return rule_content.get(cls.fieldname_field, None)
-
 
     @classmethod
     def _get_expected_count(cls, rule_content):
@@ -101,5 +99,6 @@ class ValidateEntries():
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """ returns error code object in list with fieldname as error data """
         return [add_error_data(error=error_code, error_data=fieldname)]
+
 
 DictValidator.register_instruction(ValidateEntries)

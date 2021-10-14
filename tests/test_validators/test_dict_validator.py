@@ -2,12 +2,14 @@
 module to test validate module of data-validator
 """
 import pytest
+from test_data import InstructionTestClass
+
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.validators.dict_validator import DictValidator
 from pipeline_telemetry.validators.has_key import HasKey
 
-from test_data import InstructionTestClass
-#pylint: disable=protected-access
+# pylint: disable=protected-access
+
 
 def test_dict_validator_class_exists():
     """ check that DictValidator class exists """
@@ -60,7 +62,7 @@ def test_apply_rule_calls_do_validate_method(mocker):
     DictValidator.register_instruction(HasKey)
     rule = {'has_key': 'rule'}
     mocker.patch('pipeline_telemetry.validators.has_key.HasKey.validate',
-        return_value='return_value')
+                 return_value='return_value')
     _do_validate_spy = mocker.spy(
         HasKey, 'validate')
     return_value = DictValidator()._apply_rule({}, rule)

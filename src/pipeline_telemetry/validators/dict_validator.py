@@ -2,8 +2,8 @@
 Module to define the DictValidator class
 """
 
-from ..settings.exceptions import \
-    UnknownInstruction, InstructionRegisteredTwice, RuleCanHaveOnlyOneInstruction
+from ..settings.exceptions import InstructionRegisteredTwice, \
+    RuleCanHaveOnlyOneInstruction, UnknownInstruction
 
 
 class DictValidator():
@@ -21,8 +21,8 @@ class DictValidator():
 
     @classmethod
     def validate(cls,
-            dict_to_validate: dict,
-            validation_rules: list) -> list:
+                 dict_to_validate: dict,
+                 validation_rules: list) -> list:
         """ public method to run the validation """
         errors = []
         for rule in validation_rules.items():
@@ -50,7 +50,6 @@ class DictValidator():
             dict_to_validate=dict_to_validate,
             rule_content=rule.get(instruction)
         )
-
 
     @classmethod
     def register_instruction(cls, instruction_class: type) -> None:

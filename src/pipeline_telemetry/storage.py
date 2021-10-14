@@ -1,8 +1,8 @@
 """[summary]
 """
-from abc import ABCMeta, abstractmethod
-import sqlite3
 import json
+import sqlite3
+from abc import ABCMeta, abstractmethod
 
 
 class AbstractTelemetryStorage(metaclass=ABCMeta):
@@ -31,7 +31,6 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         if not self.db_in_memory:
             self.initialize_db()
 
-
     @classmethod
     def initialize_db(cls):
         """
@@ -52,13 +51,12 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         cls.db_cursor = None
         cls.db_in_memory = None
 
-
     @staticmethod
     def _define_db_table(cursor):
         """ define telemetry table """
         cursor.executescript('''
         DROP TABLE IF EXISTS telemetry;
-        CREATE TABLE telemetry (process_name varchar(40), 
+        CREATE TABLE telemetry (process_name varchar(40),
         process_type varchar(40), start_date_time varchar(30),
         run_time varchar(20), telemetry_data json)''')
 
@@ -74,5 +72,5 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         self.db_cursor.execute(
             "insert into telemetry values (?, ?, ?, ?, ?)",
             [process_name, process_type, start_date_time,
-            run_time_in_seconds, json_object]
-            )
+             run_time_in_seconds, json_object]
+        )

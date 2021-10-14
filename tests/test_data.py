@@ -3,10 +3,10 @@ This module provides test data for the telemetry tests
 """
 from errors.base import ErrorCode
 
+
 class InstructionTestClass():
-    #pylint: disable=too-few-public-methods
-    """Instruction class for test purposes
-    """
+    """Instruction class for test purposes."""
+    # pylint: disable=too-few-public-methods
     instruction = 'test_instruction'
     fieldname = 'field_name'
 

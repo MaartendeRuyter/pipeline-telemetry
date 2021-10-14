@@ -12,8 +12,10 @@ exceptions
 - StorageClassOfIncorrectType
 """
 
+
 class FieldNameMandatory(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, instruction):
         message = f'For `{instruction}` instruction'
         super().__init__(message)
@@ -21,20 +23,24 @@ class FieldNameMandatory(Exception):
 
 class ExpectedCountMustBePositiveInt(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self):
         message = ''.join([
             'Ruleset does not contain `expected_count` or ',
             'expected count is negative'])
         super().__init__(message)
-        
+
 
 class UnknownInstruction(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, instruction):
         super().__init__(f'{instruction} not registered')
 
+
 class InstructionRegisteredTwice(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, instruction_class):
         message = ''.join([
             f'{instruction_class.instruction} from class ',
@@ -42,8 +48,10 @@ class InstructionRegisteredTwice(Exception):
         ])
         super().__init__(message)
 
+
 class RuleCanHaveOnlyOneInstruction(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, rule):
         message = ''.join([
             'Rule contains multiple keys / instruction : ',
@@ -51,8 +59,10 @@ class RuleCanHaveOnlyOneInstruction(Exception):
         ])
         super().__init__(message)
 
+
 class InvalidProcessType(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, process_type):
         message = ''.join([
             f'Invalid Process type {process_type} used with',
@@ -62,6 +72,7 @@ class InvalidProcessType(Exception):
 
 class BaseCountForSubProcessNotAdded(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, sub_process):
         message = ''.join([
             f'Sub process {sub_process} has not yet been initialized.',
@@ -72,6 +83,7 @@ class BaseCountForSubProcessNotAdded(Exception):
 
 class TelemetryObjectAlreadyClosed(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self):
         message = 'Telemetry object is already closed'
         super().__init__(message)
@@ -79,6 +91,7 @@ class TelemetryObjectAlreadyClosed(Exception):
 
 class StorageClassOfIncorrectType(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self, class_name):
         message = ''.join([
             f'StorageClass `{class_name}` not a child ',
@@ -88,6 +101,7 @@ class StorageClassOfIncorrectType(Exception):
 
 class ProcessTypeMustBeDict(Exception):
     """ custom exception for Telemetry Module """
+
     def __init__(self):
         message = 'Provided custom process_type is not of type dict'
         super().__init__(message)
