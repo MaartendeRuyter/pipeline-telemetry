@@ -2,9 +2,9 @@
 """
 import jmespath
 from errors.base import add_error_data
+from errors.error import ErrorCode, ListErrors
 
 from ..settings import exceptions
-from ..settings.errors import ErrorCode, ValidationErrors
 from ..validators.dict_validator import DictValidator
 
 
@@ -52,7 +52,7 @@ class HasKey():
         fieldname = cls._get_field_name(rule_content)
         if not jmespath.search(fieldname, dict_to_validate):
             return cls._validation_error(
-                ValidationErrors.KEY_NOT_FOUND.value, fieldname)
+                ListErrors.KEY_NOT_FOUND, fieldname)
 
         return []
 
