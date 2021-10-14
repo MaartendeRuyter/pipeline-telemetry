@@ -25,6 +25,7 @@ def test_dict_validator_register_instruction():
     """
     check that register_instruction method registers an instruction
     """
+    # ensure that test is not corrupted by previous registrations
     DictValidator._instructions = {}
     DictValidator.register_instruction(InstructionTestClass)
     assert InstructionTestClass.instruction in \
@@ -36,7 +37,7 @@ def test_dict_validator_register_instruction_twice():
     check that register_instruction method raises exception if you try to
     register an instruction twice
     """
-    # ensure that test is not corrupted by resig
+    # ensure that test is not corrupted by previous registrations
     DictValidator._instructions = {}
     DictValidator.register_instruction(InstructionTestClass)
     with pytest.raises(exceptions.InstructionRegisteredTwice):
