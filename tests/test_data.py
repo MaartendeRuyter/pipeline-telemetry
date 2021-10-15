@@ -29,3 +29,9 @@ TEST_ERROR_CODE = ErrorCode(
     code="TEST_CODE_0001",
     description='test error'
 )
+
+TEST_TELEMETRY_RULES = {
+    'RETRIEVE_RAW_DATA': {
+        'has_key': {'field_name': 'items'}
+    }
+}
