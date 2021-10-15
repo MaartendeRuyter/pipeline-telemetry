@@ -13,6 +13,7 @@ from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.settings import BASE_SUB_PROCESS_TYPES
 from pipeline_telemetry.storage import AbstractTelemetryStorage, \
     TelemetryInMemoryStorage
+from pipeline_telemetry.validators.dict_validator import DictValidator
 
 # default telemetry field names
 BASE_COUNT_KEY = 'base_counter'
@@ -57,14 +58,14 @@ class Telemetry():
 
     def __init__(
             self, process_name: str, process_type: str,
-            telemetry_rules: dict = dict,
+            telemetry_rules: dict = None,
             storage_class: AbstractTelemetryStorage = None):
         self._telemetry = {
             PROCESS_NAME: process_name,
             PROCESS_TYPE_KEY: process_type,
             START_TIME: datetime.now()
         }
-        self._telemetry_rules = telemetry_rules
+        self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
         self._validate_initial_telemetry()
 
@@ -161,7 +162,23 @@ class Telemetry():
         """
         if not self._telemetry.get(sub_process):
             self._initialize_sub_process(sub_process)
-        self._add_errors(sub_process, errors)
+        validation_errors = self._validate_data(sub_process, data)
+        all_errors = errors + validation_errors
+        self._add_errors(sub_process, all_errors)
+
+    def _validate_data(self, sub_process: str, data: dict) -> List[ErrorCode]:
+        """Validates the data provided by a subprocess.
+
+        Data is validated based upon telemetry rules for the subprocces
+
+        :param sub_process: applicable subprocess
+        :typesub_process: str
+        :param data: data provided by subprocess
+        :type data: dict
+        :returns: list of Errorcodes
+        """
+        telemetry_rules = self._telemetry_rules.get(sub_process, {})
+        return DictValidator().validate(data, telemetry_rules)
 
     def _add_errors(self, sub_process: str, errors: list) -> None:
         """Adds the error to a telemetry sub process.
