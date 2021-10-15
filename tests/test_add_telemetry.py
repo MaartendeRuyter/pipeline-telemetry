@@ -1,7 +1,9 @@
 """Module to define tests for adding telemetry"""
 import pytest
 from errors.error import ListErrors
-from test_data import DEFAULT_TELEMETRY_PARAMS
+from test_data import DEFAULT_TELEMETRY_PARAMS, \
+    TEST_TELEMETRY_RULES
+
 
 from pipeline_telemetry.main import Telemetry
 from pipeline_telemetry.settings import exceptions
@@ -30,3 +32,14 @@ def test_add_errors_method_adds_errors_to_sub_process():
     telemetry._add_errors('RETRIEVE_RAW_DATA', [ListErrors.KEY_NOT_FOUND])
     sub_process_telemetry = telemetry.telemetry.get('RETRIEVE_RAW_DATA')
     assert sub_process_telemetry.get(ListErrors.KEY_NOT_FOUND.code) == 1
+
+
+def test_validate_data_method():
+    """Test _validate_data_method returns list of errors."""
+    telemetry = Telemetry(telemetry_rules=TEST_TELEMETRY_RULES,
+                          **DEFAULT_TELEMETRY_PARAMS)
+    telemetry.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
+    errors = telemetry._validate_data(sub_process='RETRIEVE_RAW_DATA',
+                                      data={})
+    assert ListErrors.KEY_NOT_FOUND.code in str(errors[0])
+    assert '@KEY_<items>' in str(errors[0])
