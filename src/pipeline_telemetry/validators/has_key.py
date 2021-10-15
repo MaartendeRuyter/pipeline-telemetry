@@ -73,7 +73,9 @@ class HasKey():
     def _validation_error(
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """ returns error code object in list with fieldname as error data """
-        return [add_error_data(error=error_code, error_data=fieldname)]
+        key_specific_error = error_code.code + '@KEY_<' + fieldname + '>'
+        return [ErrorCode(
+            code=key_specific_error, description=error_code.description)]
 
 
 DictValidator.register_instruction(HasKey)
