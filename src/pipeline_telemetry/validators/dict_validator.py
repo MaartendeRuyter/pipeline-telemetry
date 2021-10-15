@@ -1,6 +1,11 @@
 """
 Module to define the DictValidator class
+
+classes:
+    - DictValidator
 """
+from typing import List
+from errors.base import ErrorCode
 
 from ..settings.exceptions import InstructionRegisteredTwice, \
     RuleCanHaveOnlyOneInstruction, UnknownInstruction
@@ -22,20 +27,30 @@ class DictValidator():
     @classmethod
     def validate(cls,
                  dict_to_validate: dict,
-                 validation_rules: list) -> list:
-        """ public method to run the validation """
+                 validation_rules: dict) -> List[ErrorCode]:
+        """Public class method to run the validation.
+
+        :param dict_to_validate: data dict to be validated
+        :type dict_to_validate: dict
+        :param validation_rules: validation rules for this data object
+        :type validation_rules: dict
+
+        :returns: List of ErrorCodes. List is empty if no Errors are found
+        """
         errors = []
         for rule in validation_rules.items():
             errors.extend(cls._apply_rule(dict_to_validate, rule))
         return errors
 
     @classmethod
-    def _apply_rule(cls, dict_to_validate: dict, rule: dict) -> list:
+    def _apply_rule(
+            cls, dict_to_validate: dict, rule: tuple) -> List[ErrorCode]:
         """[summary]
 
         Args:
-            dict_to_validate (dict): [description]
-            rule (dict): [description]
+            dict_to_validate (dict): data dict to be validated
+            rule (tuple): The rule with the instruction on position 0 and
+                          details for the instruction on position 1
 
         Raises:
             UnknownInstruction: [description]
@@ -48,7 +63,7 @@ class DictValidator():
             raise UnknownInstruction(instruction)
         return cls._instructions.get(instruction).validate(
             dict_to_validate=dict_to_validate,
-            rule_content=rule.get(instruction)
+            rule_content=rule[1]
         )
 
     @classmethod
@@ -68,11 +83,12 @@ class DictValidator():
             instruction_class.instruction: instruction_class})
 
     @staticmethod
-    def _instruction_from_rule(rule: dict) -> str:
+    def _instruction_from_rule(rule: tuple) -> str:
         """Returns the instuction string from rule dict
 
         Args:
-            rule (dict): The rule
+            rule (tuple): The rule with the instruction on position 0 and
+                          details for the instruction on position 1
 
         Raises:
             RuleCanHaveOnlyOneInstruction:
@@ -81,7 +97,6 @@ class DictValidator():
         Returns:
             str: the instruction
         """
-        instruction = rule.keys()
-        if not len(instruction) == 1:
+        if not (isinstance(rule, tuple) and len(rule) == 2):
             raise RuleCanHaveOnlyOneInstruction(rule)
-        return list(instruction)[0]
+        return rule[0]
