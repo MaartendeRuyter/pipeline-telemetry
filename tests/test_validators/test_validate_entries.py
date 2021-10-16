@@ -16,6 +16,11 @@ def test_validate_entries_class_exists():
     assert ValidateEntries
 
 
+def test_validate_entries_class_is_singleton_clss():
+    """Check that ValidateEntries class is a singleton class."""
+    assert ValidateEntries() is ValidateEntries()
+
+
 def test_validate_rule_method_raises_exception():
     """
     check that _validate_rule method raises exception when field name
