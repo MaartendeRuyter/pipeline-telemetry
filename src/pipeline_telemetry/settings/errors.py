@@ -1,6 +1,7 @@
 """Module to define errors
 """
 from errors.base import ErrorCode, FunctionalErrorsBaseClass
+from errors.error import ListErrors
 
 
 class ValidationErrors(FunctionalErrorsBaseClass):
@@ -22,3 +23,6 @@ class ValidationErrors(FunctionalErrorsBaseClass):
     UNEXPECTED_NR_OF_ITEMS = ErrorCode(
         code='VALIDATE_ENTRIES_ERR_003',
         description='Field contains unexpected nr of items')
+
+
+ListErrors.register_errors(ValidationErrors)

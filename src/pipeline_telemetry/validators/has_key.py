@@ -1,10 +1,9 @@
 """Module to define HasKey class validator
 """
 import jmespath
-from errors.base import add_error_data
+from errors.error import ErrorCode, ListErrors
 
 from ..settings import exceptions
-from ..settings.errors import ErrorCode, ValidationErrors
 from ..validators.dict_validator import DictValidator
 
 
@@ -52,7 +51,7 @@ class HasKey():
         fieldname = cls._get_field_name(rule_content)
         if not jmespath.search(fieldname, dict_to_validate):
             return cls._validation_error(
-                ValidationErrors.KEY_NOT_FOUND.value, fieldname)
+                ListErrors.KEY_NOT_FOUND, fieldname)
 
         return []
 
@@ -73,7 +72,9 @@ class HasKey():
     def _validation_error(
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """ returns error code object in list with fieldname as error data """
-        return [add_error_data(error=error_code, error_data=fieldname)]
+        key_specific_error = error_code.code + '@KEY_<' + fieldname + '>'
+        return [ErrorCode(
+            code=key_specific_error, description=error_code.description)]
 
 
 DictValidator.register_instruction(HasKey)

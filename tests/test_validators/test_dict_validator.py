@@ -25,6 +25,7 @@ def test_dict_validator_register_instruction():
     """
     check that register_instruction method registers an instruction
     """
+    # ensure that test is not corrupted by previous registrations
     DictValidator._instructions = {}
     DictValidator.register_instruction(InstructionTestClass)
     assert InstructionTestClass.instruction in \
@@ -36,7 +37,7 @@ def test_dict_validator_register_instruction_twice():
     check that register_instruction method raises exception if you try to
     register an instruction twice
     """
-    # ensure that test is not corrupted by resig
+    # ensure that test is not corrupted by previous registrations
     DictValidator._instructions = {}
     DictValidator.register_instruction(InstructionTestClass)
     with pytest.raises(exceptions.InstructionRegisteredTwice):
@@ -49,7 +50,8 @@ def test_apply_rule_raises_exception_with_unregistered_instruction():
     unregistered instruction is provided
     """
     with pytest.raises(exceptions.UnknownInstruction):
-        DictValidator()._apply_rule({}, {'unkwown_rule': 'rule'})
+        DictValidator()._apply_rule(
+            {}, ('unkwown_rule', {'rule details': 'details'}))
 
 
 def test_apply_rule_calls_do_validate_method(mocker):
@@ -60,7 +62,7 @@ def test_apply_rule_calls_do_validate_method(mocker):
     # as previous tests might have cleaned the instruction set it needs to be
     # reregistered
     DictValidator.register_instruction(HasKey)
-    rule = {'has_key': 'rule'}
+    rule = ('has_key', {'has_key_details': 'rule'})
     mocker.patch('pipeline_telemetry.validators.has_key.HasKey.validate',
                  return_value='return_value')
     _do_validate_spy = mocker.spy(
@@ -72,7 +74,7 @@ def test_apply_rule_calls_do_validate_method(mocker):
 
 def test_instruction_from_rule_succes():
     """ test instruction returns instruction when given a valid rule """
-    valid_rule = {'instruction_in_valid_rule': 'test'}
+    valid_rule = ('instruction_in_valid_rule',  {'rule_details': 'test'})
     assert DictValidator._instruction_from_rule(valid_rule) == \
         'instruction_in_valid_rule'
 

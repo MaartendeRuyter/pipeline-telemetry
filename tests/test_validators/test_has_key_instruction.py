@@ -55,15 +55,14 @@ def test_get_field_name_method():
 
 def test_validation_error_method():
     """
-    check that _validation_error method returns instance
-    of ErrorCode with fieldname in error_data
+    Check that _validation_error method returns a list with
+    ErrorCode instance.
     """
     validation_error_list = HasKey._validation_error(
         TEST_ERROR_CODE, 'test_error_data')
     validation_error = validation_error_list[0]
     assert isinstance(validation_error_list, list)
     assert isinstance(validation_error, ErrorCode)
-    assert validation_error.error_data == 'test_error_data'
 
 
 def test_validate_valid_dict():
@@ -102,15 +101,13 @@ def test_validate_invalid_dict():
         dict_to_validate=invalid_dict, rule_content=rule_content
     )
     assert len(validation_result) == 1
-    assert validation_result[0].code == 'HAS_KEY_ERR_0001'
-    assert validation_result[0].error_data == 'correct_key'
+    assert validation_result[0].code == 'HAS_KEY_ERR_0001@KEY_<correct_key>'
 
 
 def test_validate_invalid_nested_dict():
     """
     Test that a nested dict without right nested key returns a list with
-    error_code KEY_NOT_FOUND_001 and the nested field_name in the error_data
-
+    error_code KEY_NOT_FOUND_001 and the nested field_name in the error_data.
     """
     invalid_dict = {'incorrect_key': {'nested_key': 'value'}}
     rule_content = {'field_name': 'correct_key.nested_key'}
@@ -118,5 +115,5 @@ def test_validate_invalid_nested_dict():
         dict_to_validate=invalid_dict, rule_content=rule_content
     )
     assert len(validation_result) == 1
-    assert validation_result[0].code == 'HAS_KEY_ERR_0001'
-    assert validation_result[0].error_data == 'correct_key.nested_key'
+    assert validation_result[0].code == \
+        'HAS_KEY_ERR_0001@KEY_<correct_key.nested_key>'

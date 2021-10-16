@@ -2,9 +2,9 @@
 """
 import jmespath
 from errors.base import add_error_data
+from errors.error import ErrorCode, ListErrors
 
 from ..settings import exceptions
-from ..settings.errors import ErrorCode, ValidationErrors
 from ..validators.dict_validator import DictValidator
 
 
@@ -59,15 +59,15 @@ class ValidateEntries():
 
         if not field_to_validate:
             return cls._validation_error(
-                ValidationErrors.FIELD_NOT_FOUND.value, fieldname)
+                ListErrors.FIELD_NOT_FOUND, fieldname)
 
         if not isinstance(field_to_validate, (list, dict)):
             return cls._validation_error(
-                ValidationErrors.WRONG_TYPE_IN_FIELD.value, fieldname)
+                ListErrors.WRONG_TYPE_IN_FIELD, fieldname)
 
         if len(field_to_validate) != cls._get_expected_count(rule_content):
             return cls._validation_error(
-                ValidationErrors.UNEXPECTED_NR_OF_ITEMS.value, fieldname)
+                ListErrors.UNEXPECTED_NR_OF_ITEMS, fieldname)
 
         return []
 
