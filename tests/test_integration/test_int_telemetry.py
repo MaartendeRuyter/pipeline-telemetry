@@ -1,10 +1,10 @@
 """Module to run integration test for telemetry module
 """
-from pipeline_telemetry.main import Telemetry
-
 from test_data import DEFAULT_TELEMETRY_PARAMS
 from test_integration_data import BASIC_RETRIEVE_DATA_TEST, \
-    validate_result_from_telemetry, MISSING_KEY_RETRIEVE_DATA_TEST
+    MISSING_KEY_RETRIEVE_DATA_TEST, validate_result_from_telemetry
+
+from pipeline_telemetry.main import Telemetry
 
 
 def test_basic_test_data():

@@ -1,9 +1,7 @@
 """Module to define tests for adding telemetry"""
 import pytest
 from errors.error import ListErrors
-from test_data import DEFAULT_TELEMETRY_PARAMS, \
-    TEST_TELEMETRY_RULES
-
+from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_TELEMETRY_RULES
 
 from pipeline_telemetry.main import Telemetry
 from pipeline_telemetry.settings import exceptions

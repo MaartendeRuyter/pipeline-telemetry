@@ -5,6 +5,7 @@ classes:
     - DictValidator
 """
 from typing import List
+
 from errors.base import ErrorCode
 
 from ..settings.exceptions import InstructionRegisteredTwice, \
