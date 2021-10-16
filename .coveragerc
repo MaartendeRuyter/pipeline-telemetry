@@ -15,4 +15,8 @@ omit =
 [report]
 show_missing = true
 precision = 0
-omit = *migrations*
+omit =
+    *migrations*
+    src/pipeline_telemetry/__main__.py
+    src/pipeline_telemetry/cli.py
+
