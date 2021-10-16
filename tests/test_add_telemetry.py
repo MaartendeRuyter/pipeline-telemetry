@@ -55,4 +55,3 @@ def test_validate_data_method_returns_empty_list():
     errors = telemetry._validate_data(sub_process='RETRIEVE_RAW_DATA',
                                       data={'items': [1, 2, 3]})
     assert errors == []
-
