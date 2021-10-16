@@ -1,6 +1,5 @@
 """
-module to test telemetry main class for pipeline telemetry module
-
+Module to test telemetry main class for pipeline telemetry module.
 """
 from datetime import datetime
 
@@ -70,13 +69,26 @@ def test_telemetry_instance_sets_start_time():
     assert isinstance(telemetry.get('start_date_time'), datetime)
 
 
-def test_add_sub_process_count_to_telemetry():
+def test_increase_new_sub_process_base_count_to_telemetry():
     """
-    check that a sub process base count can be added to th eTelemetry instance
+    Check that a new sub process base count can be added to a Telemetry
+    instance.
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     assert 'RETRIEVE_RAW_DATA' in telemetry_inst.telemetry
+    assert telemetry_inst.get('RETRIEVE_RAW_DATA')['base_counter'] == 1
+
+
+def test_increase_sub_process_base_count_to_telemetry():
+    """
+    Check that an existing sub process base count can be inreased.
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
+    assert telemetry_inst.get('RETRIEVE_RAW_DATA')['base_counter'] == 1
+    telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
+    assert telemetry_inst.get('RETRIEVE_RAW_DATA')['base_counter'] == 2
 
 
 def test_increase_sub_process_count_not_allowed_with_closed_telemetry():
@@ -164,6 +176,32 @@ def test_add_custom_counter_to_telemetry():
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_custom_count('network_error')
     assert telemetry_inst.telemetry['network_error'] == 1
+
+
+def test_add_sub_process_custom_counter_to_telemetry():
+    """
+    Check that a custom counter can be added to a subprocess.
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
+    telemetry_inst.increase_sub_process_custom_count(
+        custom_counter='network_error',
+        sub_process='RETRIEVE_RAW_DATA')
+    assert telemetry_inst.get('RETRIEVE_RAW_DATA')['network_error'] == 1
+
+
+def test_increase_existimg_sub_process_custom_counter_to_telemetry():
+    """
+    Check that a existing custom counter can be icnrease
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
+    for _ in [1, 2]:
+        telemetry_inst.increase_sub_process_custom_count(
+            custom_counter='network_error',
+            sub_process='RETRIEVE_RAW_DATA')
+
+    assert telemetry_inst.get('RETRIEVE_RAW_DATA')['network_error'] == 2
 
 
 def test_increase_custom_counter_to_telemetry():
