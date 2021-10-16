@@ -1,7 +1,6 @@
 """Module to define HasKey class validator
 """
 import jmespath
-from errors.base import add_error_data
 from errors.error import ErrorCode, ListErrors
 
 from ..settings import exceptions
