@@ -1,4 +1,5 @@
 """Module to define ProcesTypes class."""
+from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.settings import BaseEnumerator, \
     DefaultProcessTypes, ProcessType
 
@@ -16,17 +17,19 @@ class ProcessTypes():
             cls, process_type_key: str, process_type: ProcessType) -> None:
         """Class method to register a single process type."""
         if not isinstance(process_type, ProcessType):
-            raise ValueError(
-                'provided process type is not of type ProcessType')
+            raise exceptions.ProcessTypeMustBeOfClassProcessType
         setattr(cls, process_type_key, process_type)
         cls._process_types.append(process_type)
 
     @classmethod
     def register_process_types(cls, process_types: BaseEnumerator) -> None:
         """Class method to register new errors from enumerator."""
-        if not issubclass(process_types, BaseEnumerator):
-            raise ValueError(
-                'provide process is not a subclas of BaseEnumerator')
+        try:
+            if not issubclass(process_types, BaseEnumerator):
+                raise exceptions.ProcessTypesMustBeOfClassBaseEnumertor
+        except TypeError:
+            raise exceptions.ProcessTypesMustBeOfClassBaseEnumertor
+
         for process_type_key in process_types.keys():
             process_type = process_types[process_type_key].value
             cls.register_process_type(

@@ -114,3 +114,11 @@ class ProcessTypeNotRegistered(Exception):
     def __init__(self, process_type):
         message = f'provided process_type {process_type.name} not registered'
         super().__init__(message)
+
+
+class ProcessTypesMustBeOfClassBaseEnumertor(Exception):
+    """ custom exception for Telemetry Module """
+
+    def __init__(self):
+        message = 'provided process_types enumerator not of class BaseEnumrator'
+        super().__init__(message)
