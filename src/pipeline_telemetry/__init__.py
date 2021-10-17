@@ -33,4 +33,5 @@ Arguments
     -
 """
 from .settings import errors  # noqa: F401
+from .settings import process_type  # noqa: F401
 from .validators import has_key, validate_entries  # noqa: F401
