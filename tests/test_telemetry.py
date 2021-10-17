@@ -8,6 +8,7 @@ from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.main import FAIL_COUNT, Telemetry
 from pipeline_telemetry.settings import exceptions, settings
+from pipeline_telemetry.settings.settings import ProcessType
 from pipeline_telemetry.storage import AbstractTelemetryStorage, \
     TelemetryInMemoryStorage
 
@@ -25,19 +26,25 @@ def test_telemetry_instance_creation():
         'load_weather_data'
 
 
+def test_telemetry_instance_creation_raises_excption():
+    """
+    Check that Telemetry instance creation raises exception with non registered
+    ProcessType.
+    """
+    process_type = ProcessType(
+        process_name='not_registered',
+        subtypes=['test'])
+    telemetry_params = {
+        'process_name': 'load_weather_data',
+        'process_type': process_type
+    }
+    with pytest.raises(exceptions.ProcessTypeNotRegistered):
+        Telemetry(**telemetry_params)
+
+
 def test_telemetry_instance_has_telemetry_property():
     """ check that Telemetry instance has a telemetry property """
     assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry
-
-
-def test_telemetry_instance_has_process_types_property():
-    """
-    check that Telemetry instance has a process_types property that return a list with process_types
-    """
-    assert isinstance(
-        Telemetry(**DEFAULT_TELEMETRY_PARAMS).process_types, list)
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).process_types == \
-        list(settings.BASE_SUB_PROCESS_TYPES.keys())
 
 
 def test_telemetry_instance_has_sub_process_types_property():
@@ -46,9 +53,9 @@ def test_telemetry_instance_has_sub_process_types_property():
     a dict with all sub_process_types
     """
     assert isinstance(
-        Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types, dict)
+        Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types, list)
     assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types == \
-        settings.BASE_SUB_PROCESS_TYPES
+        settings.DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 
 
 def test_telemetry_instance_raises_exception_with_invalid_process_type():
@@ -57,7 +64,7 @@ def test_telemetry_instance_raises_exception_with_invalid_process_type():
     process_type is used
     """
     telemetry_params = DEFAULT_TELEMETRY_PARAMS | {'process_type': 'invalid'}
-    with pytest.raises(exceptions.InvalidProcessType):
+    with pytest.raises(exceptions.ProcessTypeMustBeOfClassProcessType):
         Telemetry(**telemetry_params)
 
 
@@ -78,6 +85,16 @@ def test_increase_new_sub_process_base_count_to_telemetry():
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     assert 'RETRIEVE_RAW_DATA' in telemetry_inst.telemetry
     assert telemetry_inst.get('RETRIEVE_RAW_DATA')['base_counter'] == 1
+
+
+def test_increase_non_exsiting_sub_process_raises_exception():
+    """
+    Check that a add a based count for a non existing sub process raises
+    an excpetion
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    with pytest.raises(exceptions.InvalidSubProcess):
+        telemetry_inst.increase_sub_process_base_count('Non exsiting')
 
 
 def test_increase_sub_process_base_count_to_telemetry():

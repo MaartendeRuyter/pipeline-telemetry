@@ -10,7 +10,7 @@ from typing import List
 from errors.base import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
-from pipeline_telemetry.settings.settings import BASE_SUB_PROCESS_TYPES
+from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
 from pipeline_telemetry.storage import AbstractTelemetryStorage, \
     TelemetryInMemoryStorage
 from pipeline_telemetry.validators.dict_validator import DictValidator
@@ -54,33 +54,36 @@ class Telemetry():
 
     """
 
-    _sub_process_types = BASE_SUB_PROCESS_TYPES
+    _available_process_types = ProcessTypes
 
     def __init__(
-            self, process_name: str, process_type: str,
+            self, process_name: str, process_type: ProcessType,
             telemetry_rules: dict = None,
             storage_class: AbstractTelemetryStorage = None):
+        self._set_process_type(process_type)
         self._telemetry = {
             PROCESS_NAME: process_name,
-            PROCESS_TYPE_KEY: process_type,
+            PROCESS_TYPE_KEY: self._process_type.name,
             START_TIME: datetime.now()
         }
         self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
-        self._validate_initial_telemetry()
 
     @classmethod
-    def add_process_type(cls, process_type: dict) -> None:
+    def add_process_type(
+            cls, process_type_key: str, process_type: ProcessType) -> None:
         """
-        Add a custom process type and sub process types to the class.
+        Add a custom process type to the available process types.
 
         Args:
-            process_type (dict):
-                dict describing the process and sub_process types
+            process_type (ProcessType): Process type that needs to be added
+            process_type_key (str): key that should be used when calling this
+                                    ProcessType
         """
-        if not isinstance(process_type, dict):
-            raise exceptions.ProcessTypeMustBeDict()
-        cls._sub_process_types.update(process_type)
+        if not isinstance(process_type, ProcessType):
+            raise exceptions.ProcessTypeMustBeOfClassProcessType()
+        cls._available_process_types.register_process_type(
+            process_type_key, process_type)
 
     @staticmethod
     def _get_storage_class(storage_class: AbstractTelemetryStorage) -> None:
@@ -117,15 +120,9 @@ class Telemetry():
         return self._telemetry
 
     @property
-    def process_types(self) -> list:
-        """Returns a list of process_types."""
-        # process types are the keys in sub_process_list
-        return list(self._sub_process_types.keys())
-
-    @property
-    def sub_process_types(self) -> dict:
-        """Returns a dict of process_type including their sub_process type."""
-        return self._sub_process_types
+    def sub_process_types(self) -> list:
+        """Returns a of subprocess types allowed for the Telemetry instance."""
+        return self._process_type.sub_processes
 
     def get(self, field_name: str) -> dict:
         """Retrieve a field from the telemetry object.
@@ -288,17 +285,17 @@ class Telemetry():
         Args:
             sub_process (str): sub process name
         """
+        if sub_process not in self._process_type.sub_processes:
+            raise exceptions.InvalidSubProcess(sub_process, self._process_type)
+
         self._telemetry[sub_process] = {
             BASE_COUNT_KEY: 0,
             FAIL_COUNT: 0}
 
-    def _validate_initial_telemetry(self) -> None:
-        """ validates telemetry initial settings
-        Initial settings are programmatically set and should therefor always be
-        valid
-
-        exception is raised if initial settings are invalid.
-        """
-        process_type = self._telemetry.get(PROCESS_TYPE_KEY)
-        if process_type not in self.sub_process_types.keys():
-            raise exceptions.InvalidProcessType(process_type)
+    def _set_process_type(self, process_type: ProcessType) -> None:
+        """Sets the process type for the telemetrty instance."""
+        if not isinstance(process_type, ProcessType):
+            raise exceptions.ProcessTypeMustBeOfClassProcessType
+        if not self._available_process_types.is_registered(process_type):
+            raise exceptions.ProcessTypeNotRegistered(process_type)
+        self._process_type = process_type

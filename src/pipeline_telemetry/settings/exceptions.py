@@ -6,10 +6,11 @@ exceptions
 - UnknownInstruction
 - InstructionRegisteredTwice
 - RuleCanHaveOnlyOneInstruction
-- InvalidProcessType
 - BaseCountForSubProcessNotAdded
 - TelemetryObjectAlreadyClosed
 - StorageClassOfIncorrectType
+- ProcessTypeMustBeOfClassProcessType
+- ProcessTypeNotRegistered
 """
 
 
@@ -60,13 +61,13 @@ class RuleCanHaveOnlyOneInstruction(Exception):
         super().__init__(message)
 
 
-class InvalidProcessType(Exception):
+class InvalidSubProcess(Exception):
     """ custom exception for Telemetry Module """
 
-    def __init__(self, process_type):
+    def __init__(self, sub_process: str, process_type):
         message = ''.join([
-            f'Invalid Process type {process_type} used with',
-            ' Telemetry instanciation'])
+            f'Sub Process `{sub_process}` does not exist for ',
+            f'process type `{process_type.name}`'])
         super().__init__(message)
 
 
@@ -99,9 +100,25 @@ class StorageClassOfIncorrectType(Exception):
         super().__init__(message)
 
 
-class ProcessTypeMustBeDict(Exception):
+class ProcessTypeMustBeOfClassProcessType(Exception):
     """ custom exception for Telemetry Module """
 
     def __init__(self):
-        message = 'Provided custom process_type is not of type dict'
+        message = 'provide process_type not of class ProcessType'
+        super().__init__(message)
+
+
+class ProcessTypeNotRegistered(Exception):
+    """ custom exception for Telemetry Module """
+
+    def __init__(self, process_type):
+        message = f'provided process_type {process_type.name} not registered'
+        super().__init__(message)
+
+
+class ProcessTypesMustBeOfClassBaseEnumertor(Exception):
+    """ custom exception for Telemetry Module """
+
+    def __init__(self):
+        message = 'provided process_types enumerator not of class BaseEnumrator'
         super().__init__(message)

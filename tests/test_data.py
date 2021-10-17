@@ -3,6 +3,10 @@ This module provides test data for the telemetry tests
 """
 from errors.base import ErrorCode
 
+from pipeline_telemetry.settings.process_type import ProcessTypes
+from pipeline_telemetry.settings.settings import \
+    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES, ProcessType
+
 
 class InstructionTestClass():
     """Instruction class for test purposes."""
@@ -18,7 +22,7 @@ class InstructionTestClass():
 # default params for creating a test Telemetry object
 DEFAULT_TELEMETRY_PARAMS = {
     'process_name': 'load_weather_data',
-    'process_type': 'create_data_from_url'
+    'process_type': ProcessTypes.CREATE_DATA_FROM_URL
 }
 
 # custom process type for testing extending the default process types
@@ -35,3 +39,7 @@ TEST_TELEMETRY_RULES = {
         'has_key': {'field_name': 'items'}
     }
 }
+
+TEST_PROCESS_TYPE = ProcessType(
+    process_name='test_process_type',
+    subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)

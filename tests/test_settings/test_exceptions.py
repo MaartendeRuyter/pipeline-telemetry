@@ -2,6 +2,7 @@
 module to test custom exceptions in pipeline telemetry module
 """
 import pytest
+from test_data import TEST_PROCESS_TYPE
 
 from pipeline_telemetry.settings import exceptions
 
@@ -52,14 +53,6 @@ def test_rule_can_only_have_one_instruction_exception():
     assert 'key1, key2' in str(exception)
 
 
-def test_invalid_process_type_exception():
-    """ test InvalidProcessType exception """
-    with pytest.raises(exceptions.InvalidProcessType) as exception:
-        raise_exception(exceptions.InvalidProcessType, 'test_process_type')
-
-    assert 'Invalid Process type test_process_type' in str(exception)
-
-
 def test_base_count_for_sub_process_not_added_exception():
     """ test BaseCountForSubProcessNotAdded exception """
     with pytest.raises(exceptions.BaseCountForSubProcessNotAdded) as exception:
@@ -87,17 +80,36 @@ def test_storage_class_of_incorrect_type_exception():
     assert 'StorageClass `Incorrect_class` not a child class' in str(exception)
 
 
-def test_process_type_must_be_dict_exception():
-    """ test ProcessTypeMustBeDict exception """
-    with pytest.raises(exceptions.ProcessTypeMustBeDict) as exception:
-        raise exceptions.ProcessTypeMustBeDict
-
-    assert 'Provided custom process_type is not of type dict' in str(exception)
-
-
 def test_expected_count_must_be_positive_int_exception():
     """ test ExpectedCountMustBePositiveInt exception """
     with pytest.raises(exceptions.ExpectedCountMustBePositiveInt) as exception:
         raise exceptions.ExpectedCountMustBePositiveInt
 
     assert 'Ruleset does not contain `expected_count` or' in str(exception)
+
+
+def test_invalid_sub_process():
+    """ test InvalidSubProcess exception """
+    with pytest.raises(exceptions.InvalidSubProcess) as exception:
+        raise exceptions.InvalidSubProcess('test_process', TEST_PROCESS_TYPE)
+
+    assert 'Sub Process `test_process` does not exist' in str(exception)
+
+
+def test_process_type_not_registered():
+    """ test ProcessTypeNotRegistered exception """
+    with pytest.raises(exceptions.ProcessTypeNotRegistered) as exception:
+        raise exceptions.ProcessTypeNotRegistered(TEST_PROCESS_TYPE)
+
+    assert 'provided process_type test_process_type not registered' in \
+        str(exception)
+
+
+def test_process_types_not_of_right_class():
+    """ test ProcessTypesMustBeOfClassBaseEnumertor exception """
+    with pytest.raises(
+            exceptions.ProcessTypesMustBeOfClassBaseEnumertor) as exception:
+        raise exceptions.ProcessTypesMustBeOfClassBaseEnumertor
+
+    assert 'provided process_types enumerator not of class BaseEnumrator' in \
+        str(exception)
