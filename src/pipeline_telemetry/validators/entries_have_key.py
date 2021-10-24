@@ -126,14 +126,14 @@ class EntriesHaveKey():
             cls, dict_to_validate: dict,
             rule_content: dict) -> list[ErrorCode]:
         """
-        method to check if entries field exists in dict_to_validate
+        method to check if entries field in dict_to_validate is a list
 
         returns:
-            - list{ErrorCode]: Empty list in case the field does exist
+            - list[ErrorCode]: Empty list in case the field holds a list
         """
         fieldname = cls._get_field_name(rule_content)
         entries = jmespath.search(fieldname, dict_to_validate)
-        if not isinstance(entries, (dict, list)):
+        if not isinstance(entries, (list)):
             return cls._validation_error(
                 ListErrors.ENTRIES_FIELD_OF_WRONG_TYPE, fieldname)
 
