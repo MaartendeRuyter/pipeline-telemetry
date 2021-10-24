@@ -55,3 +55,40 @@ MISSING_KEY_RETRIEVE_DATA_TEST = IntegrationTestData(
             'base_counter': 1,
             'fail_counter': 0,
             'HAS_KEY_ERR_0001@KEY_<items>': 1}})
+
+
+MUST_HAVE_KEY_IN_ITEMS_TEST = IntegrationTestData(
+    data={'items': [{'key': 1}, {'no_key': 2}]},
+    validation_rules={
+        'RETRIEVE_RAW_DATA': {
+            'entries_have_key': {'field_name': 'items', 'must_have_key': 'key'}}},
+    telemetry_result={
+        'field': 'RETRIEVE_RAW_DATA',
+        'result': {
+            'base_counter': 1,
+            'fail_counter': 0,
+            'ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>': 1}})
+
+NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
+    data={'items': [{'no_key': 1}, {'no_key': 2}]},
+    validation_rules={
+        'RETRIEVE_RAW_DATA': {
+            'entries_have_key': {'field_name': 'items', 'must_have_key': 'key'}}},
+    telemetry_result={
+        'field': 'RETRIEVE_RAW_DATA',
+        'result': {
+            'base_counter': 1,
+            'fail_counter': 0,
+            'ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>': 2}})
+
+ITEMS_FIELD_HAS_DICT_TEST = IntegrationTestData(
+    data={'items': {'key': 1, 'no_key': 2}},
+    validation_rules={
+        'RETRIEVE_RAW_DATA': {
+            'entries_have_key': {'field_name': 'items', 'must_have_key': 'key'}}},
+    telemetry_result={
+        'field': 'RETRIEVE_RAW_DATA',
+        'result': {
+            'base_counter': 1,
+            'fail_counter': 0,
+            'ENTRIES_HAVE_KEY_ERR_002@KEY_<items>': 1}})

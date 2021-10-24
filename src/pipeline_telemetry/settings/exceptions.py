@@ -22,6 +22,14 @@ class FieldNameMandatory(Exception):
         super().__init__(message)
 
 
+class MustHaveKeyMandatory(Exception):
+    """ custom exception for Telemetry Module """
+
+    def __init__(self, instruction):
+        message = f'For `{instruction}` instruction'
+        super().__init__(message)
+
+
 class ExpectedCountMustBePositiveInt(Exception):
     """ custom exception for Telemetry Module """
 
