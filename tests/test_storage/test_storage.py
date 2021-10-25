@@ -2,8 +2,8 @@
 """
 import sqlite3
 
-from pipeline_telemetry.storage import AbstractTelemetryStorage, \
-    TelemetryInMemoryStorage
+from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
+from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 
 
 def test_abstract_strorage_class_exists():

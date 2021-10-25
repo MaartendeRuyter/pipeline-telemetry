@@ -9,8 +9,8 @@ from test_data import DEFAULT_TELEMETRY_PARAMS
 from pipeline_telemetry.main import FAIL_COUNT, Telemetry
 from pipeline_telemetry.settings import exceptions, settings
 from pipeline_telemetry.settings.settings import ProcessType
-from pipeline_telemetry.storage import AbstractTelemetryStorage, \
-    TelemetryInMemoryStorage
+from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
+from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 
 # pylint: disable=protected-access
 
@@ -263,7 +263,8 @@ def test_close_telemetry_instance_sets_run_time(mocker):
     check that closing the telemetry sets the run_time
     """
     mocker.patch(
-        'pipeline_telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
+        ("pipeline_telemetry.storage.memory."
+         "TelemetryInMemoryStorage.store_telemetry"),
         return_value=None)
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
@@ -276,7 +277,8 @@ def test_close_telemetry_instance_calls_store_telemetry(mocker):
     check that closing the telemetry sets the run_time
     """
     mocker.patch(
-        'pipeline_telemetry.storage.TelemetryInMemoryStorage.store_telemetry',
+        ("pipeline_telemetry.storage.memory."
+         "TelemetryInMemoryStorage.store_telemetry"),
         return_value=None)
     _store_telemetry_spy = mocker.spy(
         TelemetryInMemoryStorage, 'store_telemetry')

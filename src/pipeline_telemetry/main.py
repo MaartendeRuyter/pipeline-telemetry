@@ -11,8 +11,8 @@ from errors.base import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
-from pipeline_telemetry.storage import AbstractTelemetryStorage, \
-    TelemetryInMemoryStorage
+from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
+from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.validators.dict_validator import DictValidator
 
 # default telemetry field names
