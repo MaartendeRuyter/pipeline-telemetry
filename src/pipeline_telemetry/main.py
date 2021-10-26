@@ -13,6 +13,7 @@ from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 from pipeline_telemetry.validators.dict_validator import DictValidator
 
 # default telemetry field names
@@ -144,12 +145,21 @@ class Telemetry():
         """
         if self._telemetry.get(RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
-        self._telemetry[RUN_TIME] = (datetime.now() -
-                                     self._telemetry.get(START_TIME)).total_seconds()
-
+        self._set_runtime()
+        self._strf_starttime()
         self._storage_class.store_telemetry(self._telemetry)
 
         return self._telemetry
+
+    def _set_runtime(self) -> None:
+        """Method to calculate and set the runtime seconds (in str)."""
+        run_time = datetime.now() - self._telemetry.get(START_TIME)
+        self._telemetry[RUN_TIME] = str(run_time.total_seconds())
+
+    def _strf_starttime(self) -> None:
+        """Method to to turn starttime in str %Y-%m-%d, %H:%M:%S format."""
+        self._telemetry[START_TIME] = \
+            self._telemetry[START_TIME].strftime("%Y-%m-%d, %H:%M:%S")
 
     @_raise_exception_if_telemetry_closed
     def add(self, sub_process: str,
@@ -299,3 +309,12 @@ class Telemetry():
         if not self._available_process_types.is_registered(process_type):
             raise exceptions.ProcessTypeNotRegistered(process_type)
         self._process_type = process_type
+
+
+def mongo_telemetry(
+        process_name: str, process_type: ProcessType,
+        telemetry_rules: dict) -> Telemetry:
+    """Factory method to create Telemetry instance with MongoStorage class."""
+    return Telemetry(
+        process_name=process_name, process_type=process_type,
+        telemetry_rules=telemetry_rules, storage_class=TelemetryMongoStorage)
