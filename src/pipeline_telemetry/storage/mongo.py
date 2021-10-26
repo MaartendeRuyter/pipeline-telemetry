@@ -17,7 +17,6 @@ from mongoengine import DictField, Document, StringField, connect
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
 
-
 connect(**MONGO_ACCESS_PARAMS)
 
 
@@ -29,7 +28,7 @@ class TelemetryMongoModel(Document):
     process_type = StringField()
     start_date_time = StringField()
     run_time_in_seconds = StringField()
-    telemetry = DictField()
+    telemetry = DictField(default=None)
 
 
 class TelemetryMongoStorage(AbstractTelemetryStorage):
@@ -45,7 +44,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoModel(**telemetry_mongo_kwargs).save()
 
     @staticmethod
-    def _mongo_model_kwargs(telemetry: dict) -> dict:
+    def _telemetry_model_kwargs(telemetry: dict) -> dict:
         """
         Returns a dicts with kwargs that can be used to create a new
         TelemetryMongoStorage instance.
@@ -60,5 +59,5 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
             'process_type': process_type,
             'start_date_time': start_date_time,
             'run_time_in_seconds': run_time_in_seconds,
-            'telememtry': telemetry_copy
+            'telemetry': telemetry_copy
         }
