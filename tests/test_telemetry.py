@@ -6,11 +6,12 @@ from datetime import datetime
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
-from pipeline_telemetry.main import FAIL_COUNT, Telemetry
+from pipeline_telemetry.main import FAIL_COUNT, Telemetry, mongo_telemetry
 from pipeline_telemetry.settings import exceptions, settings
 from pipeline_telemetry.settings.settings import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 
 # pylint: disable=protected-access
 
@@ -269,7 +270,7 @@ def test_close_telemetry_instance_sets_run_time(mocker):
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     telemetry_result = telemetry_inst.save_and_close()
-    assert telemetry_result.get('run_time_in_seconds') > 0
+    assert float(telemetry_result.get('run_time_in_seconds')) > 0
 
 
 def test_close_telemetry_instance_calls_store_telemetry(mocker):
@@ -334,3 +335,13 @@ def test_storage_class_close_method_closes_db():
     storage_instance.close_db()
     assert storage_instance.db_in_memory is None
     assert storage_instance.db_cursor is None
+
+
+def test_mongo_telemetry():
+    """
+    Test mongo_telemetry method returns a Telemetry object with a mongo storage
+    class.
+    """
+    telemetry = mongo_telemetry(telemetry_rules={}, **DEFAULT_TELEMETRY_PARAMS)
+    assert isinstance(telemetry, Telemetry)
+    assert isinstance(telemetry._storage_class, TelemetryMongoStorage)
