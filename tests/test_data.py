@@ -41,5 +41,5 @@ TEST_TELEMETRY_RULES = {
 }
 
 TEST_PROCESS_TYPE = ProcessType(
-    process_name='test_process_type',
+    process_type='test_process_type',
     subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)

@@ -14,7 +14,7 @@ def test_telemetry_class_method_add_process_type():
     check that Telemetry class method add_process_type adds a process type
     """
     process_type = ProcessType(
-        process_name='custom_process_type',
+        process_type='custom_process_type',
         subtypes=['custom_sub_process_type'])
     Telemetry.add_process_type('TEST_TYPE', process_type)
     assert Telemetry('test', process_type)
@@ -26,7 +26,7 @@ def test_sub_process_types_also_added():
     including all sub_processes.
     """
     process_type = ProcessType(
-        process_name='custom_process_type',
+        process_type='custom_process_type',
         subtypes=['custom_sub_process_type'])
     Telemetry.add_process_type('TEST_TYPE', process_type)
     telemetry = Telemetry('name', process_type)

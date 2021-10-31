@@ -33,7 +33,7 @@ def test_telemetry_instance_creation_raises_excption():
     ProcessType.
     """
     process_type = ProcessType(
-        process_name='not_registered',
+        process_type='not_registered',
         subtypes=['test'])
     telemetry_params = {
         'process_name': 'load_weather_data',
