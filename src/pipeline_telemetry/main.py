@@ -2,7 +2,10 @@
 Module to provide Telemetry class as public class to be accessed
 
 classes
-    - CheckForErrors
+    - Telemetry
+
+methods
+    - mongo_telemetry: Method to create telemetry objects with mongo storage
 """
 from datetime import datetime
 from typing import List
@@ -25,13 +28,14 @@ START_TIME = 'start_date_time'
 RUN_TIME = 'run_time_in_seconds'
 
 
+# decorator method to check status telemetry object
 def _raise_exception_if_telemetry_closed(method):
     """
     Decorator method to check if telemetry object is closed.
     If so an exception is raised.
 
     Decorator method to be used for methods that are only allowed
-    when telemtry object not yet closed.
+    when telemetry object not yet closed.
     """
 
     def wrapper(self, *args, **kwargs):
@@ -47,12 +51,47 @@ def _raise_exception_if_telemetry_closed(method):
 
 
 class Telemetry():
-    """class to manage the telemetry data object of a data pipeline process
+    """Class to manage the telemetry data object of a data pipeline process.
 
+    This class can be used to measure and store indicators of a data process.
+    When the dataprocess is finished this Telemetry object can be persisted in
+    a database provide via a storage class.
+
+    args:
+        - process_name (str):
+            Process name for which telemetry is made for example: `GET-WEATHER`
+            Process names can be choosen freely and should ne unique for a
+            single process as they are used to collect all telemetry data for a
+            specific process.
+        - process_type (ProcessType):
+            Process Type for which the telemetry is created. For example
+            `CREATE_DATA_FROM_API`. Process type are predefined objects and
+            made available via class ProcessTypes. Each process type defines
+            a number of sub processes like for example `RETRIEVE_RAW_DATA`. For
+            these subprocess specific telemetry data can be stored in the
+            telemetry instance
+        - telemetry_rules (dict)
+            rules how to evaluate the data object for specific sub process
+            see DictValidator class for more details on how to define rules
+        - storage_class (AbstractTelemetryStorage)
+            class to define storage method for Telemetry object
 
     public class methods:
+        - add_process_types: add custom process types
 
+    properties:
+        - process_name
+        - process_type
+        - sub_process_types
 
+    public methods:
+        - get (as normal get method for dict)
+        - save_and_close
+        - add
+        - increase_sub_process_base_count
+        - increase_sub_process_fail_count
+        - increase_sub_process_custom_count
+        - increase_custom_count
     """
 
     _available_process_types = ProcessTypes
@@ -74,7 +113,8 @@ class Telemetry():
     def add_process_type(
             cls, process_type_key: str, process_type: ProcessType) -> None:
         """
-        Add a custom process type to the available process types.
+        Add a custom process type to the available process types to the
+        already registered process types.
 
         Args:
             process_type (ProcessType): Process type that needs to be added
