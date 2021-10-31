@@ -8,6 +8,8 @@ Contents
    readme
    installation
    usage
+   process_types
+   storage_class
    reference/index
    contributing
    authors
