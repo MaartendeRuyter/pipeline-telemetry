@@ -8,7 +8,7 @@ Contents
    readme
    installation
    usage
-   process_types
+   process_type
    storage_class
    reference/index
    contributing
