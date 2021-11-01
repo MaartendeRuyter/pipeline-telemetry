@@ -5,22 +5,29 @@ from enum import Enum
 from typing import List
 
 DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES = [
-    'RETRIEVE_RAW_DATA', 'DATA_CONVERSION', 'DATA_STORAGE']
+    "RETRIEVE_RAW_DATA",
+    "DATA_CONVERSION",
+    "DATA_STORAGE",
+]
 
 DEFAULT_UPLOAD_DATA_SUB_PROCESS_TYPES = [
-    'DATA_SELECTION', 'DATA_CONVERSION', 'DATA_UPLOAD']
+    "DATA_SELECTION",
+    "DATA_CONVERSION",
+    "DATA_UPLOAD",
+]
 
 
 @dataclass(frozen=True)
-class ProcessType():
+class ProcessType:
     """Immutable dataclass to define a process type and its subtypes."""
-    process_name: str
+
+    process_type: str
     subtypes: list = list
 
     @property
     def name(self) -> str:
         """Property method to return process key name."""
-        return self.process_name
+        return self.process_type
 
     @property
     def sub_processes(self) -> List[str]:
@@ -43,18 +50,22 @@ class DefaultProcessTypes(BaseEnumerator):
     """
     Class to define the defailt process types with their subtypes
     """
+
     CREATE_DATA_FROM_URL = ProcessType(
-        process_name='create_data_from_url',
-        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)
+        process_type="create_data_from_url",
+        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES,
+    )
 
     CREATE_DATA_FROM_API = ProcessType(
-        process_name='create_data_from_api',
-        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)
+        process_type="create_data_from_api",
+        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES,
+    )
 
     CREATE_DATA_FROM_FILE = ProcessType(
-        process_name='create_data_from_file',
-        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)
+        process_type="create_data_from_file",
+        subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES,
+    )
 
     UPLOAD_DATA = ProcessType(
-        process_name='upload_data',
-        subtypes=DEFAULT_UPLOAD_DATA_SUB_PROCESS_TYPES)
+        process_type="upload_data", subtypes=DEFAULT_UPLOAD_DATA_SUB_PROCESS_TYPES
+    )

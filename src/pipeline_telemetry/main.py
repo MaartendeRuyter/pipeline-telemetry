@@ -2,7 +2,10 @@
 Module to provide Telemetry class as public class to be accessed
 
 classes
-    - CheckForErrors
+    - Telemetry
+
+methods
+    - mongo_telemetry: Method to create telemetry objects with mongo storage
 """
 from datetime import datetime
 from typing import List
@@ -11,8 +14,9 @@ from errors.base import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
-from pipeline_telemetry.storage import AbstractTelemetryStorage, \
-    TelemetryInMemoryStorage
+from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
+from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 from pipeline_telemetry.validators.dict_validator import DictValidator
 
 # default telemetry field names
@@ -24,13 +28,14 @@ START_TIME = 'start_date_time'
 RUN_TIME = 'run_time_in_seconds'
 
 
+# decorator method to check status telemetry object
 def _raise_exception_if_telemetry_closed(method):
     """
     Decorator method to check if telemetry object is closed.
     If so an exception is raised.
 
     Decorator method to be used for methods that are only allowed
-    when telemtry object not yet closed.
+    when telemetry object not yet closed.
     """
 
     def wrapper(self, *args, **kwargs):
@@ -46,12 +51,47 @@ def _raise_exception_if_telemetry_closed(method):
 
 
 class Telemetry():
-    """class to manage the telemetry data object of a data pipeline process
+    """Class to manage the telemetry data object of a data pipeline process.
 
+    This class can be used to measure and store indicators of a data process.
+    When the dataprocess is finished this Telemetry object can be persisted in
+    a database provide via a storage class.
+
+    args:
+        - process_name (str):
+            Process name for which telemetry is made for example: `GET-WEATHER`
+            Process names can be choosen freely and should ne unique for a
+            single process as they are used to collect all telemetry data for a
+            specific process.
+        - process_type (ProcessType):
+            Process Type for which the telemetry is created. For example
+            `CREATE_DATA_FROM_API`. Process type are predefined objects and
+            made available via class ProcessTypes. Each process type defines
+            a number of sub processes like for example `RETRIEVE_RAW_DATA`. For
+            these subprocess specific telemetry data can be stored in the
+            telemetry instance
+        - telemetry_rules (dict)
+            rules how to evaluate the data object for specific sub process
+            see DictValidator class for more details on how to define rules
+        - storage_class (AbstractTelemetryStorage)
+            class to define storage method for Telemetry object
 
     public class methods:
+        - add_process_types: add custom process types
 
+    properties:
+        - process_name
+        - process_type
+        - sub_process_types
 
+    public methods:
+        - get (as normal get method for dict)
+        - save_and_close
+        - add
+        - increase_sub_process_base_count
+        - increase_sub_process_fail_count
+        - increase_sub_process_custom_count
+        - increase_custom_count
     """
 
     _available_process_types = ProcessTypes
@@ -73,7 +113,8 @@ class Telemetry():
     def add_process_type(
             cls, process_type_key: str, process_type: ProcessType) -> None:
         """
-        Add a custom process type to the available process types.
+        Add a custom process type to the available process types to the
+        already registered process types.
 
         Args:
             process_type (ProcessType): Process type that needs to be added
@@ -144,12 +185,21 @@ class Telemetry():
         """
         if self._telemetry.get(RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
-        self._telemetry[RUN_TIME] = (datetime.now() -
-                                     self._telemetry.get(START_TIME)).total_seconds()
-
+        self._set_runtime()
+        self._strf_starttime()
         self._storage_class.store_telemetry(self._telemetry)
 
         return self._telemetry
+
+    def _set_runtime(self) -> None:
+        """Method to calculate and set the runtime seconds (in str)."""
+        run_time = datetime.now() - self._telemetry.get(START_TIME)
+        self._telemetry[RUN_TIME] = str(run_time.total_seconds())
+
+    def _strf_starttime(self) -> None:
+        """Method to to turn starttime in str %Y-%m-%d, %H:%M:%S format."""
+        self._telemetry[START_TIME] = \
+            self._telemetry[START_TIME].strftime("%Y-%m-%d, %H:%M:%S")
 
     @_raise_exception_if_telemetry_closed
     def add(self, sub_process: str,
@@ -299,3 +349,12 @@ class Telemetry():
         if not self._available_process_types.is_registered(process_type):
             raise exceptions.ProcessTypeNotRegistered(process_type)
         self._process_type = process_type
+
+
+def mongo_telemetry(
+        process_name: str, process_type: ProcessType,
+        telemetry_rules: dict) -> Telemetry:
+    """Factory method to create Telemetry instance with MongoStorage class."""
+    return Telemetry(
+        process_name=process_name, process_type=process_type,
+        telemetry_rules=telemetry_rules, storage_class=TelemetryMongoStorage)
