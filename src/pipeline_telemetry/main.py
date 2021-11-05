@@ -14,18 +14,19 @@ from errors.base import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
+from pipeline_telemetry.settings.settings import TelemetryCounter
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 from pipeline_telemetry.validators.dict_validator import DictValidator
 
 # default telemetry field names
-BASE_COUNT_KEY = 'base_counter'
-FAIL_COUNT = 'fail_counter'
-PROCESS_NAME = 'process_name'
-PROCESS_TYPE_KEY = 'process_type'
-START_TIME = 'start_date_time'
-RUN_TIME = 'run_time_in_seconds'
+BASE_COUNT_KEY = "base_counter"
+FAIL_COUNT = "fail_counter"
+PROCESS_NAME = "process_name"
+PROCESS_TYPE_KEY = "process_type"
+START_TIME = "start_date_time"
+RUN_TIME = "run_time_in_seconds"
 
 
 # decorator method to check status telemetry object
@@ -47,10 +48,11 @@ def _raise_exception_if_telemetry_closed(method):
             raise exceptions.TelemetryObjectAlreadyClosed()
 
         return method(self, *args, **kwargs)
+
     return wrapper
 
 
-class Telemetry():
+class Telemetry:
     """Class to manage the telemetry data object of a data pipeline process.
 
     This class can be used to measure and store indicators of a data process.
@@ -97,21 +99,23 @@ class Telemetry():
     _available_process_types = ProcessTypes
 
     def __init__(
-            self, process_name: str, process_type: ProcessType,
-            telemetry_rules: dict = None,
-            storage_class: AbstractTelemetryStorage = None):
+        self,
+        process_name: str,
+        process_type: ProcessType,
+        telemetry_rules: dict = None,
+        storage_class: AbstractTelemetryStorage = None,
+    ):
         self._set_process_type(process_type)
         self._telemetry = {
             PROCESS_NAME: process_name,
             PROCESS_TYPE_KEY: self._process_type.name,
-            START_TIME: datetime.now()
+            START_TIME: datetime.now(),
         }
         self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
 
     @classmethod
-    def add_process_type(
-            cls, process_type_key: str, process_type: ProcessType) -> None:
+    def add_process_type(cls, process_type_key: str, process_type: ProcessType) -> None:
         """
         Add a custom process type to the available process types to the
         already registered process types.
@@ -124,7 +128,8 @@ class Telemetry():
         if not isinstance(process_type, ProcessType):
             raise exceptions.ProcessTypeMustBeOfClassProcessType()
         cls._available_process_types.register_process_type(
-            process_type_key, process_type)
+            process_type_key, process_type
+        )
 
     @staticmethod
     def _get_storage_class(storage_class: AbstractTelemetryStorage) -> None:
@@ -198,12 +203,12 @@ class Telemetry():
 
     def _strf_starttime(self) -> None:
         """Method to to turn starttime in str %Y-%m-%d, %H:%M:%S format."""
-        self._telemetry[START_TIME] = \
-            self._telemetry[START_TIME].strftime("%Y-%m-%d, %H:%M:%S")
+        self._telemetry[START_TIME] = self._telemetry[START_TIME].strftime(
+            "%Y-%m-%d, %H:%M:%S"
+        )
 
     @_raise_exception_if_telemetry_closed
-    def add(self, sub_process: str,
-            data: dict, errors: List[ErrorCode]) -> None:
+    def add(self, sub_process: str, data: dict, errors: List[ErrorCode]) -> None:
         """
         Add data validation errors and/or errors from data process to a
         telemetry sub process.
@@ -255,10 +260,10 @@ class Telemetry():
         for error in errors:
             error_code = error.code
             self.increase_sub_process_custom_count(
-                custom_counter=error_code,
-                sub_process=sub_process)
+                custom_counter=error_code, sub_process=sub_process
+            )
 
-    @ _raise_exception_if_telemetry_closed
+    @_raise_exception_if_telemetry_closed
     def increase_sub_process_base_count(self, sub_process: str) -> None:
         """
         Increases the base count for a subprocess.
@@ -288,8 +293,8 @@ class Telemetry():
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_custom_count(
-            self, custom_counter: str, sub_process: str,
-            increment: int = 1) -> None:
+        self, custom_counter: str, sub_process: str, increment: int = 1
+    ) -> None:
         """
         Increases a custom counter for a subprocess.
 
@@ -311,8 +316,7 @@ class Telemetry():
         self._telemetry[sub_process][custom_counter] += increment
 
     @_raise_exception_if_telemetry_closed
-    def increase_custom_count(
-            self, custom_counter: str, increment: int = 1) -> None:
+    def increase_custom_count(self, custom_counter: str, increment: int = 1) -> None:
         """
         Increases a custom counter for the telemetry object.
 
@@ -329,6 +333,25 @@ class Telemetry():
 
         self._telemetry[custom_counter] += increment
 
+    def add_telemetry_counter(
+        self, telemetry_counter: TelemetryCounter, increment: int = None
+    ) -> None:
+        """Method to process a TelemetryCounter object with predefined
+
+        Args:
+            telemetry_counter (TelemetryCounter): [description]
+            increment (int, None):
+                when not None overules the increment setting from
+                TelemetryCounter (which defaults to 1)
+        """
+        telemetry_counter.validate_sub_process()
+        sub_process = telemetry_counter.sub_process
+        counter_name = telemetry_counter.counter_name
+        increment = increment or telemetry_counter.increment
+        self.increase_sub_process_custom_count(
+            sub_process=sub_process, custom_counter=counter_name, increment=increment
+        )
+
     def _initialize_sub_process(self, sub_process: str) -> None:
         """sets the initial count object for a sub_process
 
@@ -338,9 +361,7 @@ class Telemetry():
         if sub_process not in self._process_type.sub_processes:
             raise exceptions.InvalidSubProcess(sub_process, self._process_type)
 
-        self._telemetry[sub_process] = {
-            BASE_COUNT_KEY: 0,
-            FAIL_COUNT: 0}
+        self._telemetry[sub_process] = {BASE_COUNT_KEY: 0, FAIL_COUNT: 0}
 
     def _set_process_type(self, process_type: ProcessType) -> None:
         """Sets the process type for the telemetrty instance."""
@@ -352,9 +373,12 @@ class Telemetry():
 
 
 def mongo_telemetry(
-        process_name: str, process_type: ProcessType,
-        telemetry_rules: dict) -> Telemetry:
+    process_name: str, process_type: ProcessType, telemetry_rules: dict
+) -> Telemetry:
     """Factory method to create Telemetry instance with MongoStorage class."""
     return Telemetry(
-        process_name=process_name, process_type=process_type,
-        telemetry_rules=telemetry_rules, storage_class=TelemetryMongoStorage)
+        process_name=process_name,
+        process_type=process_type,
+        telemetry_rules=telemetry_rules,
+        storage_class=TelemetryMongoStorage,
+    )

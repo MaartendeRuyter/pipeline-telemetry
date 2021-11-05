@@ -5,7 +5,7 @@ from errors.base import ErrorCode
 
 from pipeline_telemetry.settings.process_type import ProcessTypes
 from pipeline_telemetry.settings.settings import \
-    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES, ProcessType
+    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES, ProcessType, TelemetryCounter
 
 
 class InstructionTestClass():
@@ -43,3 +43,23 @@ TEST_TELEMETRY_RULES = {
 TEST_PROCESS_TYPE = ProcessType(
     process_type='test_process_type',
     subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES)
+
+TEST_TELEMETRY_COUNTER = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process='RETRIEVE_RAW_DATA',
+    counter_name='test_counter',
+)
+
+TEST_TELEMETRY_COUNTER_INC_2 = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process='RETRIEVE_RAW_DATA',
+    counter_name='test_counter',
+    increment=2
+)
+
+TEST_INV_TELEMETRY_COUNTER = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process='invalid_sub_process',
+    counter_name='test_counter',
+    increment=2
+)

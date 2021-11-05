@@ -32,6 +32,7 @@ Arguments
 
     -
 """
+from .decorator import add_telemetry  # noqa: F401
 from .main import Telemetry, mongo_telemetry  # noqa: F401
 from .settings import errors  # noqa: F401
 from .settings import process_type  # noqa: F401

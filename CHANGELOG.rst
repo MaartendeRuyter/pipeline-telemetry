@@ -15,3 +15,10 @@ Changelog
 * Added MongoDb storage class
 * Started with documentation
 
+0.1.0 (2021-11-05)
+------------------
+
+* added Telemetry method add_telemetry_counter 
+* Added ``TelemetryCounter`` class that can be used to make prefedined objects
+  that can be added to the Telemetry instance with nteh add_telemetry_counter
+  object. This will make your code more readable
