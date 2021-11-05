@@ -113,3 +113,13 @@ def test_process_types_not_of_right_class():
 
     assert 'provided process_types enumerator not of class BaseEnumrator' in \
         str(exception)
+
+
+def test_sub_process_not_defined_in_process_type():
+    """ test InvalidSubProcessForProcessType exception """
+    with pytest.raises(
+            exceptions.InvalidSubProcessForProcessType) as exception:
+        raise exceptions.InvalidSubProcessForProcessType
+
+    assert 'Provided sub process is not defined in ProcessType.' in \
+        str(exception)

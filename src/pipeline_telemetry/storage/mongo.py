@@ -17,18 +17,21 @@ from mongoengine import DictField, Document, StringField, connect
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
 
-connect(**MONGO_ACCESS_PARAMS)
+connect(alias="telemetry", **MONGO_ACCESS_PARAMS)
 
 
 class TelemetryMongoModel(Document):
     """
     Class to provice telemetry Mongo Model for persistance in MongoDB
     """
+
     process_name = StringField()
     process_type = StringField()
     start_date_time = StringField()
     run_time_in_seconds = StringField()
     telemetry = DictField(default=None)
+
+    meta = {"db_alias": "telemetry"}
 
 
 class TelemetryMongoStorage(AbstractTelemetryStorage):
@@ -39,7 +42,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
     """
 
     def store_telemetry(self, telemetry: dict) -> None:
-        """ public method to persist telemetry object"""
+        """public method to persist telemetry object"""
         telemetry_mongo_kwargs = self._telemetry_model_kwargs(telemetry)
         TelemetryMongoModel(**telemetry_mongo_kwargs).save()
 
@@ -50,14 +53,14 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoStorage instance.
         """
         telemetry_copy = telemetry.copy()
-        process_name = telemetry_copy.pop('process_name', None)
-        process_type = telemetry_copy.pop('process_type', None)
-        start_date_time = telemetry_copy.pop('start_date_time', None)
-        run_time_in_seconds = telemetry_copy.pop('run_time_in_seconds', None)
+        process_name = telemetry_copy.pop("process_name", None)
+        process_type = telemetry_copy.pop("process_type", None)
+        start_date_time = telemetry_copy.pop("start_date_time", None)
+        run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
         return {
-            'process_name': process_name,
-            'process_type': process_type,
-            'start_date_time': start_date_time,
-            'run_time_in_seconds': run_time_in_seconds,
-            'telemetry': telemetry_copy
+            "process_name": process_name,
+            "process_type": process_type,
+            "start_date_time": start_date_time,
+            "run_time_in_seconds": run_time_in_seconds,
+            "telemetry": telemetry_copy,
         }
