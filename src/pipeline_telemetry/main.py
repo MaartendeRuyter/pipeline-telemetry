@@ -10,7 +10,7 @@ methods
 from datetime import datetime
 from typing import List
 
-from errors.base import ErrorCode
+from errors import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes

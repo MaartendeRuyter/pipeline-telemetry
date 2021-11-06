@@ -1,7 +1,7 @@
 """Module to define errors
 """
-from errors.base import ErrorCode, FunctionalErrorsBaseClass
-from errors.error import ListErrors
+from errors import ErrorCode, ListErrors
+from errors.base import FunctionalErrorsBaseClass
 
 
 class ValidationErrors(FunctionalErrorsBaseClass):

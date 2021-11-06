@@ -1,8 +1,7 @@
 """Module to define validate entries validator class
 """
 import jmespath
-from errors.base import add_error_data
-from errors.error import ErrorCode, ListErrors
+from errors import ErrorCode, ListErrors, add_error_data
 
 from ..settings import exceptions
 from ..validators.dict_validator import DictValidator

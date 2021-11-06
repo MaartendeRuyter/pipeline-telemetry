@@ -6,7 +6,7 @@ classes:
 """
 from typing import List
 
-from errors.base import ErrorCode
+from errors import ErrorCode
 
 from ..settings.exceptions import InstructionRegisteredTwice, \
     RuleCanHaveOnlyOneInstruction, UnknownInstruction

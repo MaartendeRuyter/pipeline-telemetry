@@ -1,7 +1,7 @@
 """Module to define EntriesHaveKey class validator
 """
 import jmespath
-from errors.error import ErrorCode, ListErrors
+from errors import ErrorCode, ListErrors
 
 from ..settings import exceptions
 from ..validators.dict_validator import DictValidator
