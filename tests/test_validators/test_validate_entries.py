@@ -5,9 +5,9 @@ module to test has_key instruction class
 import pytest
 from test_data import TEST_ERROR_CODE
 
-from pipeline_telemetry.settings.telemetry_errors import ErrorCode
 from pipeline_telemetry.settings.exceptions import \
     ExpectedCountMustBePositiveInt, FieldNameMandatory
+from pipeline_telemetry.settings.telemetry_errors import ErrorCode
 from pipeline_telemetry.validators.validate_entries import ValidateEntries
 
 

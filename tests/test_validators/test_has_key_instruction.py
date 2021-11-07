@@ -4,8 +4,8 @@ module to test has_key instruction class
 import pytest
 from test_data import TEST_ERROR_CODE
 
-from pipeline_telemetry.settings.telemetry_errors import ErrorCode
 from pipeline_telemetry.settings.exceptions import FieldNameMandatory
+from pipeline_telemetry.settings.telemetry_errors import ErrorCode
 from pipeline_telemetry.validators.has_key import HasKey
 
 # pylint: disable=protected-access

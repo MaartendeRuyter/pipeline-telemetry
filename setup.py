@@ -67,7 +67,7 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "jmespath>=0.10.0",
-        "error-manager"
+        "error-manager>=1.1.1"
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
