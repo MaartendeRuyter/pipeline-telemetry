@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
+from errors import ErrorCode
+
 from pipeline_telemetry.settings import exceptions
 
 DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES = [
@@ -43,8 +45,9 @@ class TelemetryCounter:
 
     process_type: ProcessType
     sub_process: str
-    counter_name: str
+    counter_name: str = None
     increment: int = 1
+    error: ErrorCode = None
 
     def validate_sub_process(self) -> None:
         """
