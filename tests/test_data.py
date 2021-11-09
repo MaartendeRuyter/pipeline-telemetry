@@ -3,9 +3,11 @@ This module provides test data for the telemetry tests
 """
 from errors import ErrorCode, ListErrors
 
+from pipeline_telemetry.settings.data_class import ProcessType, \
+    TelemetryCounter
 from pipeline_telemetry.settings.process_type import ProcessTypes
 from pipeline_telemetry.settings.settings import \
-    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES, ProcessType, TelemetryCounter
+    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 
 
 class InstructionTestClass():

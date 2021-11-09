@@ -8,7 +8,7 @@ from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.main import FAIL_COUNT_KEY, Telemetry, mongo_telemetry
 from pipeline_telemetry.settings import exceptions, settings
-from pipeline_telemetry.settings.settings import ProcessType
+from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage

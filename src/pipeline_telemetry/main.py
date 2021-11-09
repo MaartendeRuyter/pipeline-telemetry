@@ -13,8 +13,9 @@ from typing import List
 from errors import ErrorCode
 
 from pipeline_telemetry.settings import exceptions
-from pipeline_telemetry.settings.process_type import ProcessType, ProcessTypes
-from pipeline_telemetry.settings.settings import TelemetryCounter
+from pipeline_telemetry.settings.data_class import ProcessType, \
+    TelemetryCounter
+from pipeline_telemetry.settings.process_type import ProcessTypes
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
