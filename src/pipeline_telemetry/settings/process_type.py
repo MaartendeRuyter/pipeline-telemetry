@@ -46,4 +46,3 @@ class ProcessTypes():
             Bool: True of process_type is registered else False
         """
         return process_type in cls._process_types
-
