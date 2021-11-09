@@ -43,3 +43,11 @@ Changelog
 * Updated add_telemetry_counter so that it can handle TelemetryCounter instances
   with either an Errorcode of a custom counter. In case of ErrorCode the actual
   error_code will serve as the customer counter. 
+
+
+0.2.0 (2021-11-10)
+------------------
+
+* added ``is_telemetry_counter`` method in helper module
+* moved ``add_telemetry`` decorator to helper module
+* bot method can be directly imported from ``pipeline_telemetry`` module
