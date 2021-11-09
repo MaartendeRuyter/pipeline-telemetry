@@ -32,9 +32,14 @@ Arguments
 
     -
 """
+from errors import ListErrors
+
 from .decorator import add_telemetry  # noqa: F401
 from .main import Telemetry, mongo_telemetry  # noqa: F401
-from .settings import process_type  # noqa: F401
-from .settings import telemetry_errors  # noqa: F401
-from .settings.process_type import ProcessTypes  # noqa: F401
-from .validators import has_key, validate_entries  # noqa: F401
+from .settings.data_class import ProcessType, TelemetryCounter  # noqa: F401
+from .settings.process_type import ProcessTypes
+from .settings.settings import DefaultProcessTypes
+from .settings.telemetry_errors import ValidationErrors
+
+ProcessTypes.register_process_types(DefaultProcessTypes)
+ListErrors.register_errors(ValidationErrors)
