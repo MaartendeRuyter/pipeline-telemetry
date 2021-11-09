@@ -63,9 +63,7 @@ MISSING_KEY_RETRIEVE_DATA_TEST = IntegrationTestData(
         "result": {
             "base_counter": 1,
             "fail_counter": 0,
-            ERRORS_KEY: {
-                "HAS_KEY_ERR_0001@KEY_<items>": 1
-            }
+            ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1},
         },
     },
 )
