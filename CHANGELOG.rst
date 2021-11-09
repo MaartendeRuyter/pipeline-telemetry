@@ -50,4 +50,4 @@ Changelog
 
 * added ``is_telemetry_counter`` method in helper module
 * moved ``add_telemetry`` decorator to helper module
-* both method can be directly imported from ``pipeline_telemetry`` module
+* both methods can be directly imported from ``pipeline_telemetry`` module
