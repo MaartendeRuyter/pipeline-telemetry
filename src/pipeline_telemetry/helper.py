@@ -1,6 +1,9 @@
 """[summary]
 """
+from typing import Any, Union
+
 from pipeline_telemetry.main import Telemetry
+from pipeline_telemetry.settings.data_class import TelemetryCounter
 
 
 def add_telemetry(telemetry_params: dict) -> object:
@@ -30,3 +33,8 @@ def add_telemetry(telemetry_params: dict) -> object:
         return wrapped_method
 
     return wrapper
+
+
+def is_telemetry_counter(counter: Union[TelemetryCounter, Any]) -> bool:
+    """Method to check in object is an instance of TelemetryCounter."""
+    return issubclass(counter.__class__, TelemetryCounter)
