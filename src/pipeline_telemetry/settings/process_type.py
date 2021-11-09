@@ -1,7 +1,7 @@
 """Module to define ProcesTypes class."""
 from pipeline_telemetry.settings import exceptions
-from pipeline_telemetry.settings.settings import BaseEnumerator, \
-    DefaultProcessTypes, ProcessType
+from pipeline_telemetry.settings.data_class import ProcessType
+from pipeline_telemetry.settings.settings import BaseEnumerator
 
 
 class ProcessTypes():
@@ -47,5 +47,3 @@ class ProcessTypes():
         """
         return process_type in cls._process_types
 
-
-ProcessTypes.register_process_types(DefaultProcessTypes)

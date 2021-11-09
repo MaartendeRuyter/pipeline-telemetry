@@ -6,7 +6,7 @@ import pytest
 
 from pipeline_telemetry.main import Telemetry
 from pipeline_telemetry.settings import exceptions
-from pipeline_telemetry.settings.settings import ProcessType
+from pipeline_telemetry.settings.data_class import ProcessType
 
 
 def test_telemetry_class_method_add_process_type():

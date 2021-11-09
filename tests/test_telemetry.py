@@ -6,9 +6,9 @@ from datetime import datetime
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
-from pipeline_telemetry.main import FAIL_COUNT, Telemetry, mongo_telemetry
+from pipeline_telemetry.main import FAIL_COUNT_KEY, Telemetry, mongo_telemetry
 from pipeline_telemetry.settings import exceptions, settings
-from pipeline_telemetry.settings.settings import ProcessType
+from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
@@ -174,7 +174,7 @@ def test_add_sub_process_fail_count_to_telemetry():
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     telemetry_inst.increase_sub_process_fail_count('RETRIEVE_RAW_DATA')
-    assert telemetry_inst.telemetry['RETRIEVE_RAW_DATA'][FAIL_COUNT] == 1
+    assert telemetry_inst.telemetry['RETRIEVE_RAW_DATA'][FAIL_COUNT_KEY] == 1
 
 
 def test_add_sub_process_fail_count_raises_excpetion():
@@ -208,7 +208,7 @@ def test_add_sub_process_custom_counter_to_telemetry():
     assert telemetry_inst.get('RETRIEVE_RAW_DATA')['network_error'] == 1
 
 
-def test_increase_existimg_sub_process_custom_counter_to_telemetry():
+def test_increase_existing_sub_process_custom_counter_to_telemetry():
     """
     Check that a existing custom counter can be icnrease
     """

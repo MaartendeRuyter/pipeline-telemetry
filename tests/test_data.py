@@ -1,11 +1,13 @@
 """
 This module provides test data for the telemetry tests
 """
-from errors.base import ErrorCode
+from errors import ErrorCode, ListErrors
 
+from pipeline_telemetry.settings.data_class import ProcessType, \
+    TelemetryCounter
 from pipeline_telemetry.settings.process_type import ProcessTypes
 from pipeline_telemetry.settings.settings import \
-    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES, ProcessType, TelemetryCounter
+    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 
 
 class InstructionTestClass():
@@ -63,3 +65,11 @@ TEST_INV_TELEMETRY_COUNTER = TelemetryCounter(
     counter_name='test_counter',
     increment=2
 )
+
+TEST_ERROR_TELEMETRY_COUNTER = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process='RETRIEVE_RAW_DATA',
+    increment=1,
+    error=ListErrors.KEY_NOT_FOUND
+)
+

@@ -82,5 +82,6 @@ def test_items_has_dict_field_test():
     telemetry.add('RETRIEVE_RAW_DATA',
                   ITEMS_FIELD_HAS_DICT_TEST.data, None)
     telemetry.save_and_close()
+    print(telemetry.telemetry)
     assert validate_result_from_telemetry(
         telemetry, ITEMS_FIELD_HAS_DICT_TEST)
