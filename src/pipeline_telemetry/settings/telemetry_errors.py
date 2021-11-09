@@ -39,6 +39,3 @@ class ValidationErrors(FunctionalErrorsBaseClass):
     ENTRY_IS_NOT_A_DICT = ErrorCode(
         code='ENTRIES_HAVE_KEY_ERR_004',
         description='Entry that needs to have a key is not a dict')
-
-
-

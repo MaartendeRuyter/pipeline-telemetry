@@ -323,7 +323,7 @@ class Telemetry:
         """
         Increases a error counter for a subprocess.
 
-        Args:   
+        Args:
             sub_process (str): name of subprocess
             error_code (str): error code from ErrorCode object
             increment (int): increment for the counter

@@ -72,4 +72,3 @@ TEST_ERROR_TELEMETRY_COUNTER = TelemetryCounter(
     increment=1,
     error=ListErrors.KEY_NOT_FOUND
 )
-
