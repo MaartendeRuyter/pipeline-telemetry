@@ -2,11 +2,11 @@
 Module to test telemetry counter login for pipeline telemetry module.
 """
 import pytest
-from pipeline_telemetry.helper import is_telemetry_counter
 from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_ERROR_TELEMETRY_COUNTER, \
     TEST_INV_TELEMETRY_COUNTER, TEST_TELEMETRY_COUNTER, \
     TEST_TELEMETRY_COUNTER_INC_2
 
+from pipeline_telemetry.helper import is_telemetry_counter
 from pipeline_telemetry.main import ERRORS_KEY, Telemetry
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.data_class import TelemetryCounter
