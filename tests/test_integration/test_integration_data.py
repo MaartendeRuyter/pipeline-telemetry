@@ -1,4 +1,7 @@
+"""Module to define test data for the integration tests
+"""
 from dataclasses import dataclass
+
 from pipeline_telemetry.main import ERRORS_KEY
 
 
