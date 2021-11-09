@@ -1,6 +1,6 @@
 """Module to define errors
 """
-from errors import ErrorCode, ListErrors
+from errors import ErrorCode
 from errors.base import FunctionalErrorsBaseClass
 
 
@@ -41,4 +41,4 @@ class ValidationErrors(FunctionalErrorsBaseClass):
         description='Entry that needs to have a key is not a dict')
 
 
-ListErrors.register_errors(ValidationErrors)
+
