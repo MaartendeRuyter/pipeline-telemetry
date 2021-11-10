@@ -34,7 +34,7 @@ Arguments
 """
 from errors import ListErrors
 
-from .helper import add_telemetry, add_mongo_telemetry  # noqa: F401
+from .helper import add_mongo_telemetry, add_telemetry  # noqa: F401
 from .main import Telemetry  # noqa: F401
 from .settings.data_class import ProcessType, TelemetryCounter  # noqa: F401
 from .settings.process_type import ProcessTypes
