@@ -51,3 +51,8 @@ Changelog
 * added ``is_telemetry_counter`` method in helper module
 * moved ``add_telemetry`` decorator to helper module
 * both methods can be directly imported from ``pipeline_telemetry`` module
+
+0.2.2 (2021-11-10)
+------------------
+
+* added ``add_mongo_telemetry`` decorator that uses mongo storage class
