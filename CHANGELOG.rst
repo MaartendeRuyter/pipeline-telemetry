@@ -34,7 +34,7 @@ Changelog
     telemetry.add_telemetry_counter(YOUR_PREDFINED_COUNTER)
 
 
-0.2.0 (2021-11-10)
+0.2.0 (2021-11-09)
 ------------------
 
 * added error field to ``TelemetryCounter`` so that default Errorcodes
@@ -45,9 +45,14 @@ Changelog
   error_code will serve as the customer counter. 
 
 
-0.2.0 (2021-11-10)
+0.2.1 (2021-11-09)
 ------------------
 
 * added ``is_telemetry_counter`` method in helper module
 * moved ``add_telemetry`` decorator to helper module
-* bot method can be directly imported from ``pipeline_telemetry`` module
+* both methods can be directly imported from ``pipeline_telemetry`` module
+
+0.2.2 (2021-11-10)
+------------------
+
+* added ``add_mongo_telemetry`` decorator that uses mongo storage class
