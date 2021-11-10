@@ -6,6 +6,7 @@ from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_ERROR_TELEMETRY_COUNTER, \
     TEST_INV_TELEMETRY_COUNTER, TEST_TELEMETRY_COUNTER, \
     TEST_TELEMETRY_COUNTER_INC_2
 
+from pipeline_telemetry import ProcessTypes
 from pipeline_telemetry.helper import is_telemetry_counter
 from pipeline_telemetry.main import ERRORS_KEY, Telemetry
 from pipeline_telemetry.settings import exceptions
@@ -39,8 +40,7 @@ def test_add_error_telemetry_counter_to_telemetry(telemetry_inst):
     creates a counter
     """
     telemetry_inst.add_telemetry_counter(TEST_ERROR_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")[
-        ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
+    assert telemetry_inst.get("RETRIEVE_RAW_DATA")[ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
 
 
 def test_add_error_telemetry_counter_to_telemetry_raises_exception():
@@ -87,7 +87,7 @@ def test_is_telemetry_counter_returns_false():
     Test is_telemetry_counter method returns False if counter is not an instance
     off TelemetryCounter or subclass of TelemetryCounter.
     """
-    assert not is_telemetry_counter('1')
+    assert not is_telemetry_counter("1")
 
 
 def test_is_telemetry_counter_returns_true():
@@ -102,12 +102,79 @@ def test_is_error_returns_true_on_error_code_sub_class():
     """
     Test is_error method returns True if error is an instance of ErrorCode.
     """
+
     class TelemetryCounterSubClass(TelemetryCounter):
         pass
 
     counter = TelemetryCounterSubClass(
         process_type=TEST_TELEMETRY_COUNTER.process_type,
         sub_process=TEST_TELEMETRY_COUNTER.sub_process,
-        counter_name=TEST_TELEMETRY_COUNTER.counter_name)
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
 
     assert is_telemetry_counter(counter)
+
+
+def test_telemetry_counter_validate_sub_process():
+    """
+    Test validate_sub_process method returns None if sub process is in scope of
+    process_type.
+    """
+    assert TEST_TELEMETRY_COUNTER.validate_sub_process() is None
+
+
+def test_validate_sub_process_raises_exception():
+    """
+    Test validate_sub_process method raises exception if sub process is not
+    in scope of process_type.
+    """
+    counter = TelemetryCounter(
+        process_type=TEST_TELEMETRY_COUNTER.process_type,
+        sub_process="sub process not in scope of process_type",
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
+
+    with pytest.raises(exceptions.InvalidSubProcessForProcessType):
+        counter.validate_sub_process()
+
+
+def test_validate_sub_process_with_multiple_process_types():
+    """
+    Test validate_sub_process method returns None if sub process is in scope of
+    one of the given process_types.
+    """
+    counter = TelemetryCounter(
+        process_types=[ProcessTypes.CREATE_DATA_FROM_URL, ProcessTypes.UPLOAD_DATA],
+        sub_process="DATA_UPLOAD",
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
+    assert counter.validate_sub_process() is None
+
+
+def test_all_process_types_with_multiple_entries():
+    """
+    Test validate_sub_process method returns None if sub process is in scope of
+    one of the given process_types.
+    """
+    counter = TelemetryCounter(
+        process_types=[ProcessTypes.CREATE_DATA_FROM_URL, ProcessTypes.UPLOAD_DATA],
+        sub_process="DATA_UPLOAD",
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
+    assert None not in counter.all_process_types
+    assert ProcessTypes.CREATE_DATA_FROM_URL in counter.all_process_types
+    assert ProcessTypes.UPLOAD_DATA in counter.all_process_types
+
+
+def test_all_process_types_with_single_entry():
+    """
+    Test validate_sub_process method returns None if sub process is in scope of
+    one of the given process_types.
+    """
+    counter = TelemetryCounter(
+        process_type=ProcessTypes.CREATE_DATA_FROM_URL,
+        sub_process="DATA_UPLOAD",
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
+    assert None not in counter.all_process_types
+    assert ProcessTypes.CREATE_DATA_FROM_URL in counter.all_process_types

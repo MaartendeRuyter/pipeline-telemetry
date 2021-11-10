@@ -30,8 +30,9 @@ class ProcessType:
 class TelemetryCounter:
     """Immutable dataclass to define a process type and its subtypes."""
 
-    process_type: ProcessType
     sub_process: str
+    process_types: List[ProcessType] = None
+    process_type: ProcessType = None
     counter_name: str = None
     increment: int = 1
     error: ErrorCode = None
@@ -40,5 +41,23 @@ class TelemetryCounter:
         """
         Raises exception if sub_process not define in ProcessType in scope.
         """
-        if self.sub_process not in self.process_type.subtypes:
+        subtypes = []
+        for process_type in self.all_process_types:
+            subtypes.extend(process_type.subtypes)
+
+        if self.sub_process not in subtypes:
             raise exceptions.InvalidSubProcessForProcessType
+
+    @property
+    def all_process_types(self) -> List[ProcessType]:
+        """Returns all process_types in scope in a list
+
+        Returns:
+            List[ProcessType]: list with process_types
+        """
+        all_process_types = [self.process_type]
+        if self.process_types:
+            all_process_types.extend(self.process_types)
+
+        return list(filter(
+            lambda process_type: process_type is not None, all_process_types))

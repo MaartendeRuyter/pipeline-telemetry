@@ -56,3 +56,11 @@ Changelog
 ------------------
 
 * added ``add_mongo_telemetry`` decorator that uses mongo storage class
+
+0.2.3 (2021-11-10)
+------------------
+
+* Added attribute ``process_types`` to ``TelemetryCounter`` dataclass next to
+  existing ``process_type`` attribute. This allows you to choose between a list
+  of process_types or just a single process_type to be in scope of the ``TelemetryCounter``` instance
+  
