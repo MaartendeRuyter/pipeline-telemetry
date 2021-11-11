@@ -29,15 +29,16 @@ Arguments
         is added to the telemetry object. With these rules you can define custom
         conditional counts and errors that can be applied to the provided data.
         See telemetry rules section for more detail
-
     -
 """
+# flake8: noqa F401
 from errors import ListErrors
 
-from .decorator import add_mongo_telemetry, add_telemetry  # noqa: F401
-from .helper import is_telemetry_counter  # noqa: F401
-from .main import Telemetry  # noqa: F401
-from .settings.data_class import ProcessType, TelemetryCounter  # noqa: F401
+from .decorator import add_mongo_telemetry, add_telemetry
+from .helper import increase_base_count, increase_fail_count, \
+    is_telemetry_counter
+from .main import Telemetry
+from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
 from .settings.settings import DefaultProcessTypes
 from .settings.telemetry_errors import ValidationErrors
