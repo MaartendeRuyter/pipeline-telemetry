@@ -71,3 +71,9 @@ Changelog
 * Implemented ``add_to`` method in ``TelemetryCounter``. Can be used to  add a
   ``TelemetryCounter`` instance to an object with a telemetry instance attached
   to it. This will make the code more readable.
+
+0.2.5 (2021-11-11)
+------------------
+
+* Implemented ``increase_base_count`` and ``increase_fail_count`` method. They
+  can be used to make your code more readable when updating the telemetry
