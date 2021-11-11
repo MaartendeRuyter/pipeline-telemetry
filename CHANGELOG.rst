@@ -64,3 +64,10 @@ Changelog
   existing ``process_type`` attribute. This allows you to choose between a list
   of process_types or just a single process_type to be in scope of the ``TelemetryCounter``` instance
   
+
+0.2.4 (2021-11-11)
+------------------
+
+* Implemented ``add_to`` method in ``TelemetryCounter``. Can be used to  add a
+  ``TelemetryCounter`` instance to an object with a telemetry instance attached
+  to it. This will make the code more readable.
