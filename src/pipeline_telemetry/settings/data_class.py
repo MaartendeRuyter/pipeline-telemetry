@@ -1,7 +1,7 @@
 """[summary]
 """
 from dataclasses import dataclass
-from typing import List
+from typing import Any, List
 
 from errors import ErrorCode
 
@@ -37,6 +37,15 @@ class TelemetryCounter:
     increment: int = 1
     error: ErrorCode = None
 
+    def add_to(self, object_with_telemetry: Any, increment: int = None) -> None:
+        """
+        Method to add to add self (the TelemetryCounter) to an object telemetry
+        instance
+        """
+        object_with_telemetry._telemetry.add_telemetry_counter(
+            telemetry_counter=self, increment=increment
+        )
+
     def validate_sub_process(self) -> None:
         """
         Raises exception if sub_process not define in ProcessType in scope.
@@ -59,5 +68,6 @@ class TelemetryCounter:
         if self.process_types:
             all_process_types.extend(self.process_types)
 
-        return list(filter(
-            lambda process_type: process_type is not None, all_process_types))
+        return list(
+            filter(lambda process_type: process_type is not None, all_process_types)
+        )
