@@ -1,9 +1,10 @@
-"""[summary]
-"""
-from typing import Any, Union
+"""Telemety Decorators to be used whith class methods that need telemetry
 
+decorators:
+    - add_telemetry
+    - add_mongo_telemetry
+"""
 from pipeline_telemetry.main import Telemetry, mongo_telemetry
-from pipeline_telemetry.settings.data_class import TelemetryCounter
 
 
 def add_telemetry(telemetry_params: dict) -> object:
@@ -67,5 +68,3 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
         return wrapped_method
 
     return wrapper
-
-
