@@ -11,26 +11,22 @@ def is_telemetry_counter(counter: Union[TelemetryCounter, Any]) -> bool:
 
 
 def increase_base_count(
-        object_with_telemetry: Any,
-        sub_process: str,
-        increment: int = None) -> None:
+    object_with_telemetry: Any, sub_process: str, increment: int = 1
+) -> None:
     """
     Helper method to increase base count for a sub_process
     """
     object_with_telemetry._telemetry.increase_sub_process_base_count(
-        sub_process=sub_process,
-        increment=increment
+        sub_process=sub_process, increment=increment
     )
 
 
 def increase_fail_count(
-        object_with_telemetry: Any,
-        sub_process: str,
-        increment: int = None) -> None:
+    object_with_telemetry: Any, sub_process: str, increment: int = 1
+) -> None:
     """
     Helper method to increase base count for a sub_process
     """
     object_with_telemetry._telemetry.increase_sub_process_fail_count(
-        sub_process=sub_process,
-        increment=increment
+        sub_process=sub_process, increment=increment
     )

@@ -77,3 +77,11 @@ Changelog
 
 * Implemented ``increase_base_count`` and ``increase_fail_count`` method. They
   can be used to make your code more readable when updating the telemetry
+
+
+0.2.6 (2021-12-08)
+------------------
+
+* Added default increment value = 1 to methods ``increase_base_count`` and
+  ``increase_fail_count``
+

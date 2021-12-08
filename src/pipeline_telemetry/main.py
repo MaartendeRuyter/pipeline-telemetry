@@ -260,12 +260,12 @@ class Telemetry:
         :returns: None
         """
         for error in errors:
-            self.increase_sub_process_error_count(
-                error=error, sub_process=sub_process
-            )
+            self.increase_sub_process_error_count(error=error, sub_process=sub_process)
 
     @_raise_exception_if_telemetry_closed
-    def increase_sub_process_base_count(self, sub_process: str) -> None:
+    def increase_sub_process_base_count(
+        self, sub_process: str, increment: int = 1
+    ) -> None:
         """
         Increases the base count for a subprocess.
 
@@ -275,10 +275,12 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             self._initialize_sub_process(sub_process)
 
-        self._telemetry[sub_process][BASE_COUNT_KEY] += 1
+        self._telemetry[sub_process][BASE_COUNT_KEY] += increment
 
     @_raise_exception_if_telemetry_closed
-    def increase_sub_process_fail_count(self, sub_process: str) -> None:
+    def increase_sub_process_fail_count(
+        self, sub_process: str, increment: int = 1
+    ) -> None:
         """Increases the fail count for a subprocess
 
         Args:
@@ -290,7 +292,7 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
-        self._telemetry[sub_process][FAIL_COUNT_KEY] += 1
+        self._telemetry[sub_process][FAIL_COUNT_KEY] += increment
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_custom_count(
@@ -377,10 +379,16 @@ class Telemetry:
         increment = increment or telemetry_counter.increment
         if telemetry_counter.error:
             self.increase_sub_process_error_count(
-                sub_process=sub_process, error=telemetry_counter.error, increment=increment)
+                sub_process=sub_process,
+                error=telemetry_counter.error,
+                increment=increment,
+            )
         if not telemetry_counter.error:
             self.increase_sub_process_custom_count(
-                sub_process=sub_process, custom_counter=counter_name, increment=increment)
+                sub_process=sub_process,
+                custom_counter=counter_name,
+                increment=increment,
+            )
 
     def _initialize_sub_process(self, sub_process: str) -> None:
         """sets the initial count object for a sub_process
@@ -392,7 +400,10 @@ class Telemetry:
             raise exceptions.InvalidSubProcess(sub_process, self._process_type)
 
         self._telemetry[sub_process] = {
-            BASE_COUNT_KEY: 0, FAIL_COUNT_KEY: 0, ERRORS_KEY: {}}
+            BASE_COUNT_KEY: 0,
+            FAIL_COUNT_KEY: 0,
+            ERRORS_KEY: {},
+        }
 
     def _set_process_type(self, process_type: ProcessType) -> None:
         """Sets the process type for the telemetrty instance."""
