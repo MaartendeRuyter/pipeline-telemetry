@@ -28,6 +28,16 @@ def test_in_memory_strorage_creates_db_in_memory():
     assert isinstance(in_memory_storage.db_cursor, sqlite3.Cursor)
 
 
+def test_in_memory_strorage_is_only_created_once():
+    """Test that once the database is created it will not be reinitialized """
+    in_memory_storage = TelemetryInMemoryStorage()
+    db = in_memory_storage.db_in_memory
+    TelemetryInMemoryStorage.initialize_db()
+    assert in_memory_storage.db_in_memory is db
+    new_in_memory_storage = TelemetryInMemoryStorage() 
+    assert new_in_memory_storage.db_in_memory is db
+
+
 def test_store_telemetry_stores_object():
     """Test in memory storage instance has db_in_memory and db_cursor """
     telemetry = {'process_name': 'test'}
