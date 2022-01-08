@@ -30,9 +30,12 @@ def add_telemetry(telemetry_params: dict) -> object:
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
                 self._telemetry = Telemetry(**telemetry_params)
-            result = method(self, *args, **kwargs)
-            self._telemetry.save_and_close()
-            self._telemetry = None
+                result = method(self, *args, **kwargs)
+                self._telemetry.save_and_close()
+                self._telemetry = None
+            else:
+                result = method(self, *args, **kwargs)
+
             return result
 
         return wrapped_method
@@ -60,9 +63,11 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
                 self._telemetry = mongo_telemetry(**telemetry_params)
-            result = method(self, *args, **kwargs)
-            self._telemetry.save_and_close()
-            self._telemetry = None
+                result = method(self, *args, **kwargs)
+                self._telemetry.save_and_close()
+                self._telemetry = None
+            else:
+                result = method(self, *args, **kwargs)
             return result
 
         return wrapped_method
