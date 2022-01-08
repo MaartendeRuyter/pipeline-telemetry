@@ -24,7 +24,8 @@ class TelemetryMongoModel(Document):
     """
     Class to provice telemetry Mongo Model for persistance in MongoDB
     """
-
+    category = StringField()
+    sub_category = StringField()
     process_name = StringField()
     process_type = StringField()
     start_date_time = StringField()

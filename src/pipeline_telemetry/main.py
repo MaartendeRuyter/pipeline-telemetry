@@ -26,6 +26,8 @@ BASE_COUNT_KEY = "base_counter"
 ERRORS_KEY = "errors"
 FAIL_COUNT_KEY = "fail_counter"
 PROCESS_NAME = "process_name"
+CATEGORY_KEY = "category"
+SUB_CATEGORY_KEY = "sub_category"
 PROCESS_TYPE_KEY = "process_type"
 START_TIME = "start_date_time"
 RUN_TIME = "run_time_in_seconds"
@@ -84,6 +86,8 @@ class Telemetry:
         - add_process_types: add custom process types
 
     properties:
+        - category
+        - sub_category
         - process_name
         - process_type
         - sub_process_types
@@ -104,11 +108,15 @@ class Telemetry:
         self,
         process_name: str,
         process_type: ProcessType,
+        category: str = "OTHER",
+        sub_category: str = "OTHER",
         telemetry_rules: dict = None,
         storage_class: AbstractTelemetryStorage = None,
     ):
         self._set_process_type(process_type)
         self._telemetry = {
+            CATEGORY_KEY: category,
+            SUB_CATEGORY_KEY: sub_category,
             PROCESS_NAME: process_name,
             PROCESS_TYPE_KEY: self._process_type.name,
             START_TIME: datetime.now(),
@@ -415,10 +423,16 @@ class Telemetry:
 
 
 def mongo_telemetry(
-    process_name: str, process_type: ProcessType, telemetry_rules: dict
+    category: str,
+    sub_category: str,
+    process_name: str,
+    process_type: ProcessType,
+    telemetry_rules: dict,
 ) -> Telemetry:
     """Factory method to create Telemetry instance with MongoStorage class."""
     return Telemetry(
+        category=category,
+        sub_category=sub_category,
         process_name=process_name,
         process_type=process_type,
         telemetry_rules=telemetry_rules,

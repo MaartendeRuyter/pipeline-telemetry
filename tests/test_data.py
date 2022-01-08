@@ -23,6 +23,8 @@ class InstructionTestClass():
 
 # default params for creating a test Telemetry object
 DEFAULT_TELEMETRY_PARAMS = {
+    'category': 'WEATHER',
+    'sub_category': 'DAILY_PREDICTIONS',
     'process_name': 'load_weather_data',
     'process_type': ProcessTypes.CREATE_DATA_FROM_URL
 }
