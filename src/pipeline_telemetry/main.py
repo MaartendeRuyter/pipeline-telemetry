@@ -25,7 +25,7 @@ from pipeline_telemetry.validators.dict_validator import DictValidator
 BASE_COUNT_KEY = "base_counter"
 ERRORS_KEY = "errors"
 FAIL_COUNT_KEY = "fail_counter"
-PROCESS_NAME = "process_name"
+SOURCE_NAME_KEY = "source_name"
 CATEGORY_KEY = "category"
 SUB_CATEGORY_KEY = "sub_category"
 PROCESS_TYPE_KEY = "process_type"
@@ -64,7 +64,7 @@ class Telemetry:
     a database provide via a storage class.
 
     args:
-        - process_name (str):
+        - source_name (str):
             Process name for which telemetry is made for example: `GET-WEATHER`
             Process names can be choosen freely and should ne unique for a
             single process as they are used to collect all telemetry data for a
@@ -88,7 +88,7 @@ class Telemetry:
     properties:
         - category
         - sub_category
-        - process_name
+        - source_name
         - process_type
         - sub_process_types
 
@@ -106,10 +106,10 @@ class Telemetry:
 
     def __init__(
         self,
-        process_name: str,
+        category: str,
+        sub_category: str,
+        source_name: str,
         process_type: ProcessType,
-        category: str = "OTHER",
-        sub_category: str = "OTHER",
         telemetry_rules: dict = None,
         storage_class: AbstractTelemetryStorage = None,
     ):
@@ -117,7 +117,7 @@ class Telemetry:
         self._telemetry = {
             CATEGORY_KEY: category,
             SUB_CATEGORY_KEY: sub_category,
-            PROCESS_NAME: process_name,
+            SOURCE_NAME_KEY: source_name,
             PROCESS_TYPE_KEY: self._process_type.name,
             START_TIME: datetime.now(),
         }
@@ -166,9 +166,9 @@ class Telemetry:
         return storage_class()
 
     @property
-    def process_name(self) -> str:
-        """Process_name property."""
-        return self._telemetry.get(PROCESS_NAME)
+    def source_name(self) -> str:
+        """Source_name property."""
+        return self._telemetry.get(SOURCE_NAME_KEY)
 
     @property
     def telemetry(self) -> dict:
@@ -425,7 +425,7 @@ class Telemetry:
 def mongo_telemetry(
     category: str,
     sub_category: str,
-    process_name: str,
+    source_name: str,
     process_type: ProcessType,
     telemetry_rules: dict,
 ) -> Telemetry:
@@ -433,7 +433,7 @@ def mongo_telemetry(
     return Telemetry(
         category=category,
         sub_category=sub_category,
-        process_name=process_name,
+        source_name=source_name,
         process_type=process_type,
         telemetry_rules=telemetry_rules,
         storage_class=TelemetryMongoStorage,

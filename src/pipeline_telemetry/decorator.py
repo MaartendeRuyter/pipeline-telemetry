@@ -15,7 +15,7 @@ def add_telemetry(telemetry_params: dict) -> object:
 
     Args:
         telemetry_params (dict:
-            - process_name (str): free format process name
+            - source_name (str): free format process name
             - process_type (ProcessType): process type definition
             - telemetry_rules (dict): telemetry rules definition dict
             - storage_class (AbstractTelemetryStorage, optional):
@@ -51,7 +51,7 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
 
     Args:
         telemetry_params (dict:
-            - process_name (str): free format process name
+            - source_name (str): free format process name
             - process_type (ProcessType): process type definition
             - telemetry_rules (dict): telemetry rules definition dict
     """
