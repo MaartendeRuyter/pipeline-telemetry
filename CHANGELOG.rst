@@ -85,3 +85,11 @@ Changelog
 * Added default increment value = 1 to methods ``increase_base_count`` and
   ``increase_fail_count``
 
+0.2.7 (2022-01-13)
+------------------
+
+* Added fields `category` and `sub_category` to the telemetry object to allow
+  for better distinction between telemetry sources
+* Rename telemetry field 'process_name' to 'soure_name' to be more clear about
+  the data source in scope of the telemetry object
+

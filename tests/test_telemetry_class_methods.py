@@ -17,7 +17,7 @@ def test_telemetry_class_method_add_process_type():
         process_type='custom_process_type',
         subtypes=['custom_sub_process_type'])
     Telemetry.add_process_type('TEST_TYPE', process_type)
-    assert Telemetry('test', process_type)
+    assert Telemetry('test', 'test', 'test', process_type)
 
 
 def test_sub_process_types_also_added():
@@ -29,7 +29,7 @@ def test_sub_process_types_also_added():
         process_type='custom_process_type',
         subtypes=['custom_sub_process_type'])
     Telemetry.add_process_type('TEST_TYPE', process_type)
-    telemetry = Telemetry('name', process_type)
+    telemetry = Telemetry('category', 'sub_category', 'name', process_type)
     assert telemetry._process_type.sub_processes == ['custom_sub_process_type']
 
 

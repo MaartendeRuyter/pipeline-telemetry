@@ -10,6 +10,7 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
     """
     Class to provice telemetry in memory storage for use when unit testing
     """
+
     db_in_memory = None
     db_cursor = None
 
@@ -23,15 +24,13 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         class method to initialize the in memory db
         """
         if not cls.db_in_memory:
-            cls.db_in_memory = \
-                sqlite3.connect(":memory:")
+            cls.db_in_memory = sqlite3.connect(":memory:")
             cls.db_cursor = cls.db_in_memory.cursor()
             cls._define_db_table(cls.db_cursor)
 
     @classmethod
     def close_db(cls):
-        """close cursor and connections
-        """
+        """close cursor and connections"""
         cls.db_cursor.close()
         cls.db_in_memory.close()
         cls.db_cursor = None
@@ -39,24 +38,31 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
 
     @staticmethod
     def _define_db_table(cursor):
-        """ define telemetry table """
-        cursor.executescript('''
+        """define telemetry table"""
+        cursor.executescript(
+            """
         DROP TABLE IF EXISTS telemetry;
-        CREATE TABLE telemetry (process_name varchar(40),
+        CREATE TABLE telemetry (source_name varchar(40),
         process_type varchar(40), start_date_time varchar(30),
-        run_time varchar(20), telemetry_data json)''')
+        run_time varchar(20), telemetry_data json)"""
+        )
 
     def store_telemetry(self, telemetry: dict) -> None:
-        """ public method to persist telemetry object"""
+        """public method to persist telemetry object"""
         telemetry_copy = telemetry.copy()
-        process_name = telemetry_copy.pop('process_name', None)
-        process_type = telemetry_copy.pop('process_type', None)
-        start_date_time = telemetry_copy.pop('start_date_time', None)
-        run_time_in_seconds = telemetry_copy.pop('run_time_in_seconds', None)
+        source_name = telemetry_copy.pop("source_name", None)
+        process_type = telemetry_copy.pop("process_type", None)
+        start_date_time = telemetry_copy.pop("start_date_time", None)
+        run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
         json_object = json.dumps(telemetry_copy)
 
         self.db_cursor.execute(
             "insert into telemetry values (?, ?, ?, ?, ?)",
-            [process_name, process_type, start_date_time,
-             run_time_in_seconds, json_object]
+            [
+                source_name,
+                process_type,
+                start_date_time,
+                run_time_in_seconds,
+                json_object,
+            ],
         )

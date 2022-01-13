@@ -25,7 +25,9 @@ class TelemetryMongoModel(Document):
     Class to provice telemetry Mongo Model for persistance in MongoDB
     """
 
-    process_name = StringField()
+    category = StringField()
+    sub_category = StringField()
+    source_name = StringField()
     process_type = StringField()
     start_date_time = StringField()
     run_time_in_seconds = StringField()
@@ -53,12 +55,12 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoStorage instance.
         """
         telemetry_copy = telemetry.copy()
-        process_name = telemetry_copy.pop("process_name", None)
+        source_name = telemetry_copy.pop("source_name", None)
         process_type = telemetry_copy.pop("process_type", None)
         start_date_time = telemetry_copy.pop("start_date_time", None)
         run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
         return {
-            "process_name": process_name,
+            "source_name": source_name,
             "process_type": process_type,
             "start_date_time": start_date_time,
             "run_time_in_seconds": run_time_in_seconds,

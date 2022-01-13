@@ -5,7 +5,7 @@ Main usage:
 
     >>> from pipeline_telemetry.main import Telemetry
     >>> telemetry = Telemetry(
-            process_name, process_type, telemetry_rules, storage_class)
+            source_name, process_type, telemetry_rules, storage_class)
     >>> pipeline_telemetry.add(sub_process_type, data, errors)
     >>> pipeline_telemetry.save_and_close()
 
@@ -15,7 +15,7 @@ that the sub process returned. In the final step the telementry is saved and
 closed
 
 Arguments
-    - process_name (str):
+    - source_name (str):
         Process name for the pipeline process that this telemetry is reporting
         on. Name is free to choose but make sure it is a unique name for each
         unique process as it will otherwise be difficult to use the telemetry
@@ -40,7 +40,7 @@ from .helper import increase_base_count, increase_fail_count, \
 from .main import Telemetry
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
-from .settings.settings import DefaultProcessTypes
+from .settings.settings import BaseEnumerator, DefaultProcessTypes
 from .settings.telemetry_errors import ValidationErrors
 
 ProcessTypes.register_process_types(DefaultProcessTypes)
