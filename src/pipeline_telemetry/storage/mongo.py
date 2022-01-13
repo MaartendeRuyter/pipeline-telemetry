@@ -55,11 +55,15 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoStorage instance.
         """
         telemetry_copy = telemetry.copy()
+        category = telemetry_copy.pop("category", None)
+        sub_category = telemetry_copy.pop("sub_category", None)
         source_name = telemetry_copy.pop("source_name", None)
         process_type = telemetry_copy.pop("process_type", None)
         start_date_time = telemetry_copy.pop("start_date_time", None)
         run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
         return {
+            "category": category,
+            "sub_category": sub_category,
             "source_name": source_name,
             "process_type": process_type,
             "start_date_time": start_date_time,

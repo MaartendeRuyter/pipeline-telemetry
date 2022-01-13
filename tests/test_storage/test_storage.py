@@ -87,6 +87,8 @@ def test_telemetry_model_kwargs_method():
     """Test _telemetry_model_kwargs method returns correct kwargs."""
     result = TelemetryMongoStorage()._telemetry_model_kwargs(
         {
+            "category": "test",
+            "sub_category": "sub_test",
             "source_name": "tst_source_name",
             "process_type": "tst_process_type",
             "start_date_time": "tst_start_date_time",
@@ -97,6 +99,8 @@ def test_telemetry_model_kwargs_method():
     )
 
     assert result == {
+        "category": "test",
+        "sub_category": "sub_test",
         "source_name": "tst_source_name",
         "process_type": "tst_process_type",
         "start_date_time": "tst_start_date_time",

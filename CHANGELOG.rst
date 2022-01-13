@@ -88,8 +88,14 @@ Changelog
 0.2.7 (2022-01-13)
 ------------------
 
-* Added fields `category` and `sub_category` to the telemetry object to allow
-  for better distinction between telemetry sources
+* Added fields ``category`` and ``sub_category`` to the telemetry object to
+  allow for better distinction between telemetry sources
 * Rename telemetry field 'process_name' to 'soure_name' to be more clear about
   the data source in scope of the telemetry object
+
+0.2.8 (2022-01-13)
+------------------
+
+* Fix in storage classes to ensure ``category`` and ``sub_category`` to be
+  stored in the toplevel of the telemetry object
 
