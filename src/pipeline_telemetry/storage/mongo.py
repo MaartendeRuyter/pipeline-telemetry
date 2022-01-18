@@ -12,7 +12,9 @@ MONGO_DB_PORT
 If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
-from mongoengine import DictField, Document, StringField, connect
+from datetime import datetime
+from mongoengine import \
+    DictField, Document, StringField, connect, DateTimeField
 
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
@@ -31,6 +33,7 @@ class TelemetryMongoModel(Document):
     process_type = StringField()
     start_date_time = StringField()
     run_time_in_seconds = StringField()
+    created_at = DateTimeField(default=datetime.utcnow)
     telemetry = DictField(default=None)
 
     meta = {

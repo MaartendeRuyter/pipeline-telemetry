@@ -2,10 +2,11 @@
 """
 import sqlite3
 
+from freezegun import freeze_time
+
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
-from pipeline_telemetry.storage.mongo import TelemetryMongoModel, \
-    TelemetryMongoStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoModel, TelemetryMongoStorage
 from pipeline_telemetry.storage.mongo_connection import get_mongo_db_port
 
 
@@ -49,6 +50,20 @@ def test_store_telemetry_stores_object():
         "SELECT * FROM telemetry "
     )
     assert len(all_in_memory_objects.fetchall()) == 1
+
+
+@freeze_time("2022-01-18 18:00:00.123456")
+def test_store_telemetry_stores_object_with_create_date(mocker):
+    """Test in memory storage instance has db_in_memory and db_cursor"""
+    telemetry = {"source_name": "test"}
+    # Table reset for each test is needed as the table is a class property
+    TelemetryInMemoryStorage._define_db_table(TelemetryInMemoryStorage.db_cursor)
+    in_memory_storage = TelemetryInMemoryStorage()
+    in_memory_storage.store_telemetry(telemetry)
+    in_memory_record = in_memory_storage.db_cursor.execute(
+        "SELECT * FROM telemetry LIMIT 1"
+    ).fetchone()
+    assert in_memory_record[7] == "2022-01-18 18:00:00.123456"
 
 
 def test_telemetry_mongo_model_class_exists():

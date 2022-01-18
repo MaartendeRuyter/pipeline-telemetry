@@ -104,3 +104,9 @@ Changelog
 
 * Added indexes to mongo storage class
 
+0.2.11 (2022-01-18)
+-------------------
+
+* Added ``created_at`` field in mongo storage class for better date selection
+* of the telemetry objects
+
