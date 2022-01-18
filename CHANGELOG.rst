@@ -99,3 +99,8 @@ Changelog
 * Fix in storage classes to ensure ``category`` and ``sub_category`` to be
   stored in the toplevel of the telemetry object
 
+0.2.10 (2022-01-18)
+------------------
+
+* Added indexes to mongo storage class
+

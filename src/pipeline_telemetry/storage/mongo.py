@@ -33,7 +33,16 @@ class TelemetryMongoModel(Document):
     run_time_in_seconds = StringField()
     telemetry = DictField(default=None)
 
-    meta = {"db_alias": "telemetry"}
+    meta = {
+        "db_alias": "telemetry",
+        "indexes": [
+            "category",
+            "sub_category",
+            "source_name",
+            ("category", "sub_category", "source_name", "process_type"),
+            "process_type",
+        ],
+    }
 
 
 class TelemetryMongoStorage(AbstractTelemetryStorage):
