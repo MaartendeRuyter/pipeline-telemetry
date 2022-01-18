@@ -13,8 +13,9 @@ If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
 from datetime import datetime
-from mongoengine import \
-    DictField, Document, StringField, connect, DateTimeField
+
+from mongoengine import DateTimeField, DictField, Document, StringField, \
+    connect
 
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
