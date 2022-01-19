@@ -14,8 +14,7 @@ mongoDB instance.
 """
 from datetime import datetime
 
-from mongoengine import DateTimeField, DictField, Document, StringField, \
-    connect
+from mongoengine import DateTimeField, DictField, Document, StringField, connect
 
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
@@ -34,7 +33,6 @@ class TelemetryMongoModel(Document):
     process_type = StringField()
     start_date_time = DateTimeField()
     run_time_in_seconds = StringField()
-    created_at = DateTimeField(default=datetime.now)
     traffic_light = StringField()
     telemetry = DictField(default=None)
 
@@ -47,7 +45,7 @@ class TelemetryMongoModel(Document):
             ("category", "sub_category", "source_name", "process_type"),
             "process_type",
             "traffic_light",
-            "start_date_time"
+            "start_date_time",
         ],
     }
 
