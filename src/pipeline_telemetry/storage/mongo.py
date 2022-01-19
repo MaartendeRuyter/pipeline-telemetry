@@ -14,8 +14,7 @@ mongoDB instance.
 """
 from datetime import datetime
 
-from mongoengine import DateTimeField, DictField, Document, StringField, \
-    connect
+from mongoengine import DateTimeField, DictField, Document, StringField, connect
 
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
@@ -34,7 +33,8 @@ class TelemetryMongoModel(Document):
     process_type = StringField()
     start_date_time = StringField()
     run_time_in_seconds = StringField()
-    created_at = DateTimeField(default=datetime.utcnow)
+    created_at = DateTimeField(default=datetime.now)
+    traffic_light = StringField()
     telemetry = DictField(default=None)
 
     meta = {
@@ -45,6 +45,7 @@ class TelemetryMongoModel(Document):
             "source_name",
             ("category", "sub_category", "source_name", "process_type"),
             "process_type",
+            "traffic_light",
         ],
     }
 
@@ -67,12 +68,14 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         Returns a dicts with kwargs that can be used to create a new
         TelemetryMongoStorage instance.
         """
+        print(telemetry)
         telemetry_copy = telemetry.copy()
         category = telemetry_copy.pop("category", None)
         sub_category = telemetry_copy.pop("sub_category", None)
         source_name = telemetry_copy.pop("source_name", None)
         process_type = telemetry_copy.pop("process_type", None)
         start_date_time = telemetry_copy.pop("start_date_time", None)
+        traffic_light = telemetry_copy.pop("traffic_light", None)
         run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
         return {
             "category": category,
@@ -81,5 +84,6 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
             "process_type": process_type,
             "start_date_time": start_date_time,
             "run_time_in_seconds": run_time_in_seconds,
+            "traffic_light": traffic_light,
             "telemetry": telemetry_copy,
         }

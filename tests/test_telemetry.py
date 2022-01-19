@@ -7,7 +7,9 @@ import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.main import FAIL_COUNT_KEY, Telemetry
-from pipeline_telemetry.settings import exceptions, settings
+from pipeline_telemetry.settings import (
+    exceptions, settings, DEFAULT_TRAFIC_LIGHT_COLOR,
+    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED)
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
@@ -32,8 +34,8 @@ def test_telemetry_instance_creation_raises_excption():
     """
     process_type = ProcessType(process_type="not_registered", subtypes=["test"])
     telemetry_params = {
-        "category": 'WEATHER',
-        "sub_category": 'DAILY_PREDICTIONS',
+        "category": "WEATHER",
+        "sub_category": "DAILY_PREDICTIONS",
         "source_name": "load_weather_data",
         "process_type": process_type,
     }
@@ -334,3 +336,23 @@ def test_storage_class_close_method_closes_db():
     storage_instance.close_db()
     assert storage_instance.db_in_memory is None
     assert storage_instance.db_cursor is None
+
+
+def test_new_telemetry_has_default_traffic_light_color():
+    """New telemetry instance should have default trafic light color."""
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    assert telemetry_inst.traffic_light == DEFAULT_TRAFIC_LIGHT_COLOR
+
+
+def test_set_telemetry_traffic_light_to_orange():
+    """New telemetry instance traffic light property can be set to orange."""
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst.set_orange_traffic_light()
+    assert telemetry_inst.traffic_light == TRAFIC_LIGHT_COLOR_ORANGE
+
+
+def test_set_telemetry_traffic_light_to_red():
+    """New telemetry instance traffic light property can be set to red."""
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst.set_red_traffic_light()
+    assert telemetry_inst.traffic_light == TRAFIC_LIGHT_COLOR_RED

@@ -42,11 +42,12 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         """define telemetry table"""
         cursor.executescript(
             """
-        DROP TABLE IF EXISTS telemetry;
-        CREATE TABLE telemetry (category varchar(60),
-        sub_category varchar(60), source_name varchar(40),
-        process_type varchar(40), start_date_time varchar(30),
-        run_time varchar(20), telemetry_data json, created_at timestamp)"""
+            DROP TABLE IF EXISTS telemetry;
+            CREATE TABLE telemetry (category varchar(60),
+            sub_category varchar(60), source_name varchar(40),
+            process_type varchar(40), start_date_time varchar(30),
+            run_time varchar(20), telemetry_data json, created_at timestamp,
+            traffic_light varchar(10))"""
         )
 
     def store_telemetry(self, telemetry: dict) -> None:
@@ -58,10 +59,11 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         process_type = telemetry_copy.pop("process_type", None)
         start_date_time = telemetry_copy.pop("start_date_time", None)
         run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
+        traffic_light = telemetry_copy.pop("traffic_light", None)
         json_object = json.dumps(telemetry_copy)
 
         self.db_cursor.execute(
-            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 category,
                 sub_category,
@@ -70,6 +72,7 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
                 start_date_time,
                 run_time_in_seconds,
                 json_object,
-                datetime.datetime.now()
+                datetime.datetime.now(),
+                traffic_light
             ],
         )

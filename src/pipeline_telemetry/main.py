@@ -17,6 +17,9 @@ from .settings.process_type import ProcessTypes
 from .storage.generic import AbstractTelemetryStorage
 from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
+from .settings.settings import (
+    TRAFIC_LIGHT_COLOR_RED, DEFAULT_TRAFIC_LIGHT_COLOR,
+    TRAFIC_LIGHT_COLOR_ORANGE,)
 
 # default telemetry field names
 BASE_COUNT_KEY = "base_counter"
@@ -28,6 +31,7 @@ SUB_CATEGORY_KEY = "sub_category"
 PROCESS_TYPE_KEY = "process_type"
 START_TIME = "start_date_time"
 RUN_TIME = "run_time_in_seconds"
+TRAFFIC_LIGHT_KEY = "traffic_light"
 
 
 # decorator method to check status telemetry object
@@ -118,6 +122,7 @@ class Telemetry:
             SOURCE_NAME_KEY: source_name,
             PROCESS_TYPE_KEY: self._process_type.name,
             START_TIME: datetime.now(),
+            TRAFFIC_LIGHT_KEY: DEFAULT_TRAFIC_LIGHT_COLOR
         })
         self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
@@ -169,6 +174,11 @@ class Telemetry:
         return self._telemetry.get(SOURCE_NAME_KEY)
 
     @property
+    def traffic_light(self) -> str:
+        """Traffic_light property."""
+        return self._telemetry.get(TRAFFIC_LIGHT_KEY)
+
+    @property
     def telemetry(self) -> dict:
         """Telemetry property."""
         return self._telemetry
@@ -177,6 +187,14 @@ class Telemetry:
     def sub_process_types(self) -> list:
         """Returns a of subprocess types allowed for the Telemetry instance."""
         return self._process_type.sub_processes
+
+    def set_orange_traffic_light(self) -> None:
+        """Sets traffic light attribute to orange."""
+        self._telemetry[TRAFFIC_LIGHT_KEY] = TRAFIC_LIGHT_COLOR_ORANGE
+
+    def set_red_traffic_light(self) -> None:
+        """Sets traffic light attribute to red."""
+        self._telemetry[TRAFFIC_LIGHT_KEY] = TRAFIC_LIGHT_COLOR_RED
 
     def get(self, field_name: str) -> dict:
         """Retrieve a field from the telemetry object.

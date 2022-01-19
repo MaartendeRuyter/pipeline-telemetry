@@ -1,0 +1,5 @@
+from .settings import (  # noqa
+    DEFAULT_TRAFIC_LIGHT_COLOR,
+    TRAFIC_LIGHT_COLOR_RED,
+    TRAFIC_LIGHT_COLOR_ORANGE,
+)
