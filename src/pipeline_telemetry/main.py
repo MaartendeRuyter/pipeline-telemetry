@@ -224,7 +224,6 @@ class Telemetry:
         if self._telemetry.get(RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
         self._set_runtime()
-        self._strf_starttime()
         self._storage_class.store_telemetry(self._telemetry)
 
         return self._telemetry
@@ -233,12 +232,6 @@ class Telemetry:
         """Method to calculate and set the runtime seconds (in str)."""
         run_time = datetime.now() - self._telemetry.get(START_TIME)
         self._telemetry[RUN_TIME] = str(run_time.total_seconds())
-
-    def _strf_starttime(self) -> None:
-        """Method to to turn starttime in str %Y-%m-%d, %H:%M:%S format."""
-        self._telemetry[START_TIME] = self._telemetry[START_TIME].strftime(
-            "%Y-%m-%d, %H:%M:%S"
-        )
 
     @_raise_exception_if_telemetry_closed
     def add(self, sub_process: str, data: dict, errors: List[ErrorCode]) -> None:

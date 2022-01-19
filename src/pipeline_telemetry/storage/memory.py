@@ -1,6 +1,5 @@
 """[summary]
 """
-import datetime
 import json
 import sqlite3
 
@@ -45,8 +44,8 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
             DROP TABLE IF EXISTS telemetry;
             CREATE TABLE telemetry (category varchar(60),
             sub_category varchar(60), source_name varchar(40),
-            process_type varchar(40), start_date_time varchar(30),
-            run_time varchar(20), telemetry_data json, created_at timestamp,
+            process_type varchar(40), start_date_time timestamp,
+            run_time varchar(20), telemetry_data json,
             traffic_light varchar(10))"""
         )
 
@@ -63,7 +62,7 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         json_object = json.dumps(telemetry_copy)
 
         self.db_cursor.execute(
-            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 category,
                 sub_category,
@@ -72,7 +71,6 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
                 start_date_time,
                 run_time_in_seconds,
                 json_object,
-                datetime.datetime.now(),
                 traffic_light
             ],
         )

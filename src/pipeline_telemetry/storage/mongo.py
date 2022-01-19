@@ -32,7 +32,7 @@ class TelemetryMongoModel(Document):
     sub_category = StringField()
     source_name = StringField()
     process_type = StringField()
-    start_date_time = StringField()
+    start_date_time = DateTimeField()
     run_time_in_seconds = StringField()
     created_at = DateTimeField(default=datetime.now)
     traffic_light = StringField()
@@ -47,6 +47,7 @@ class TelemetryMongoModel(Document):
             ("category", "sub_category", "source_name", "process_type"),
             "process_type",
             "traffic_light",
+            "start_date_time"
         ],
     }
 
@@ -69,7 +70,6 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         Returns a dicts with kwargs that can be used to create a new
         TelemetryMongoStorage instance.
         """
-        print(telemetry)
         telemetry_copy = telemetry.copy()
         category = telemetry_copy.pop("category", None)
         sub_category = telemetry_copy.pop("sub_category", None)
