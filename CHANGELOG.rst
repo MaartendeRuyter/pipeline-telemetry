@@ -110,3 +110,10 @@ Changelog
 * Added ``created_at`` field in mongo storage class for better date selection
 * of the telemetry objects
 
+0.2.12 (2022-01-19)
+-------------------
+
+* Added ``traffic_light`` attribute to Telemetry object indicating the success
+  state of the datapipeline process that is reporting on
+* Some minor refactoring
+
