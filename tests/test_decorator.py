@@ -47,6 +47,10 @@ def test_mongo_telemetry_decorator_sets_mongo_storage_class(mocker):
     """
     Test that mongo decorator sets the mongo storage class
     """
+    mongo_module_path = "pipeline_telemetry.storage.mongo."
+    mocker.patch(mongo_module_path + "TelemetryMongoModel.save",
+                 return_value=None)
+
     class DecoratorTest:
         @add_mongo_telemetry(DEFAULT_TELEMETRY_PARAMS)
         def decorated_method(self):
@@ -60,6 +64,10 @@ def test_calling_decorated_method_from_within_decorated_method(mocker):
     Test that when telemetry is active it is not changed by any other telemetry
     decorated method that is being called.
     """
+    mongo_module_path = "pipeline_telemetry.storage.mongo."
+    mocker.patch(mongo_module_path + "TelemetryMongoModel.save",
+                 return_value=None)
+
     changed_telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy() | {
         "category": "OTHER VALUE",
     }
@@ -75,7 +83,8 @@ def test_calling_decorated_method_from_within_decorated_method(mocker):
 
     class_instance = DecoratorTest()
     assert not hasattr(class_instance, "_telemetry")
-    assert class_instance.decorated_method() == DEFAULT_TELEMETRY_PARAMS.get("category")
+    assert class_instance.decorated_method() == \
+        DEFAULT_TELEMETRY_PARAMS.get("category")
     assert hasattr(class_instance, "_telemetry")
 
 
