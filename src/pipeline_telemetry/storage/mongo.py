@@ -12,8 +12,6 @@ MONGO_DB_PORT
 If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
-from datetime import datetime
-
 from mongoengine import DateTimeField, DictField, Document, StringField, connect
 
 from .generic import AbstractTelemetryStorage
