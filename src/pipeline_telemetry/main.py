@@ -168,6 +168,14 @@ class Telemetry:
         return storage_class()
 
     @property
+    def storage_class(self):
+        return self._storage_class
+
+    @storage_class.setter
+    def storage_class(self, storage_class):
+        self._storage_class = self._get_storage_class(storage_class)
+
+    @property
     def source_name(self) -> str:
         """Source_name property."""
         return self._telemetry.get(SOURCE_NAME_KEY)

@@ -52,8 +52,7 @@ def test_mongo_telemetry_decorator_sets_mongo_storage_class(mocker):
         def decorated_method(self):
             return self._telemetry.storage_class
 
-    class_instance = DecoratorTest()
-    assert class_instance.decorated_method() == TelemetryMongoStorage
+    assert isinstance(DecoratorTest().decorated_method(), TelemetryMongoStorage)
 
 
 def test_calling_decorated_method_from_within_decorated_method(mocker):
