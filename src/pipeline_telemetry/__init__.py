@@ -31,7 +31,6 @@ Arguments
         See telemetry rules section for more detail
     -
 """
-# flake8: noqa F401
 from errors import ListErrors
 
 from .decorator import add_mongo_telemetry, add_telemetry

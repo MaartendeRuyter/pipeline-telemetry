@@ -7,9 +7,8 @@ import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.main import FAIL_COUNT_KEY, Telemetry
-from pipeline_telemetry.settings import (
-    exceptions, settings, DEFAULT_TRAFIC_LIGHT_COLOR,
-    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED)
+from pipeline_telemetry.settings import DEFAULT_TRAFIC_LIGHT_COLOR, \
+    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED, exceptions, settings
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage

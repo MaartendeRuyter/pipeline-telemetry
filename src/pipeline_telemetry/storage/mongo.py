@@ -14,7 +14,8 @@ mongoDB instance.
 """
 from datetime import datetime
 
-from mongoengine import DateTimeField, DictField, Document, StringField, connect
+from mongoengine import DateTimeField, DictField, Document, StringField, \
+    connect
 
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS

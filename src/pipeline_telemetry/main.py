@@ -14,12 +14,11 @@ from errors import ErrorCode
 from .settings import exceptions
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
+from .settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, \
+    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED
 from .storage.generic import AbstractTelemetryStorage
 from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
-from .settings.settings import (
-    TRAFIC_LIGHT_COLOR_RED, DEFAULT_TRAFIC_LIGHT_COLOR,
-    TRAFIC_LIGHT_COLOR_ORANGE,)
 
 # default telemetry field names
 BASE_COUNT_KEY = "base_counter"

@@ -4,11 +4,12 @@ import sqlite3
 
 from freezegun import freeze_time
 
+from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
-from pipeline_telemetry.storage.mongo import TelemetryMongoModel, TelemetryMongoStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoModel, \
+    TelemetryMongoStorage
 from pipeline_telemetry.storage.mongo_connection import get_mongo_db_port
-from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR
 
 
 def test_abstract_strorage_class_exists():
