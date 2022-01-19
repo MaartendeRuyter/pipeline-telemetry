@@ -4,22 +4,19 @@ Module to provide Telemetry class as public class to be accessed
 classes
     - Telemetry
 
-methods
-    - mongo_telemetry: Method to create telemetry objects with mongo storage
 """
+from collections import defaultdict
 from datetime import datetime
 from typing import List
 
 from errors import ErrorCode
 
-from pipeline_telemetry.settings import exceptions
-from pipeline_telemetry.settings.data_class import ProcessType, \
-    TelemetryCounter
-from pipeline_telemetry.settings.process_type import ProcessTypes
-from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
-from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
-from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
-from pipeline_telemetry.validators.dict_validator import DictValidator
+from .settings import exceptions
+from .settings.data_class import ProcessType, TelemetryCounter
+from .settings.process_type import ProcessTypes
+from .storage.generic import AbstractTelemetryStorage
+from .storage.memory import TelemetryInMemoryStorage
+from .validators.dict_validator import DictValidator
 
 # default telemetry field names
 BASE_COUNT_KEY = "base_counter"
@@ -114,13 +111,14 @@ class Telemetry:
         storage_class: AbstractTelemetryStorage = None,
     ):
         self._set_process_type(process_type)
-        self._telemetry = {
+        self._telemetry = defaultdict(int)
+        self._telemetry.update({
             CATEGORY_KEY: category,
             SUB_CATEGORY_KEY: sub_category,
             SOURCE_NAME_KEY: source_name,
             PROCESS_TYPE_KEY: self._process_type.name,
             START_TIME: datetime.now(),
-        }
+        })
         self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
 
@@ -222,6 +220,8 @@ class Telemetry:
         """
         Add data validation errors and/or errors from data process to a
         telemetry sub process.
+        Data validation errors are retrieved from data validation defined in
+        telemetry rules.
 
         Method does not update BASE_COUNT.
 
@@ -312,7 +312,7 @@ class Telemetry:
         Args:
             sub_process (str): name of subprocess
             custom_counter (str): name of custom counter
-            increment (int): increment for the counter
+            increment (int): increment for the counter (default = 1)
 
         Raises:
             BaseCountForSubProcessNotAdded: if subprocess has not yet been
@@ -320,9 +320,6 @@ class Telemetry:
         """
         if not self._telemetry.get(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
-
-        if not self._telemetry[sub_process].get(custom_counter):
-            self._telemetry[sub_process][custom_counter] = 0
 
         self._telemetry[sub_process][custom_counter] += increment
 
@@ -345,35 +342,25 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
-        error_code = error.code
-
-        if not self._telemetry[sub_process][ERRORS_KEY].get(error_code):
-            self._telemetry[sub_process][ERRORS_KEY][error_code] = 0
-
-        self._telemetry[sub_process][ERRORS_KEY][error_code] += increment
+        self._telemetry[sub_process][ERRORS_KEY][error.code] += increment
 
     @_raise_exception_if_telemetry_closed
     def increase_custom_count(self, custom_counter: str, increment: int = 1) -> None:
         """
-        Increases a custom counter for the telemetry object.
+        Increases a custom counter in the top level of the telemetry object.
+        When then custom counter does not yet exist is created.
 
         Args:
             custom_counter (str): name of custom counter
-            increment (int): increment for the counter
-
-        Raises:
-            BaseCountForSubProcessNotAdded: if subprocess has not yet been
-                                            created
+            increment (int): increment for the counter (Default = 1)
         """
-        if not self._telemetry.get(custom_counter):
-            self._telemetry[custom_counter] = 0
-
         self._telemetry[custom_counter] += increment
 
     def add_telemetry_counter(
         self, telemetry_counter: TelemetryCounter, increment: int = None
     ) -> None:
-        """Method to process a TelemetryCounter object with predefined
+        """
+        Method to process a TelemetryCounter object with predefined counters.
 
         Args:
             telemetry_counter (TelemetryCounter): [description]
@@ -407,11 +394,12 @@ class Telemetry:
         if sub_process not in self._process_type.sub_processes:
             raise exceptions.InvalidSubProcess(sub_process, self._process_type)
 
-        self._telemetry[sub_process] = {
+        self._telemetry[sub_process] = defaultdict(int)
+        self._telemetry[sub_process].update({
             BASE_COUNT_KEY: 0,
             FAIL_COUNT_KEY: 0,
-            ERRORS_KEY: {},
-        }
+            ERRORS_KEY: defaultdict(int)
+        })
 
     def _set_process_type(self, process_type: ProcessType) -> None:
         """Sets the process type for the telemetrty instance."""
@@ -420,21 +408,3 @@ class Telemetry:
         if not self._available_process_types.is_registered(process_type):
             raise exceptions.ProcessTypeNotRegistered(process_type)
         self._process_type = process_type
-
-
-def mongo_telemetry(
-    category: str,
-    sub_category: str,
-    source_name: str,
-    process_type: ProcessType,
-    telemetry_rules: dict,
-) -> Telemetry:
-    """Factory method to create Telemetry instance with MongoStorage class."""
-    return Telemetry(
-        category=category,
-        sub_category=sub_category,
-        source_name=source_name,
-        process_type=process_type,
-        telemetry_rules=telemetry_rules,
-        storage_class=TelemetryMongoStorage,
-    )

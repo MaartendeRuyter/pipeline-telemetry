@@ -4,7 +4,8 @@ decorators:
     - add_telemetry
     - add_mongo_telemetry
 """
-from pipeline_telemetry.main import Telemetry, mongo_telemetry
+from .main import Telemetry
+from .storage import TelemetryMongoStorage
 
 
 def add_telemetry(telemetry_params: dict) -> object:
@@ -62,7 +63,8 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
             Wrapper for method where result log should be added
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
-                self._telemetry = mongo_telemetry(**telemetry_params)
+                self._telemetry = Telemetry(**telemetry_params)
+                self._telemetry.storage_class = TelemetryMongoStorage
                 result = method(self, *args, **kwargs)
                 self._telemetry.save_and_close()
                 self._telemetry = None

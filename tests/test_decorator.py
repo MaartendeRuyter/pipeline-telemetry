@@ -3,7 +3,8 @@
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.decorator import add_mongo_telemetry, add_telemetry
-from pipeline_telemetry.main import Telemetry
+from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
+from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 
 
 def test_default_decorator():
@@ -28,7 +29,8 @@ def test_mongo_telemetry_decorator(mocker):
     Test that mongo decorator does not effect decorated method result
     but sets the telemetry property.
     """
-    mocker.patch("pipeline_telemetry.decorator.mongo_telemetry", Telemetry)
+    mocker.patch("pipeline_telemetry.decorator.TelemetryMongoStorage",
+                 TelemetryInMemoryStorage)
 
     class DecoratorTest:
         @add_mongo_telemetry(DEFAULT_TELEMETRY_PARAMS)
@@ -41,6 +43,19 @@ def test_mongo_telemetry_decorator(mocker):
     assert hasattr(class_instance, "_telemetry")
 
 
+def test_mongo_telemetry_decorator_sets_mongo_storage_class(mocker):
+    """
+    Test that mongo decorator sets the mongo storage class
+    """
+    class DecoratorTest:
+        @add_mongo_telemetry(DEFAULT_TELEMETRY_PARAMS)
+        def decorated_method(self):
+            return self._telemetry.storage_class
+
+    class_instance = DecoratorTest()
+    assert class_instance.decorated_method() == TelemetryMongoStorage
+
+
 def test_calling_decorated_method_from_within_decorated_method(mocker):
     """
     Test that when telemetry is active it is not changed by any other telemetry
@@ -49,8 +64,6 @@ def test_calling_decorated_method_from_within_decorated_method(mocker):
     changed_telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy() | {
         "category": "OTHER VALUE",
     }
-
-    mocker.patch("pipeline_telemetry.decorator.mongo_telemetry", Telemetry)
 
     class DecoratorTest:
         @add_mongo_telemetry(DEFAULT_TELEMETRY_PARAMS)
