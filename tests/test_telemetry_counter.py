@@ -8,8 +8,9 @@ from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_ERROR_TELEMETRY_COUNTER, \
 
 from pipeline_telemetry import ProcessTypes
 from pipeline_telemetry.helper import is_telemetry_counter
-from pipeline_telemetry.main import ERRORS_KEY, Telemetry
+from pipeline_telemetry.main import Telemetry
 from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.settings.data_class import TelemetryCounter
 
 
@@ -40,7 +41,7 @@ def test_add_error_telemetry_counter_to_telemetry(telemetry_inst):
     creates a counter
     """
     telemetry_inst.add_telemetry_counter(TEST_ERROR_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")[ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
+    assert telemetry_inst.get("RETRIEVE_RAW_DATA")[st.ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
 
 
 def test_add_error_telemetry_counter_to_telemetry_raises_exception():

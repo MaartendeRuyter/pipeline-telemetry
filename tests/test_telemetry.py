@@ -6,9 +6,9 @@ from datetime import datetime
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
-from pipeline_telemetry.main import FAIL_COUNT_KEY, Telemetry
-from pipeline_telemetry.settings import DEFAULT_TRAFIC_LIGHT_COLOR, \
-    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED, exceptions, settings
+from pipeline_telemetry.main import Telemetry
+from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
@@ -55,7 +55,7 @@ def test_telemetry_instance_has_sub_process_types_property():
     assert isinstance(Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types, list)
     assert (
         Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types
-        == settings.DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+        == st.DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
     )
 
 
@@ -173,7 +173,7 @@ def test_add_sub_process_fail_count_to_telemetry():
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count("RETRIEVE_RAW_DATA")
     telemetry_inst.increase_sub_process_fail_count("RETRIEVE_RAW_DATA")
-    assert telemetry_inst.telemetry["RETRIEVE_RAW_DATA"][FAIL_COUNT_KEY] == 1
+    assert telemetry_inst.telemetry["RETRIEVE_RAW_DATA"][st.FAIL_COUNT_KEY] == 1
 
 
 def test_add_sub_process_fail_count_raises_excpetion():
@@ -340,18 +340,18 @@ def test_storage_class_close_method_closes_db():
 def test_new_telemetry_has_default_traffic_light_color():
     """New telemetry instance should have default trafic light color."""
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
-    assert telemetry_inst.traffic_light == DEFAULT_TRAFIC_LIGHT_COLOR
+    assert telemetry_inst.traffic_light == st.DEFAULT_TRAFIC_LIGHT_COLOR
 
 
 def test_set_telemetry_traffic_light_to_orange():
     """New telemetry instance traffic light property can be set to orange."""
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.set_orange_traffic_light()
-    assert telemetry_inst.traffic_light == TRAFIC_LIGHT_COLOR_ORANGE
+    assert telemetry_inst.traffic_light == st.TRAFIC_LIGHT_COLOR_ORANGE
 
 
 def test_set_telemetry_traffic_light_to_red():
     """New telemetry instance traffic light property can be set to red."""
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.set_red_traffic_light()
-    assert telemetry_inst.traffic_light == TRAFIC_LIGHT_COLOR_RED
+    assert telemetry_inst.traffic_light == st.TRAFIC_LIGHT_COLOR_RED

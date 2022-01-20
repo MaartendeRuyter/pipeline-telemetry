@@ -2,7 +2,7 @@
 """
 from dataclasses import dataclass
 
-from pipeline_telemetry.main import ERRORS_KEY
+from pipeline_telemetry.settings import settings as st
 
 
 @dataclass(frozen=True)
@@ -51,7 +51,7 @@ BASIC_RETRIEVE_DATA_TEST = IntegrationTestData(
     },
     telemetry_result={
         "field": "RETRIEVE_RAW_DATA",
-        "result": {"base_counter": 1, "fail_counter": 0, ERRORS_KEY: {}},
+        "result": {"base_counter": 1, "fail_counter": 0, st.ERRORS_KEY: {}},
     },
 )
 
@@ -63,7 +63,7 @@ MISSING_KEY_RETRIEVE_DATA_TEST = IntegrationTestData(
         "result": {
             "base_counter": 1,
             "fail_counter": 0,
-            ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1},
+            st.ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1},
         },
     },
 )
@@ -81,7 +81,7 @@ MUST_HAVE_KEY_IN_ITEMS_TEST = IntegrationTestData(
         "result": {
             "base_counter": 1,
             "fail_counter": 0,
-            ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 1},
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 1},
         },
     },
 )
@@ -98,7 +98,7 @@ NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
         "result": {
             "base_counter": 1,
             "fail_counter": 0,
-            ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 2},
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 2},
         },
     },
 )
@@ -115,7 +115,7 @@ ITEMS_FIELD_HAS_DICT_TEST = IntegrationTestData(
         "result": {
             "base_counter": 1,
             "fail_counter": 0,
-            ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
         },
     },
 )

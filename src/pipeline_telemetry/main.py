@@ -14,23 +14,10 @@ from errors import ErrorCode
 from .settings import exceptions
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
-from .settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, \
-    TRAFIC_LIGHT_COLOR_ORANGE, TRAFIC_LIGHT_COLOR_RED
+from .settings import settings as st
 from .storage.generic import AbstractTelemetryStorage
 from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
-
-# default telemetry field names
-BASE_COUNT_KEY = "base_counter"
-ERRORS_KEY = "errors"
-FAIL_COUNT_KEY = "fail_counter"
-SOURCE_NAME_KEY = "source_name"
-CATEGORY_KEY = "category"
-SUB_CATEGORY_KEY = "sub_category"
-PROCESS_TYPE_KEY = "process_type"
-START_TIME = "start_date_time"
-RUN_TIME = "run_time_in_seconds"
-TRAFFIC_LIGHT_KEY = "traffic_light"
 
 
 # decorator method to check status telemetry object
@@ -48,7 +35,7 @@ def _raise_exception_if_telemetry_closed(method):
         Wrapper to check if run_time has been set
         If so the telemetry object is closed
         """
-        if self.telemetry.get(RUN_TIME):
+        if self.telemetry.get(st.RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
 
         return method(self, *args, **kwargs)
@@ -110,18 +97,19 @@ class Telemetry:
         sub_category: str,
         source_name: str,
         process_type: ProcessType,
+        telemetry_type: str = st.DEFAULT_TELEMETRY_TYPE,
         telemetry_rules: dict = None,
         storage_class: AbstractTelemetryStorage = None,
     ):
         self._set_process_type(process_type)
         self._telemetry = defaultdict(int)
         self._telemetry.update({
-            CATEGORY_KEY: category,
-            SUB_CATEGORY_KEY: sub_category,
-            SOURCE_NAME_KEY: source_name,
-            PROCESS_TYPE_KEY: self._process_type.name,
-            START_TIME: datetime.now(),
-            TRAFFIC_LIGHT_KEY: DEFAULT_TRAFIC_LIGHT_COLOR
+            st.CATEGORY_KEY: category,
+            st.SUB_CATEGORY_KEY: sub_category,
+            st.SOURCE_NAME_KEY: source_name,
+            st.PROCESS_TYPE_KEY: self._process_type.name,
+            st.START_TIME: datetime.now(),
+            st.TRAFFIC_LIGHT_KEY: st.DEFAULT_TRAFIC_LIGHT_COLOR
         })
         self._telemetry_rules = telemetry_rules or {}
         self._storage_class = self._get_storage_class(storage_class)
@@ -178,12 +166,12 @@ class Telemetry:
     @property
     def source_name(self) -> str:
         """Source_name property."""
-        return self._telemetry.get(SOURCE_NAME_KEY)
+        return self._telemetry.get(st.SOURCE_NAME_KEY)
 
     @property
     def traffic_light(self) -> str:
         """Traffic_light property."""
-        return self._telemetry.get(TRAFFIC_LIGHT_KEY)
+        return self._telemetry.get(st.TRAFFIC_LIGHT_KEY)
 
     @property
     def telemetry(self) -> dict:
@@ -197,11 +185,11 @@ class Telemetry:
 
     def set_orange_traffic_light(self) -> None:
         """Sets traffic light attribute to orange."""
-        self._telemetry[TRAFFIC_LIGHT_KEY] = TRAFIC_LIGHT_COLOR_ORANGE
+        self._telemetry[st.TRAFFIC_LIGHT_KEY] = st.TRAFIC_LIGHT_COLOR_ORANGE
 
     def set_red_traffic_light(self) -> None:
         """Sets traffic light attribute to red."""
-        self._telemetry[TRAFFIC_LIGHT_KEY] = TRAFIC_LIGHT_COLOR_RED
+        self._telemetry[st.TRAFFIC_LIGHT_KEY] = st.TRAFIC_LIGHT_COLOR_RED
 
     def get(self, field_name: str) -> dict:
         """Retrieve a field from the telemetry object.
@@ -221,7 +209,7 @@ class Telemetry:
         Returns:
             dict: telemetry result
         """
-        if self._telemetry.get(RUN_TIME):
+        if self._telemetry.get(st.RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
         self._set_runtime()
         self._storage_class.store_telemetry(self._telemetry)
@@ -230,8 +218,8 @@ class Telemetry:
 
     def _set_runtime(self) -> None:
         """Method to calculate and set the runtime seconds (in str)."""
-        run_time = datetime.now() - self._telemetry.get(START_TIME)
-        self._telemetry[RUN_TIME] = str(run_time.total_seconds())
+        run_time = datetime.now() - self._telemetry.get(st.START_TIME)
+        self._telemetry[st.RUN_TIME] = str(run_time.total_seconds())
 
     @_raise_exception_if_telemetry_closed
     def add(self, sub_process: str, data: dict, errors: List[ErrorCode]) -> None:
@@ -301,7 +289,7 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             self._initialize_sub_process(sub_process)
 
-        self._telemetry[sub_process][BASE_COUNT_KEY] += increment
+        self._telemetry[sub_process][st.BASE_COUNT_KEY] += increment
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_fail_count(
@@ -318,7 +306,7 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
-        self._telemetry[sub_process][FAIL_COUNT_KEY] += increment
+        self._telemetry[sub_process][st.FAIL_COUNT_KEY] += increment
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_custom_count(
@@ -360,7 +348,7 @@ class Telemetry:
         if not self._telemetry.get(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
-        self._telemetry[sub_process][ERRORS_KEY][error.code] += increment
+        self._telemetry[sub_process][st.ERRORS_KEY][error.code] += increment
 
     @_raise_exception_if_telemetry_closed
     def increase_custom_count(self, custom_counter: str, increment: int = 1) -> None:
@@ -414,9 +402,9 @@ class Telemetry:
 
         self._telemetry[sub_process] = defaultdict(int)
         self._telemetry[sub_process].update({
-            BASE_COUNT_KEY: 0,
-            FAIL_COUNT_KEY: 0,
-            ERRORS_KEY: defaultdict(int)
+            st.BASE_COUNT_KEY: 0,
+            st.FAIL_COUNT_KEY: 0,
+            st.ERRORS_KEY: defaultdict(int)
         })
 
     def _set_process_type(self, process_type: ProcessType) -> None:
