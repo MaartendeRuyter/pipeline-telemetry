@@ -20,6 +20,7 @@ from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
 from .helper import _raise_exception_if_telemetry_closed
 
+
 class Telemetry:
     """Class to manage the telemetry data object of a data pipeline process.
 
@@ -75,7 +76,7 @@ class Telemetry:
         source_name: str,
         process_type: ProcessType,
         telemetry_type: str = st.DEFAULT_TELEMETRY_TYPE,
-        telemetry_rules: dict = None,
+        telemetry_rules: dict = dict(),
         storage_class: AbstractTelemetryStorage = None,
     ):
         self._set_process_type(process_type)
@@ -88,7 +89,7 @@ class Telemetry:
             st.START_TIME: datetime.now(),
             st.TRAFFIC_LIGHT_KEY: st.DEFAULT_TRAFIC_LIGHT_COLOR
         })
-        self._telemetry_rules = telemetry_rules or {}
+        self._telemetry_rules = telemetry_rules
         self._storage_class = self._get_storage_class(storage_class)
 
     @classmethod
