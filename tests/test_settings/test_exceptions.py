@@ -124,6 +124,7 @@ def test_sub_process_not_defined_in_process_type():
     assert 'Provided sub process is not defined in ProcessType.' in \
         str(exception)
 
+
 def test_invalid_telemetry_type():
     """ test InvalidTelemetryType exception """
     with pytest.raises(

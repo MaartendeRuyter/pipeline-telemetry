@@ -14,6 +14,7 @@ exceptions
 """
 from typing import List
 
+
 class FieldNameMandatory(Exception):
     """custom exception for Telemetry Module"""
 

@@ -94,6 +94,7 @@ def test_telemetry_instance_increase_io_time():
     telemetry.increase_io_time(1.1)
     assert telemetry.get(st.IO_TIME_KEY) == 1.1
 
+
 def test_increase_new_sub_process_base_count_to_telemetry():
     """
     Check that a new sub process base count can be added to a Telemetry
