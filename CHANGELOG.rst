@@ -117,3 +117,10 @@ Changelog
   state of the datapipeline process that is reporting on
 * Some minor refactoring
 
+0.2.16 (2022-02-01)
+-------------------
+
+* Added ``telemetry_type`` and ``io_time_in_seconds`` attributes to Telemetry
+* object including a method to increase ``io_time_in_seconds``.
+
+
