@@ -12,9 +12,10 @@ MONGO_DB_PORT
 If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
-from mongoengine import DateTimeField, DictField, Document, StringField, \
-    connect
+from mongoengine import DateTimeField, DictField, Document, FloatField, \
+    StringField, connect
 
+from ..settings import settings as st
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
 
@@ -33,6 +34,7 @@ class TelemetryMongoModel(Document):
     start_date_time = DateTimeField()
     run_time_in_seconds = StringField()
     traffic_light = StringField()
+    io_time_in_seconds = FloatField(default=0)
     telemetry = DictField(default=None)
 
     meta = {
@@ -68,20 +70,23 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoStorage instance.
         """
         telemetry_copy = telemetry.copy()
-        category = telemetry_copy.pop("category", None)
-        sub_category = telemetry_copy.pop("sub_category", None)
-        source_name = telemetry_copy.pop("source_name", None)
-        process_type = telemetry_copy.pop("process_type", None)
-        start_date_time = telemetry_copy.pop("start_date_time", None)
-        traffic_light = telemetry_copy.pop("traffic_light", None)
-        run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
+        category = telemetry_copy.pop(st.CATEGORY_KEY, None)
+        sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
+        source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
+        process_type = telemetry_copy.pop(st.PROCESS_TYPE_KEY, None)
+        start_date_time = telemetry_copy.pop(st.START_TIME, None)
+        run_time_in_seconds = telemetry_copy.pop(st.RUN_TIME, None)
+        traffic_light = telemetry_copy.pop(st.TRAFFIC_LIGHT_KEY, None)
+        io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
+
         return {
-            "category": category,
-            "sub_category": sub_category,
-            "source_name": source_name,
-            "process_type": process_type,
-            "start_date_time": start_date_time,
-            "run_time_in_seconds": run_time_in_seconds,
-            "traffic_light": traffic_light,
-            "telemetry": telemetry_copy,
+            st.CATEGORY_KEY: category,
+            st.SUB_CATEGORY_KEY: sub_category,
+            st.SOURCE_NAME_KEY: source_name,
+            st.PROCESS_TYPE_KEY: process_type,
+            st.START_TIME: start_date_time,
+            st.RUN_TIME: run_time_in_seconds,
+            st.TRAFFIC_LIGHT_KEY: traffic_light,
+            st.TELEMETRY_FIELD_KEY: telemetry_copy,
+            st.IO_TIME_KEY: io_time_in_seconds,
         }

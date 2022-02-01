@@ -3,6 +3,7 @@
 import json
 import sqlite3
 
+from ..settings import settings as st
 from .generic import AbstractTelemetryStorage
 
 
@@ -46,23 +47,24 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
             sub_category varchar(60), source_name varchar(40),
             process_type varchar(40), start_date_time timestamp,
             run_time varchar(20), telemetry_data json,
-            traffic_light varchar(10))"""
+            traffic_light varchar(10), io_time_in_seconds real)"""
         )
 
     def store_telemetry(self, telemetry: dict) -> None:
         """public method to persist telemetry object"""
         telemetry_copy = telemetry.copy()
-        category = telemetry_copy.pop("category", None)
-        sub_category = telemetry_copy.pop("sub_category", None)
-        source_name = telemetry_copy.pop("source_name", None)
-        process_type = telemetry_copy.pop("process_type", None)
-        start_date_time = telemetry_copy.pop("start_date_time", None)
-        run_time_in_seconds = telemetry_copy.pop("run_time_in_seconds", None)
-        traffic_light = telemetry_copy.pop("traffic_light", None)
+        category = telemetry_copy.pop(st.CATEGORY_KEY, None)
+        sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
+        source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
+        process_type = telemetry_copy.pop(st.PROCESS_TYPE_KEY, None)
+        start_date_time = telemetry_copy.pop(st.START_TIME, None)
+        run_time_in_seconds = telemetry_copy.pop(st.RUN_TIME, None)
+        traffic_light = telemetry_copy.pop(st.TRAFFIC_LIGHT_KEY, None)
+        io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
         json_object = json.dumps(telemetry_copy)
 
         self.db_cursor.execute(
-            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 category,
                 sub_category,
@@ -71,6 +73,7 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
                 start_date_time,
                 run_time_in_seconds,
                 json_object,
-                traffic_light
+                traffic_light,
+                io_time_in_seconds
             ],
         )
