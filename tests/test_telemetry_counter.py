@@ -26,6 +26,29 @@ def test_telemetry_counter_exists():
     assert TelemetryCounter
 
 
+def test_add_to_method():
+    """
+    Test that add_method on a telemetry counter adds the telemetry counter
+    to given object with a _telemetry attribute
+    """
+    sub_process = TEST_TELEMETRY_COUNTER_INC_2.sub_process
+    telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+
+    class ClassToTestAddTo():
+        _telemetry = telemetry
+
+    obj_with_telemetry = ClassToTestAddTo()
+
+    # ensure sub process is initialized in object's telemetry
+    telemetry._initialize_sub_process(sub_process)
+
+    # run add_to method on a Telemetry counter
+    TEST_TELEMETRY_COUNTER_INC_2.add_to(obj_with_telemetry)
+    assert sub_process in obj_with_telemetry._telemetry.telemetry
+    assert obj_with_telemetry._telemetry.get(
+        sub_process)["test_counter"] == 2
+
+
 def test_add_telemetry_counter_to_telemetry(telemetry_inst):
     """
     Check that adding a telemetry counter to a Telemetry instance
