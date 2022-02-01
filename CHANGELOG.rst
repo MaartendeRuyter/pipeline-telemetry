@@ -122,5 +122,3 @@ Changelog
 
 * Added ``telemetry_type`` and ``io_time_in_seconds`` attributes to Telemetry
 * object including a method to increase ``io_time_in_seconds``.
-
-
