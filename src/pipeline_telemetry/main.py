@@ -11,14 +11,14 @@ from typing import List
 
 from errors import ErrorCode
 
+from .helper import _raise_exception_if_telemetry_closed
 from .settings import exceptions
+from .settings import settings as st
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
-from .settings import settings as st
 from .storage.generic import AbstractTelemetryStorage
 from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
-from .helper import _raise_exception_if_telemetry_closed
 
 
 class Telemetry:
@@ -87,6 +87,7 @@ class Telemetry:
             st.SOURCE_NAME_KEY: source_name,
             st.PROCESS_TYPE_KEY: self._process_type.name,
             st.START_TIME: datetime.now(),
+            st.IO_TIME_KEY: 0,
             st.TRAFFIC_LIGHT_KEY: st.DEFAULT_TRAFIC_LIGHT_COLOR
         })
         self._telemetry_rules = telemetry_rules
@@ -327,6 +328,16 @@ class Telemetry:
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
         self._telemetry[sub_process][st.ERRORS_KEY][error.code] += increment
+
+    @_raise_exception_if_telemetry_closed
+    def increase_io_time(self, io_time: float) -> None:
+        """
+        Increases the io_time of the telemetry object.
+
+        Args:
+            io_time (float): io_time that needs to be added to the total io_time
+        """
+        self._telemetry[st.IO_TIME_KEY] += io_time
 
     @_raise_exception_if_telemetry_closed
     def increase_custom_count(self, custom_counter: str, increment: int = 1) -> None:

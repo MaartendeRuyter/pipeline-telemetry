@@ -29,6 +29,7 @@ START_TIME = "start_date_time"
 RUN_TIME = "run_time_in_seconds"
 TRAFFIC_LIGHT_KEY = "traffic_light"
 TELEMETRY_TYPE_KEY = "telemetry_type"
+IO_TIME_KEY = "io_time_in_seconds"
 
 DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES = [
     "RETRIEVE_RAW_DATA",

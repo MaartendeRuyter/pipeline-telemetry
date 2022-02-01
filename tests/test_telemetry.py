@@ -77,6 +77,23 @@ def test_telemetry_instance_sets_start_time():
     assert isinstance(telemetry.get("start_date_time"), datetime)
 
 
+def test_telemetry_instance_sets_io_time_to_zero():
+    """
+    check that Telemetry instance initially has zero io_time.
+    """
+    telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    assert telemetry.get(st.IO_TIME_KEY) == 0
+
+
+def test_telemetry_instance_increase_io_time():
+    """
+    check increase_io_time method increase the io_time of a Telemetry instance
+    with given float value.
+    """
+    telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry.increase_io_time(1.1)
+    assert telemetry.get(st.IO_TIME_KEY) == 1.1
+
 def test_increase_new_sub_process_base_count_to_telemetry():
     """
     Check that a new sub process base count can be added to a Telemetry
