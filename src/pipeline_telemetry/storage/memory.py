@@ -43,16 +43,18 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         cursor.executescript(
             """
             DROP TABLE IF EXISTS telemetry;
-            CREATE TABLE telemetry (category varchar(60),
-            sub_category varchar(60), source_name varchar(40),
-            process_type varchar(40), start_date_time timestamp,
-            run_time varchar(20), telemetry_data json,
-            traffic_light varchar(10), io_time_in_seconds real)"""
+            CREATE TABLE telemetry (telemetry_type varchar(100),
+            category varchar(60), sub_category varchar(60),
+            source_name varchar(40), process_type varchar(40),
+            start_date_time timestamp, run_time varchar(20),
+            telemetry_data json, traffic_light varchar(10),
+            io_time_in_seconds real)"""
         )
 
     def store_telemetry(self, telemetry: dict) -> None:
         """public method to persist telemetry object"""
         telemetry_copy = telemetry.copy()
+        telemetry_type = telemetry_copy.pop(st.TELEMETRY_TYPE_KEY, None)
         category = telemetry_copy.pop(st.CATEGORY_KEY, None)
         sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
         source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
@@ -64,8 +66,9 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         json_object = json.dumps(telemetry_copy)
 
         self.db_cursor.execute(
-            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
+                telemetry_type,
                 category,
                 sub_category,
                 source_name,

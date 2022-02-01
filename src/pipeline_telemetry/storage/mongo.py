@@ -34,6 +34,7 @@ class TelemetryMongoModel(Document):
     start_date_time = DateTimeField()
     run_time_in_seconds = StringField()
     traffic_light = StringField()
+    telemetry_type = StringField()
     io_time_in_seconds = FloatField(default=0)
     telemetry = DictField(default=None)
 
@@ -70,6 +71,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         TelemetryMongoStorage instance.
         """
         telemetry_copy = telemetry.copy()
+        telemetry_type = telemetry_copy.pop(st.TELEMETRY_TYPE_KEY, None)
         category = telemetry_copy.pop(st.CATEGORY_KEY, None)
         sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
         source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
@@ -80,6 +82,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
 
         return {
+            st.TELEMETRY_TYPE_KEY: telemetry_type,
             st.CATEGORY_KEY: category,
             st.SUB_CATEGORY_KEY: sub_category,
             st.SOURCE_NAME_KEY: source_name,

@@ -12,7 +12,7 @@ exceptions
 - ProcessTypeMustBeOfClassProcessType
 - ProcessTypeNotRegistered
 """
-
+from typing import List
 
 class FieldNameMandatory(Exception):
     """custom exception for Telemetry Module"""
@@ -148,4 +148,11 @@ class ProcessTypesMustBeOfClassBaseEnumertor(Exception):
 class InvalidSubProcessForProcessType(Exception):
     def __init__(self):
         message = "Provided sub process is not defined in ProcessType."
+        super().__init__(message)
+
+
+class InvalidTelemetryType(Exception):
+    def __init__(self, available_types: List[str]):
+        message = \
+            f"Telemetry Type must be of type: {', '.join(available_types)}."
         super().__init__(message)

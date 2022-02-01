@@ -67,7 +67,7 @@ def test_store_telemetry_stores_object_with_create_date(mocker):
         "SELECT * FROM telemetry LIMIT 1"
     ).fetchone()
     print(in_memory_record)
-    assert in_memory_record[4] == "2022-01-18 18:00:00.123456"
+    assert in_memory_record[5] == "2022-01-18 18:00:00.123456"
 
 
 def test_telemetry_mongo_model_class_exists():
@@ -106,6 +106,7 @@ def test_telemetry_model_kwargs_method():
     """Test _telemetry_model_kwargs method returns correct kwargs."""
     result = TelemetryMongoStorage()._telemetry_model_kwargs(
         {
+            "telemetry_type": "test telemetry type",
             "category": "test",
             "sub_category": "sub_test",
             "source_name": "tst_source_name",
@@ -120,6 +121,7 @@ def test_telemetry_model_kwargs_method():
     )
 
     assert result == {
+        "telemetry_type": "test telemetry type",
         "category": "test",
         "sub_category": "sub_test",
         "source_name": "tst_source_name",

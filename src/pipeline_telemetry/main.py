@@ -68,6 +68,7 @@ class Telemetry:
     """
 
     _available_process_types = ProcessTypes
+    _available_telemetry_types = st.TELEMETRY_TYPES
 
     def __init__(
         self,
@@ -81,7 +82,9 @@ class Telemetry:
     ):
         self._set_process_type(process_type)
         self._telemetry = defaultdict(int)
+        self._validate_telemetry_type(telemetry_type)
         self._telemetry.update({
+            st.TELEMETRY_TYPE_KEY: telemetry_type,
             st.CATEGORY_KEY: category,
             st.SUB_CATEGORY_KEY: sub_category,
             st.SOURCE_NAME_KEY: source_name,
@@ -109,6 +112,22 @@ class Telemetry:
         cls._available_process_types.register_process_type(
             process_type_key, process_type
         )
+
+    def _validate_telemetry_type(self, telemetry_type: str) -> None:
+        """Check validaty of provided telemetry type.
+
+        Raises exception if not valid. Returns non if telemetry type is valid.
+
+        Args:
+            telemetry_type (str): [description]
+
+        Raises:
+            exceptions.InvalidTelemetryType: When telemetry type is not valid.
+        """
+
+        if telemetry_type not in self._available_telemetry_types:
+            raise exceptions.InvalidTelemetryType(
+                self._available_telemetry_types)
 
     @staticmethod
     def _get_storage_class(storage_class: AbstractTelemetryStorage) -> None:
