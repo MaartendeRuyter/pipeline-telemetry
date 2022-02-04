@@ -4,6 +4,8 @@ decorators:
     - add_telemetry
     - add_mongo_telemetry
 """
+from functools import wraps
+
 from .main import Telemetry
 from .storage import TelemetryMongoStorage
 
@@ -25,6 +27,7 @@ def add_telemetry(telemetry_params: dict) -> object:
     """
 
     def wrapper(method):
+        @wraps(method)
         def wrapped_method(self, *args, **kwargs):
             """
             Wrapper for method where result log should be added
@@ -58,6 +61,7 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
     """
 
     def wrapper(method):
+        @wraps(method)
         def wrapped_method(self, *args, **kwargs):
             """
             Wrapper for method where result log should be added
