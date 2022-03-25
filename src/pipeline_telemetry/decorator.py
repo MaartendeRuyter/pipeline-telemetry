@@ -105,6 +105,7 @@ def add_mongo_single_usage_telemetry(sub_process: str = None) -> object:
         storage_class=TelemetryMongoStorage
     )
 
+
 def add_single_usage_telemetry(
         sub_process: str = None,
         storage_class: AbstractTelemetryStorage = None) -> object:
