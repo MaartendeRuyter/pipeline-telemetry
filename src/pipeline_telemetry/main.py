@@ -291,8 +291,7 @@ class Telemetry:
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_fail_count(
-        self, sub_process: str, increment: int = 1
-    ) -> None:
+            self, sub_process: str, increment: int = 1) -> None:
         """Increases the fail count for a subprocess
 
         Args:

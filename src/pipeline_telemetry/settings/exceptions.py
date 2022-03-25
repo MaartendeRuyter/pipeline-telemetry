@@ -157,3 +157,11 @@ class InvalidTelemetryType(Exception):
         message = \
             f"Telemetry Type must be of type: {', '.join(available_types)}."
         super().__init__(message)
+
+
+class ClassTelemetryParamsNotDefined(Exception):
+    def __init__(self, object):
+        class_name = object.__class__.__name__
+        message = \
+            f"Telemetry params not defined for class {class_name}"
+        super().__init__(message)

@@ -122,3 +122,10 @@ Changelog
 
 * Added ``telemetry_type`` and ``io_time_in_seconds`` attributes to Telemetry
 * object including a method to increase ``io_time_in_seconds``.
+
+
+0.2.18 (2022-03-2)
+-------------------
+
+* Added ``add_single_usage_telemetry`` decorator to be used for single usage
+* telemetry objects

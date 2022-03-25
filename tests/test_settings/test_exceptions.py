@@ -133,3 +133,15 @@ def test_invalid_telemetry_type():
 
     assert 'Telemetry Type must be of type: type1' in \
         str(exception)
+
+
+def test_class_telemetry_params_not_defined():
+    """ test ClassTelemetryParamsNotDefined exception """
+    obj = 'object'
+    with pytest.raises(
+            exceptions.ClassTelemetryParamsNotDefined) as exception:
+        raise exceptions.ClassTelemetryParamsNotDefined(obj)
+
+    assert \
+        f"Telemetry params not defined for class {obj.__class__.__name__}" in \
+        str(exception)

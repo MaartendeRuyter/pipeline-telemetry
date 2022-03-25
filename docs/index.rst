@@ -8,6 +8,7 @@ Contents
    readme
    installation
    usage
+   decorators
    process_type
    storage_class
    reference/index
