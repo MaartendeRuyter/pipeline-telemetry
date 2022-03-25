@@ -161,7 +161,7 @@ def test_single_usage_telemetry_settings_with_sub_process():
     class DecoratorTest:
         TELEMETRY_PARAMS = DEFAULT_TELEMETRY_PARAMS
 
-        @add_mongo_single_usage_telemetry(sub_process=sub_process)
+        @add_single_usage_telemetry(sub_process=sub_process)
         def decorated_method(self):
             return self._telemetry.telemetry
 
