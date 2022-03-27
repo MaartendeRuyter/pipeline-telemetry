@@ -33,8 +33,8 @@ Arguments
 """
 from errors import ListErrors
 
-from .decorator import add_mongo_telemetry, add_single_usage_telemetry, \
-    add_telemetry
+from .decorator import add_mongo_single_usage_telemetry, add_mongo_telemetry, \
+    add_single_usage_telemetry, add_telemetry
 from .helper import increase_base_count, increase_fail_count, \
     is_telemetry_counter
 from .main import Telemetry
