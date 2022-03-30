@@ -30,6 +30,11 @@ Arguments
         conditional counts and errors that can be applied to the provided data.
         See telemetry rules section for more detail
     -
+
+decorators:
+    - add_mongo_telemetry: Add telemetry
+    - add_mongo_single_usage_telemetry: Add single usage telemetry
+
 """
 from errors import ListErrors
 
