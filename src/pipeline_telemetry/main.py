@@ -238,7 +238,7 @@ class Telemetry:
         :type errors: list of Errorcodes
         :returns: None
         """
-        if not self._telemetry.get(sub_process):
+        if self._sub_process_not_yet_initialized(sub_process):
             self._initialize_sub_process(sub_process)
         validation_errors = self._validate_data(sub_process, data)
         # add data validation errors
@@ -284,7 +284,7 @@ class Telemetry:
         Args:
             sub_process (str): name of subprocess
         """
-        if not self._telemetry.get(sub_process):
+        if self._sub_process_not_yet_initialized(sub_process):
             self._initialize_sub_process(sub_process)
 
         self._telemetry[sub_process][st.BASE_COUNT_KEY] += increment
@@ -300,7 +300,7 @@ class Telemetry:
             BaseCountForSubProcessNotAdded: if subprocess has not yet been
                                             created
         """
-        if not self._telemetry.get(sub_process):
+        if self._sub_process_not_yet_initialized(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
         self._telemetry[sub_process][st.FAIL_COUNT_KEY] += increment
@@ -321,7 +321,7 @@ class Telemetry:
             BaseCountForSubProcessNotAdded: if subprocess has not yet been
                                             created
         """
-        if not self._telemetry.get(sub_process):
+        if self._sub_process_not_yet_initialized(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
         self._telemetry[sub_process][custom_counter] += increment
@@ -342,7 +342,7 @@ class Telemetry:
             BaseCountForSubProcessNotAdded: if subprocess has not yet been
                                             created
         """
-        if not self._telemetry.get(sub_process):
+        if self._sub_process_not_yet_initialized(sub_process):
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
         self._telemetry[sub_process][st.ERRORS_KEY][error.code] += increment
@@ -385,6 +385,10 @@ class Telemetry:
         sub_process = telemetry_counter.sub_process
         counter_name = telemetry_counter.counter_name
         increment = increment or telemetry_counter.increment
+
+        if self._sub_process_not_yet_initialized(sub_process):
+            self._initialize_sub_process(sub_process)
+
         if telemetry_counter.error:
             self.increase_sub_process_error_count(
                 sub_process=sub_process,
@@ -397,6 +401,28 @@ class Telemetry:
                 custom_counter=counter_name,
                 increment=increment,
             )
+
+    def _sub_process_not_yet_initialized(self, sub_process: str) -> bool:
+        """Returns True if provided sub_process is not yet initialized
+
+        Args:
+            sub_process (str): sub_process
+
+        Returns:
+            bool: True if sub_process is inialized, False otherwis
+        """
+        return not self._sub_process_is_initialized(sub_process)
+
+    def _sub_process_is_initialized(self, sub_process: str) -> bool:
+        """Returns True if provided sub_process is initialized
+
+        Args:
+            sub_process (str): sub_process
+
+        Returns:
+            bool: True if sub_process is inialized, False otherwis
+        """
+        return self._telemetry.get(sub_process)
 
     def _initialize_sub_process(self, sub_process: str) -> None:
         """sets the initial count object for a sub_process

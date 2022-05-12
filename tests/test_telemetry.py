@@ -373,3 +373,52 @@ def test_set_telemetry_traffic_light_to_red():
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.set_red_traffic_light()
     assert telemetry_inst.traffic_light == st.TRAFIC_LIGHT_COLOR_RED
+
+
+def test_sub_process_is_initialized_returns_false():
+    """
+    Check that _sub_process_is_initialized returns False when sub process is not
+    yet initialized
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    assert not telemetry_inst._sub_process_is_initialized("RETRIEVE_RAW_DATA")
+
+
+def test_sub_process_is_initialized_returns_true():
+    """
+    Check that _sub_process_is_initialized returns true when sub process is
+    initialized
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst._initialize_sub_process("RETRIEVE_RAW_DATA")
+    assert telemetry_inst._sub_process_is_initialized("RETRIEVE_RAW_DATA")
+
+
+def test_sub_process_not_yet_initialized_returns_false():
+    """
+    Check that _sub_process_not_yet_initialized returns False when sub process
+    initialized
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    telemetry_inst._initialize_sub_process("RETRIEVE_RAW_DATA")
+    assert not telemetry_inst._sub_process_not_yet_initialized("RETRIEVE_RAW_DATA")
+
+
+def test_sub_process_not_yet_initialized_returns_true():
+    """
+    Check that _sub_process_not_yet_initialized returns false when sub process
+    is not yet initialized
+    """
+    telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    assert telemetry_inst._sub_process_not_yet_initialized("RETRIEVE_RAW_DATA")
+
+
+def test_instanciating_telemetry_with_invalid_telemetry_type():
+    """
+    Test that instanciating a telemetry object with invalid telemetry type
+    raises an exception.
+    """
+    telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
+    telemetry_params['telemetry_type'] = 'invalid_type'
+    with pytest.raises(exceptions.InvalidTelemetryType):
+        Telemetry(**telemetry_params)

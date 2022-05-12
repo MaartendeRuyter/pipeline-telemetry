@@ -4,6 +4,7 @@ decorators:
     - add_telemetry
     - add_mongo_telemetry
     - add_single_usage_telemetry
+    - add_mongo_single_usage_telemetry
 """
 from functools import wraps
 

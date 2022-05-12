@@ -78,7 +78,7 @@ ProcessTypes can be created in bulk in the following way::
 
 Once the ``register_process_types`` class method has been called on
 ``ProcessTypes`` all process_types defined in the enumerator provided to the
-method will be availale via ProcessTypes class for defining Telemtry objects,
+method will be availale via ProcessTypes class for defining Telemetry objects,
 like in this example::
 
     from pipeline_telemetry import ProcessTypes

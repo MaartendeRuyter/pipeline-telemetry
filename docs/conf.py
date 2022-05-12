@@ -20,7 +20,7 @@ project = "Pipeline Telemetry"
 year = "2021"
 author = "Maarten de Ruyter"
 copyright = "{0}, {1}".format(year, author)
-version = release = "0.2.19"
+version = release = "0.3.0"
 
 pygments_style = "trac"
 templates_path = ["."]
