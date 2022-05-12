@@ -8,9 +8,11 @@ Contents
    readme
    installation
    usage
+   telemetry object
+   adding telemetry
    decorators
    process_type
-   storage_class
+   storage class
    reference/index
    contributing
    authors

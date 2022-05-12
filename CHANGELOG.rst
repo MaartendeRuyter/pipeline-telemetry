@@ -129,3 +129,12 @@ Changelog
 
 * Added ``add_single_usage_telemetry`` decorator to be used for single usage
 * telemetry objects
+
+0.3.0 (2022-05-12)
+-------------------
+
+* Added ``add_errors_from_return_value`` helper method to easily add the errors
+  from a ``ReturnValueWithStatus`` object from ``error-manager`` package.
+* Automatically initialize a missing sub_process when a telemetry counter is
+  added to the telemetry instance.
+

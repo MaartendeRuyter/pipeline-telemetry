@@ -2,6 +2,8 @@
 """
 from typing import Any, Union
 
+from errors import ReturnValueWithStatus
+
 from .settings import exceptions
 from .settings import settings as st
 from .settings.data_class import TelemetryCounter
@@ -10,6 +12,18 @@ from .settings.data_class import TelemetryCounter
 def is_telemetry_counter(counter: Union[TelemetryCounter, Any]) -> bool:
     """Method to check in object is an instance of TelemetryCounter."""
     return issubclass(counter.__class__, TelemetryCounter)
+
+
+def add_errors_from_return_value(
+        object_with_telemetry: Any, sub_process: str,
+        return_value: ReturnValueWithStatus) -> None:
+    """
+    Helper method to add the errors from a ReturnValueWithStatus instance to the
+    telemetry instance of the object_with_telemetry.
+    """
+    object_with_telemetry._telemetry.add(
+        sub_process=sub_process,
+        data=[], errors=return_value.errors)
 
 
 def increase_base_count(

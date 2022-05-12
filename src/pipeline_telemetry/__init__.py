@@ -40,8 +40,8 @@ from errors import ListErrors
 
 from .decorator import add_mongo_single_usage_telemetry, add_mongo_telemetry, \
     add_single_usage_telemetry, add_telemetry
-from .helper import increase_base_count, increase_fail_count, \
-    is_telemetry_counter
+from .helper import add_errors_from_return_value, increase_base_count, \
+    increase_fail_count, is_telemetry_counter
 from .main import Telemetry
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes

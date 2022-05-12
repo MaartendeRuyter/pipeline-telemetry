@@ -67,14 +67,14 @@ def test_add_error_telemetry_counter_to_telemetry(telemetry_inst):
     assert telemetry_inst.get("RETRIEVE_RAW_DATA")[st.ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
 
 
-def test_add_error_telemetry_counter_to_telemetry_raises_exception():
+def test_add_telemetry_counter_when_sub_process_is_not_initialized():
     """
-    Check that adding a telemetry counter to a Telemetry instance
-    raises exception when basecounter has not been added
+    Check that adding a telemetry counter to a Telemetry instance possible when
+    subproces is not initialized
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
-    with pytest.raises(exceptions.BaseCountForSubProcessNotAdded):
-        telemetry_inst.add_telemetry_counter(TEST_ERROR_TELEMETRY_COUNTER)
+    telemetry_inst.add_telemetry_counter(TEST_TELEMETRY_COUNTER)
+    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 1
 
 
 def test_add_telemetry_counter_with_icrement_2_to_telemetry(telemetry_inst):
