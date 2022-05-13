@@ -59,8 +59,8 @@ Create and store data pipeline telemetry data
 
 * Free software: GNU Lesser General Public License v3 or later (LGPLv3+)
 
-Installation
-============
+Installing pipeline-telemetry
+=============================
 
 ::
 
@@ -78,8 +78,8 @@ Documentation
 https://pipeline-telemetry.readthedocs.io/
 
 
-Development
-===========
+Testing
+=======
 
 To run all the tests run::
 

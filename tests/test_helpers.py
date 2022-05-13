@@ -1,10 +1,13 @@
 """Module to test pipeline telemetry helper methods.
 """
 from errors import ReturnValueWithErrorStatus, ReturnValueWithStatus
-from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_ERROR_CODE
+import test_data as td
+import pipeline_telemetry.helper as HP
 
 from pipeline_telemetry import Telemetry, add_errors_from_return_value, \
-    increase_base_count, increase_fail_count
+    increase_base_count, increase_fail_count, process_return_value, \
+    process_telemetry_counters_in_return_value
+
 from pipeline_telemetry.settings.settings import BASE_COUNT_KEY, FAIL_COUNT_KEY
 
 
@@ -18,7 +21,7 @@ def test_add_result_value_with_status_without_errors():
     the telemetry adds no errors to the telemetry object.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     return_value_without_error = ReturnValueWithStatus(result=[])
     add_errors_from_return_value(
         object_with_telemetry=test_obj,
@@ -33,16 +36,17 @@ def test_add_result_value_with_status_with_one_error():
     telemetry adds the actual error to the telemetry object.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
-    return_value_with_error = ReturnValueWithErrorStatus(error=TEST_ERROR_CODE)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
+    return_value_with_error = ReturnValueWithErrorStatus(
+        error=td.TEST_ERROR_CODE)
     add_errors_from_return_value(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         return_value=return_value_with_error)
-    assert TEST_ERROR_CODE.code in \
+    assert td.TEST_ERROR_CODE.code in \
         str(test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors'))
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors').get(
-        TEST_ERROR_CODE.code) == 1
+        td.TEST_ERROR_CODE.code) == 1
 
 
 def test_add_result_value_with_status_with_errors():
@@ -51,15 +55,33 @@ def test_add_result_value_with_status_with_errors():
     telemetry adds the actual errors to the telemetry object.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
-    return_value_with_error = ReturnValueWithErrorStatus(error=TEST_ERROR_CODE)
-    return_value_with_error.add_error(TEST_ERROR_CODE)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
+    return_value_with_error = ReturnValueWithErrorStatus(
+        error=td.TEST_ERROR_CODE)
+    return_value_with_error.add_error(td.TEST_ERROR_CODE)
     add_errors_from_return_value(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         return_value=return_value_with_error)
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors').get(
-        TEST_ERROR_CODE.code) == 2
+        td.TEST_ERROR_CODE.code) == 2
+
+
+def test_process_telemetry_counters_in_return_value():
+    """
+    Test that when a ResultValueWithStatus instance with 2 telemetry counters
+    in the result is processed by process_telemetry_counters_in_return_value
+    the telemetry counters are processed.
+    """
+    test_obj = HelperTest()
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
+    process_telemetry_counters_in_return_value(
+        object_with_telemetry=test_obj,
+        sub_process="RETRIEVE_RAW_DATA",
+        return_value=td.TEST_RETURN_VALUE)
+    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(
+        'errors') is not None
+    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('test_counter') == 1
 
 
 def test_increase_base_count():
@@ -68,7 +90,7 @@ def test_increase_base_count():
     a given sub process.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     increase_base_count(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA")
@@ -81,7 +103,7 @@ def test_increase_base_count_with_increment():
     a given sub process.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     increase_base_count(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
@@ -95,9 +117,73 @@ def test_increase_fail_count():
     1 for a given sub process.
     """
     test_obj = HelperTest()
-    test_obj._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     test_obj._telemetry._initialize_sub_process("RETRIEVE_RAW_DATA")
     increase_fail_count(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA")
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(FAIL_COUNT_KEY) == 1
+
+
+def test_process_return_value(mocker):
+    """
+    Test that process_return_value returns the list from the return_value
+    result field but with all TelemetryCounter instances removed.
+    """
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "process_telemetry_counters_in_return_value"),
+        return_value=None)
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "add_errors_from_return_value"),
+        return_value=None)
+    assert process_return_value(
+        object_with_telemetry=None,
+        sub_process="na for this test",
+        return_value=td.TEST_RETURN_VALUE) == [1, 2]
+
+
+def test_process_return_value_processes_the_errors(mocker):
+    """
+    Test process_return_value calls the add_errors_from_return_value method.
+    """
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "process_telemetry_counters_in_return_value"),
+        return_value=None)
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "add_errors_from_return_value"),
+        return_value=None)
+    process_telemetry_spy = mocker.spy(
+        HP, "process_telemetry_counters_in_return_value")
+
+    process_return_value(
+        object_with_telemetry=None,
+        sub_process="na for this test",
+        return_value=td.TEST_RETURN_VALUE)
+    assert process_telemetry_spy.called
+
+
+def test_process_return_value_processes_the_telemetry_counters(mocker):
+    """
+    Test process_return_value calls the
+    process_telemetry_counters_in_return_value method.
+    """
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "process_telemetry_counters_in_return_value"),
+        return_value=None)
+    mocker.patch(
+        ("pipeline_telemetry.helper."
+         "add_errors_from_return_value"),
+        return_value=None)
+    process_telemetry_spy = mocker.spy(
+        HP, "process_telemetry_counters_in_return_value")
+
+    process_return_value(
+        object_with_telemetry=None,
+        sub_process="na for this test",
+        return_value=td.TEST_RETURN_VALUE)
+    assert process_telemetry_spy.called

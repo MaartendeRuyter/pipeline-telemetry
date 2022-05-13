@@ -1,6 +1,6 @@
 """Helper module for pipeline_telemetry
 """
-from typing import Any, Union
+from typing import Any, List, Union
 
 from errors import ReturnValueWithStatus
 
@@ -24,6 +24,45 @@ def add_errors_from_return_value(
     object_with_telemetry._telemetry.add(
         sub_process=sub_process,
         data=[], errors=return_value.errors)
+
+
+def process_telemetry_counters_in_return_value(
+        object_with_telemetry: Any, sub_process: str,
+        return_value: ReturnValueWithStatus) -> None:
+    """
+    Helper method to add the errors from a ReturnValueWithStatus instance to the
+    telemetry instance of the object_with_telemetry.
+    """
+    for item in return_value.result:
+        if is_telemetry_counter(item):
+            object_with_telemetry._telemetry.add_telemetry_counter(item)
+    
+
+def process_return_value(
+        object_with_telemetry: Any, sub_process: str,
+        return_value: ReturnValueWithStatus) -> List[Any]:
+    """Processes a return value object.
+    All errors and telemetry counters in return_value errors and result list
+    will be processed and added to the telemetry object in
+    object_with_telemetry. All the other values in the result list are then
+    returned as a list.
+
+    Args:
+        object_with_telemetry (Any): _description_
+        sub_process (str): _description_
+        return_value (ReturnValueWithStatus): _description_
+
+    Returns:
+        List[Any]: _description_
+    """
+    add_errors_from_return_value(
+        object_with_telemetry, sub_process, return_value)
+
+    process_telemetry_counters_in_return_value(
+        object_with_telemetry, sub_process, return_value)
+
+    return [
+        item for item in return_value.result if not is_telemetry_counter(item)]
 
 
 def increase_base_count(

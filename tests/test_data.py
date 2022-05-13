@@ -1,7 +1,7 @@
 """
 This module provides test data for the telemetry tests
 """
-from errors import ErrorCode, ListErrors
+from errors import ErrorCode, ListErrors, ReturnValueWithStatus
 
 from pipeline_telemetry.settings.data_class import ProcessType, \
     TelemetryCounter
@@ -67,3 +67,9 @@ TEST_ERROR_TELEMETRY_COUNTER = TelemetryCounter(
     increment=1,
     error=ListErrors.KEY_NOT_FOUND,
 )
+
+
+TEST_RESULT = [1, TEST_TELEMETRY_COUNTER, 2,
+               TEST_ERROR_TELEMETRY_COUNTER]
+
+TEST_RETURN_VALUE = ReturnValueWithStatus(result=TEST_RESULT)

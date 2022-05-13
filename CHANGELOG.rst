@@ -138,3 +138,13 @@ Changelog
 * Automatically initialize a missing sub_process when a telemetry counter is
   added to the telemetry instance.
 
+
+0.3.1 (2022-05-13)
+-------------------
+
+* Added ``process_telemetry_counters_in_return_value`` helper method to easily
+  add retrieve and process TelemetryCounter objects from a return value object.
+* Added ``process_return_value`` helper method to process both ErrorCode and
+  TelemetryCounter objects from a return value object.
+* Added more documentation
+

@@ -13,6 +13,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinx.ext.autosectionlabel"
 ]
 source_suffix = ".rst"
 master_doc = "index"
@@ -20,7 +21,7 @@ project = "Pipeline Telemetry"
 year = "2021"
 author = "Maarten de Ruyter"
 copyright = "{0}, {1}".format(year, author)
-version = release = "0.3.0"
+version = release = "0.3.1"
 
 pygments_style = "trac"
 templates_path = ["."]
