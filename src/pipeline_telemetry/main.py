@@ -395,8 +395,8 @@ class Telemetry:
                 error=telemetry_counter.error,
                 increment=increment,
             )
-        
-        else:   
+
+        else:
             self.increase_sub_process_custom_count(
                 sub_process=sub_process,
                 custom_counter=counter_name,

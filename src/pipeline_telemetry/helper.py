@@ -36,7 +36,7 @@ def process_telemetry_counters_in_return_value(
     for item in return_value.result:
         if is_telemetry_counter(item):
             object_with_telemetry._telemetry.add_telemetry_counter(item)
-    
+
 
 def process_return_value(
         object_with_telemetry: Any, sub_process: str,

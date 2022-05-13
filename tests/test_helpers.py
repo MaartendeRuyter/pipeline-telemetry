@@ -1,13 +1,12 @@
 """Module to test pipeline telemetry helper methods.
 """
-from errors import ReturnValueWithErrorStatus, ReturnValueWithStatus
 import test_data as td
-import pipeline_telemetry.helper as HP
+from errors import ReturnValueWithErrorStatus, ReturnValueWithStatus
 
+import pipeline_telemetry.helper as HP
 from pipeline_telemetry import Telemetry, add_errors_from_return_value, \
     increase_base_count, increase_fail_count, process_return_value, \
     process_telemetry_counters_in_return_value
-
 from pipeline_telemetry.settings.settings import BASE_COUNT_KEY, FAIL_COUNT_KEY
 
 
