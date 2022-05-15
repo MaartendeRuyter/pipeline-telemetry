@@ -23,17 +23,17 @@ Method to process the errors from a ``ReturnValueWithStatus`` instance. It take 
             return_value = get_data_from_source()               (2)
             
             # process the errors
-            self.process_errors_from_return_value(              (2)
+            self.process_errors_from_return_value(              (3)
                 return_value=return_value,
                 sub_process="GET_DATA_FROM_SOURCE"
             )
 
             # if return_value is invalid it makes no sense to process
-            if not return_value.is_valid:
+            if not return_value.is_valid:                       (4)
                 return
 
             # process the items of the retrieved data
-            for record in return_value.result:
+            for record in return_value.result:                  (5)
                 self.process_record(record)
 
 In process_data() is called steps are executed:
