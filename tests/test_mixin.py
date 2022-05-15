@@ -1,16 +1,15 @@
 """
 Module to test telemetry mixin class for pipeline telemetry module.
 """
-import pipeline_telemetry.mixin as HP
-from pipeline_telemetry.mixin import TelemetryMixin
+import pipeline_telemetry.mixin as MX
 
 
 def test_telemetry_mixin_exists():
     """check that TelemetryMixin class exists"""
-    assert TelemetryMixin
+    assert MX.TelemetryMixin
 
 
-def test_process_errors_from_return_values(mocker):
+def test_process_errors_from_return_value(mocker):
     """
     Test method process_errors_from_return_value calls helper method
     add_errors_from_return_value
@@ -20,9 +19,9 @@ def test_process_errors_from_return_values(mocker):
          "add_errors_from_return_value"),
         return_value=None)
     add_errors_spy = mocker.spy(
-        HP, "add_errors_from_return_value")
+        MX, "add_errors_from_return_value")
 
-    TelemetryMixin().process_errors_from_return_values(
+    MX.TelemetryMixin().process_errors_from_return_value(
         sub_process='TEST',
         return_value='test')
     assert add_errors_spy.called

@@ -44,6 +44,7 @@ from .helper import add_errors_from_return_value, increase_base_count, \
     increase_fail_count, is_telemetry_counter, process_return_value, \
     process_telemetry_counters_in_return_value
 from .main import Telemetry
+from .mixin import TelemetryMixin
 from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
 from .settings.settings import BaseEnumerator, DefaultProcessTypes

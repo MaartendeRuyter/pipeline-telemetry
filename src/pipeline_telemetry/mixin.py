@@ -9,7 +9,7 @@ from .helper import add_errors_from_return_value
 
 class TelemetryMixin():
 
-    def process_errors_from_return_values(
+    def process_errors_from_return_value(
             self,  sub_process: str,
             return_value: ReturnValueWithStatus) -> None:
         """
