@@ -6,11 +6,11 @@ Contents
    :maxdepth: 2
 
    readme
-   installation
    usage
    telemetry object
-   adding telemetry
    decorators
+   adding telemetry
+   telemetry mixin
    process_type
    storage class
    reference/index

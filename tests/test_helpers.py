@@ -76,7 +76,6 @@ def test_process_telemetry_counters_in_return_value():
     test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     process_telemetry_counters_in_return_value(
         object_with_telemetry=test_obj,
-        sub_process="RETRIEVE_RAW_DATA",
         return_value=td.TEST_RETURN_VALUE)
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(
         'errors') is not None

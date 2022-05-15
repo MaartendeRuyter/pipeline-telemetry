@@ -27,7 +27,7 @@ def add_errors_from_return_value(
 
 
 def process_telemetry_counters_in_return_value(
-        object_with_telemetry: Any, sub_process: str,
+        object_with_telemetry: Any,
         return_value: ReturnValueWithStatus) -> None:
     """
     Helper method to add the errors from a ReturnValueWithStatus instance to the
@@ -59,7 +59,7 @@ def process_return_value(
         object_with_telemetry, sub_process, return_value)
 
     process_telemetry_counters_in_return_value(
-        object_with_telemetry, sub_process, return_value)
+        object_with_telemetry, return_value)
 
     return [
         item for item in return_value.result if not is_telemetry_counter(item)]

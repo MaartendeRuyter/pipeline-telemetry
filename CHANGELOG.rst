@@ -148,3 +148,11 @@ Changelog
   TelemetryCounter objects from a return value object.
 * Added more documentation
 
+0.4.0 (2022-05-15)
+-------------------
+
+* Added ``TelemetryMixin`` class to enable easy including of telemetry update
+  methods in any datapipeline class.
+  
+
+
