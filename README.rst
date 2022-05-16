@@ -13,7 +13,9 @@ Overview
       - | |travis| |requires|
         | |codecov|
     * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations|
+      - | |version| |wheel|
+        | |supported-versions|
+        | |supported-implementations|
         | |commits-since|
 .. |docs| image:: https://readthedocs.org/projects/pipeline-telemetry/badge/?style=flat
     :target: https://pipeline-telemetry.readthedocs.io/

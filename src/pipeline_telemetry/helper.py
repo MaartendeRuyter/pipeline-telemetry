@@ -26,16 +26,21 @@ def add_errors_from_return_value(
         data=[], errors=return_value.errors)
 
 
-def process_telemetry_counters_in_return_value(
+def add_telemetry_counters_from_return_value(
         object_with_telemetry: Any,
-        return_value: ReturnValueWithStatus) -> None:
+        return_value: ReturnValueWithStatus) -> List[Any]:
     """
-    Helper method to add the errors from a ReturnValueWithStatus instance to the
-    telemetry instance of the object_with_telemetry.
+    Helper method to add the TelemetryCounters from a ReturnValueWithStatus
+    instance to the telemetry instance of the object_with_telemetry.
     """
+    result_without_telemetry_counters = []
     for item in return_value.result:
         if is_telemetry_counter(item):
             object_with_telemetry._telemetry.add_telemetry_counter(item)
+        else:
+            result_without_telemetry_counters.append(item)
+
+    return result_without_telemetry_counters
 
 
 def process_return_value(
@@ -58,11 +63,8 @@ def process_return_value(
     add_errors_from_return_value(
         object_with_telemetry, sub_process, return_value)
 
-    process_telemetry_counters_in_return_value(
+    return add_telemetry_counters_from_return_value(
         object_with_telemetry, return_value)
-
-    return [
-        item for item in return_value.result if not is_telemetry_counter(item)]
 
 
 def increase_base_count(

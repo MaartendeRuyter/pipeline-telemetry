@@ -5,8 +5,8 @@ from errors import ReturnValueWithErrorStatus, ReturnValueWithStatus
 
 import pipeline_telemetry.helper as HP
 from pipeline_telemetry import Telemetry, add_errors_from_return_value, \
-    increase_base_count, increase_fail_count, process_return_value, \
-    process_telemetry_counters_in_return_value
+    add_telemetry_counters_from_return_value, increase_base_count, \
+    increase_fail_count, is_telemetry_counter, process_return_value
 from pipeline_telemetry.settings.settings import BASE_COUNT_KEY, FAIL_COUNT_KEY
 
 
@@ -74,12 +74,28 @@ def test_process_telemetry_counters_in_return_value():
     """
     test_obj = HelperTest()
     test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
-    process_telemetry_counters_in_return_value(
+    add_telemetry_counters_from_return_value(
         object_with_telemetry=test_obj,
         return_value=td.TEST_RETURN_VALUE)
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(
         'errors') is not None
     assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('test_counter') == 1
+
+
+def test_process_telemetry_counters_in_return_value_returns_list():
+    """
+    Test that when a ResultValueWithStatus instance with 2 telemetry counters
+    in the result is processed by process_telemetry_counters_in_return_value
+    the result list without TelemetryCounters is returned.
+    """
+    test_obj = HelperTest()
+    test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
+    res_without_telem_counters = add_telemetry_counters_from_return_value(
+        object_with_telemetry=test_obj,
+        return_value=td.TEST_RETURN_VALUE)
+    assert res_without_telem_counters == [
+        res for res in td.TEST_RETURN_VALUE.result
+        if not is_telemetry_counter(res)]
 
 
 def test_increase_base_count():
@@ -125,13 +141,13 @@ def test_increase_fail_count():
 
 def test_process_return_value(mocker):
     """
-    Test that process_return_value returns the list from the return_value
-    result field but with all TelemetryCounter instances removed.
+    Test that process_return_value returns helper method returns the list
+    retrieved add_telemetry_counters_from_return_value helper method.
     """
     mocker.patch(
         ("pipeline_telemetry.helper."
-         "process_telemetry_counters_in_return_value"),
-        return_value=None)
+         "add_telemetry_counters_from_return_value"),
+        return_value=['list with values'])
     mocker.patch(
         ("pipeline_telemetry.helper."
          "add_errors_from_return_value"),
@@ -139,7 +155,7 @@ def test_process_return_value(mocker):
     assert process_return_value(
         object_with_telemetry=None,
         sub_process="na for this test",
-        return_value=td.TEST_RETURN_VALUE) == [1, 2]
+        return_value=td.TEST_RETURN_VALUE) == ['list with values']
 
 
 def test_process_return_value_processes_the_errors(mocker):
@@ -148,14 +164,14 @@ def test_process_return_value_processes_the_errors(mocker):
     """
     mocker.patch(
         ("pipeline_telemetry.helper."
-         "process_telemetry_counters_in_return_value"),
+         "add_telemetry_counters_from_return_value"),
         return_value=None)
     mocker.patch(
         ("pipeline_telemetry.helper."
          "add_errors_from_return_value"),
         return_value=None)
     process_telemetry_spy = mocker.spy(
-        HP, "process_telemetry_counters_in_return_value")
+        HP, "add_telemetry_counters_from_return_value")
 
     process_return_value(
         object_with_telemetry=None,
@@ -171,14 +187,14 @@ def test_process_return_value_processes_the_telemetry_counters(mocker):
     """
     mocker.patch(
         ("pipeline_telemetry.helper."
-         "process_telemetry_counters_in_return_value"),
+         "add_telemetry_counters_from_return_value"),
         return_value=None)
     mocker.patch(
         ("pipeline_telemetry.helper."
          "add_errors_from_return_value"),
         return_value=None)
     process_telemetry_spy = mocker.spy(
-        HP, "process_telemetry_counters_in_return_value")
+        HP, "add_telemetry_counters_from_return_value")
 
     process_return_value(
         object_with_telemetry=None,

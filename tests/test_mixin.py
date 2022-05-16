@@ -25,3 +25,20 @@ def test_process_errors_from_return_value(mocker):
         sub_process='TEST',
         return_value='test')
     assert add_errors_spy.called
+
+
+def test_process_telemetry_counters_from_return_value(mocker):
+    """
+    Test method process_telemetry_counters_from_return_value calls helper
+    method add_telemetry_counters_from_return_value
+    """
+    mocker.patch(
+        ("pipeline_telemetry.mixin."
+         "add_telemetry_counters_from_return_value"),
+        return_value=None)
+    add_telemetry_counters_spy = mocker.spy(
+        MX, "add_telemetry_counters_from_return_value")
+
+    MX.TelemetryMixin().process_telemetry_counters_from_return_value(
+        return_value='test')
+    assert add_telemetry_counters_spy.called
