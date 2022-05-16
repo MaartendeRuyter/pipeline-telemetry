@@ -155,4 +155,13 @@ Changelog
   methods in any datapipeline class.
   
 
+0.4.1 (2022-05-16)
+-------------------
+
+* Added ``process_telemetry_counters_from_return_value`` method to ``TelemetryMixin`` class.
+* Added documentation on TelemetryCounter
+  
+
+
+
 
