@@ -81,3 +81,38 @@ When process_data() is called the following steps are executed:
 
 
 
+
+process_telemetry_counters_from_list
+--------------------------------------------
+Method to process the telemetry counters from a list. The method will processes all the telemetry counters that are found in the provided list and return the list without the telemetry counters.::
+
+    from pipeline_telemetry import TelemetryMixin, add_telemetry
+
+    form settings import TELEMETRY_PARAMS
+
+    for my_pipeline import get_data_from_source
+
+    
+    class MyDataPipeline(TelemetryMixin):
+
+        @add_telemetry(TELEMETRY_PARAMS)                        
+        def process_data(self) -> None:
+            # get data in a ReturnValueWithStatus object
+            list_with_source_data = get_data_from_source()               
+            
+            # process the telemetry_counters
+            list_without_telemetry_counters = \               (1)
+                self.process_telemetry_counters_from_list(              
+                    result_list=list_with_source_data)
+
+            # process the items of the retrieved data
+            for record in list_without_telemetry_counters:    (2)
+                self.process_record(record)
+
+When process_data() is called the following steps are executed:
+
+(1) All telemetry counters returned in the list_without_telemetry_counters by ``get_data_from_source()`` method are added to the telemetry attribute of the ``MyDataPipeline`` instance.
+(2) Any remaining data items can now be process by ``process_record`` method.
+
+
+

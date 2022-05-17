@@ -161,7 +161,7 @@ Changelog
 * Added ``process_telemetry_counters_from_return_value`` method to ``TelemetryMixin`` class.
 * Added documentation on TelemetryCounter
   
+0.4.2 (2022-05-17)
+-------------------
 
-
-
-
+* Added ``process_telemetry_counters_from_list`` method to ``TelemetryMixin`` class.

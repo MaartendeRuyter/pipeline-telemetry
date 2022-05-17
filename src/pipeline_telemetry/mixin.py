@@ -2,12 +2,13 @@
 Module to define TelemetryMixin class for adding methods to
 a class that allow easy Telemetry updates
 """
-from typing import Any, List
+from typing import Any, List, Union
 
 from errors import ReturnValueWithStatus
 
 from .helper import add_errors_from_return_value, \
     add_telemetry_counters_from_return_value
+from .settings.data_class import TelemetryCounter
 
 
 class TelemetryMixin():
@@ -50,3 +51,21 @@ class TelemetryMixin():
         return add_telemetry_counters_from_return_value(
             object_with_telemetry=self,
             return_value=return_value)
+
+    def process_telemetry_counters_from_list(
+            self, result_list: List[Union[Any, TelemetryCounter]]) -> list[Any]:
+        """
+        Adds TelemetryCounters from result_list to _telemetry object.
+
+        Args:
+            result_list ([Any, TelemetryCounter]):
+                Result list containing data objects (not processed) and
+                Telemetry counters
+
+        Returns:
+            List:
+                List with all data objects from result_list. All objects of type
+                TelemetryCounter will have been removed.
+        """
+        return_value = ReturnValueWithStatus(result=result_list)
+        return self.process_telemetry_counters_from_return_value(return_value)

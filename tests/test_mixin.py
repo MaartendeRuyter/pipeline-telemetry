@@ -35,10 +35,29 @@ def test_process_telemetry_counters_from_return_value(mocker):
     mocker.patch(
         ("pipeline_telemetry.mixin."
          "add_telemetry_counters_from_return_value"),
-        return_value=None)
+        return_value='correct return object')
     add_telemetry_counters_spy = mocker.spy(
         MX, "add_telemetry_counters_from_return_value")
 
-    MX.TelemetryMixin().process_telemetry_counters_from_return_value(
+    result = MX.TelemetryMixin().process_telemetry_counters_from_return_value(
         return_value='test')
     assert add_telemetry_counters_spy.called
+    assert result == 'correct return object'
+
+
+def test_process_telemetry_counters_from_result_list(mocker):
+    """
+    Test method process_telemetry_counters_from_result_list calls mixin
+    method process_telemetry_counters_from_return_value
+    """
+    mocker.patch(
+        ("pipeline_telemetry.mixin.TelemetryMixin."
+         "process_telemetry_counters_from_return_value"),
+        return_value='correct return object')
+    process_telemetry_counters_spy = mocker.spy(
+        MX.TelemetryMixin, "process_telemetry_counters_from_return_value")
+
+    result = MX.TelemetryMixin().process_telemetry_counters_from_list(
+        result_list=['test'])
+    assert process_telemetry_counters_spy.called
+    assert result == 'correct return object'
