@@ -202,3 +202,17 @@ def test_all_process_types_with_single_entry():
     )
     assert None not in counter.all_process_types
     assert ProcessTypes.CREATE_DATA_FROM_URL in counter.all_process_types
+
+
+def test_set_increment_method_on_telemetry_counter():
+    """
+    Test set_increment sets a new value for the increment.
+    """
+    counter = TelemetryCounter(
+        process_type=ProcessTypes.CREATE_DATA_FROM_URL,
+        sub_process="DATA_UPLOAD",
+        counter_name=TEST_TELEMETRY_COUNTER.counter_name,
+    )
+    assert counter.increment == 1
+    new_counter = counter.set_increment(increment=10)
+    assert new_counter.increment == 10

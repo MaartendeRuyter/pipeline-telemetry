@@ -71,3 +71,14 @@ class TelemetryCounter:
         return list(
             filter(lambda process_type: process_type is not None, all_process_types)
         )
+
+    def set_increment(self, increment: int):
+        """Returns same telemetry counter with a new increment."""
+        return TelemetryCounter(
+            sub_process=self.sub_process,
+            process_types=self.process_types,
+            process_type=self.process_type,
+            counter_name=self.counter_name,
+            increment=increment,
+            error=self.error,
+        )
