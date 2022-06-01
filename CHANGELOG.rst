@@ -165,3 +165,8 @@ Changelog
 -------------------
 
 * Added ``process_telemetry_counters_from_list`` method to ``TelemetryMixin`` class.
+
+0.4.3 (2022-06-01)
+-------------------
+
+* Added ``set_increment`` method to ``TelemetryCounter`` class.
