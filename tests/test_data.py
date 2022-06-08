@@ -41,11 +41,29 @@ TEST_PROCESS_TYPE = ProcessType(
     process_type="test_process_type", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 )
 
+
+TEST_PROCESS_TYPE_2 = ProcessType(
+    process_type="test_process_type", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+)
+
 TEST_TELEMETRY_COUNTER = TelemetryCounter(
     process_type=TEST_PROCESS_TYPE,
     sub_process="RETRIEVE_RAW_DATA",
     counter_name="test_counter",
 )
+
+TEST_TELEMETRY_COUNTER_2 = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process="RETRIEVE_RAW_DATA",
+    counter_name="test_counter_2",
+)
+
+TEST_TELEMETRY_COUNTER_3 = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process="DATA_CONVERSION",
+    counter_name="test_counter",
+)
+
 
 TEST_TELEMETRY_COUNTER_INC_2 = TelemetryCounter(
     process_type=TEST_PROCESS_TYPE,
@@ -66,6 +84,33 @@ TEST_ERROR_TELEMETRY_COUNTER = TelemetryCounter(
     sub_process="RETRIEVE_RAW_DATA",
     increment=1,
     error=ListErrors.KEY_NOT_FOUND,
+)
+
+TEST_ERROR_TELEMETRY_COUNTER_2 = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process="RETRIEVE_RAW_DATA",
+    increment=1,
+    error=ListErrors.FIELD_NOT_FOUND,
+)
+
+
+TEST_ERROR_TC_PROCESS_TYPE_2 = TelemetryCounter(
+    process_type=TEST_PROCESS_TYPE,
+    sub_process="RETRIEVE_RAW_DATA",
+    increment=1,
+    error=ListErrors.KEY_NOT_FOUND,
+)
+
+TEST_TC_MULT_PROCESS_TYPES = TelemetryCounter(
+    process_types=[TEST_PROCESS_TYPE, TEST_PROCESS_TYPE_2],
+    sub_process="RETRIEVE_RAW_DATA",
+    counter_name="test_counter",
+)
+
+TEST_TC_MULT_PROCESS_TYPES_2 = TelemetryCounter(
+    process_types=[TEST_PROCESS_TYPE],
+    sub_process="RETRIEVE_RAW_DATA",
+    counter_name="test_counter",
 )
 
 

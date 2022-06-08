@@ -37,6 +37,19 @@ class TelemetryCounter:
     increment: int = 1
     error: ErrorCode = None
 
+    def __hash__(self):
+        hash_list = [process_type.process_type for process_type
+                     in self.process_types or []]
+        hash_list.append(self.sub_process)
+        if self.process_type:
+            hash_list.append(self.process_type.process_type)
+        if self.counter_name:
+            hash_list.append(self.counter_name)
+        if self.error:
+            hash_list.append(self.error.code)
+        hash_list.append(str(self.increment))
+        return hash(tuple(hash_list))
+
     def add_to(self, object_with_telemetry: Any, increment: int = None) -> None:
         """
         Method to add to add self (the TelemetryCounter) to an object telemetry

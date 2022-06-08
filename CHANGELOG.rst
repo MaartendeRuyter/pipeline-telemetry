@@ -170,3 +170,9 @@ Changelog
 -------------------
 
 * Added ``set_increment`` method to ``TelemetryCounter`` class.
+
+
+0.4.4 (2022-06-08)
+-------------------
+
+* Added custom  __hash__ method to ``TelemetryCounter``

@@ -36,3 +36,7 @@ When a telemetry counter is added to a result in a different class from where th
     10
 
 Now you can freely change the increment of the predefined counter and return it to the class that adds the counter to the telemetry object.
+
+hash
+----
+In order to easily count the number of ``TelemetryCounters`` in a list a hash method has been implemented on the TelemetryCounters. TelemetryCounters with differerent cvalue
