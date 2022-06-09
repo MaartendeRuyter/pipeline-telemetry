@@ -1,12 +1,34 @@
 """
 Module to test telemetry mixin class for pipeline telemetry module.
 """
+from test_data import DEFAULT_TELEMETRY_PARAMS
+
 import pipeline_telemetry.mixin as MX
+from pipeline_telemetry.main import Telemetry
 
 
 def test_telemetry_mixin_exists():
     """check that TelemetryMixin class exists"""
     assert MX.TelemetryMixin
+
+
+def test_set_source_name():
+    """
+    test method set_telemetry_source_name changes the telemetry
+    source name attribute
+    """
+    class TelTest(MX.TelemetryMixin):
+        def __init__(self):
+            self._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
+
+        def get_source_name(self):
+            return self._telemetry._telemetry['source_name']
+
+    tel_test = TelTest()
+    test_source_name = 'abcd'
+    assert not tel_test.get_source_name() == test_source_name
+    tel_test.set_telemetry_source_name(test_source_name)
+    assert tel_test.get_source_name() == test_source_name
 
 
 def test_process_errors_from_return_value(mocker):

@@ -69,3 +69,12 @@ class TelemetryMixin():
         """
         return_value = ReturnValueWithStatus(result=result_list)
         return self.process_telemetry_counters_from_return_value(return_value)
+
+    def set_telemetry_source_name(self, source_name: str) -> None:
+        """(re)Set the telemerty source name
+
+        Args:
+            source_name (str): The source_name that should be added to the
+                               telemetry object.
+        """
+        self._telemetry._telemetry['source_name'] = source_name

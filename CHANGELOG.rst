@@ -175,4 +175,10 @@ Changelog
 0.4.4 (2022-06-08)
 -------------------
 
-* Added custom  __hash__ method to ``TelemetryCounter``
+* Added custom __hash__ method to ``TelemetryCounter``
+
+
+0.4.5 (2022-06-09)
+-------------------
+
+* Added ``set_telemetry_source_name`` method to ``TelemetryMixin`` class

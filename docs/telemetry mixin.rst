@@ -80,10 +80,8 @@ When process_data() is called the following steps are executed:
 (2) Any remaining data items can now be process by ``process_record`` method.
 
 
-
-
 process_telemetry_counters_from_list
---------------------------------------------
+------------------------------------
 Method to process the telemetry counters from a list. The method will processes all the telemetry counters that are found in the provided list and return the list without the telemetry counters.::
 
     from pipeline_telemetry import TelemetryMixin, add_telemetry
@@ -114,5 +112,16 @@ When process_data() is called the following steps are executed:
 (1) All telemetry counters returned in the list_without_telemetry_counters by ``get_data_from_source()`` method are added to the telemetry attribute of the ``MyDataPipeline`` instance.
 (2) Any remaining data items can now be process by ``process_record`` method.
 
+set_telemetry_source_name
+-------------------------
+This method allows you to reset the telemetry source name. This method can help you in case the telemetry params source name should be set dynamically.::
 
+    class MyDataPipeline(TelemetryMixin):
 
+        @add_telemetry(TELEMETRY_PARAMS)                        
+        def process_data(self, source_name: str) -> None:
+            self.set_telemetry_source_name(source_name=source_name)      (1)  
+            
+            # actual data pipeline logic
+
+When process_data() with a source_name as argument this source_name will overide the TELEMETRY_PARAMS source name when ``set_telemetry_source_name`` is called with the source_name as argument (1).
