@@ -7,7 +7,7 @@ classes
 """
 from collections import defaultdict
 from datetime import datetime
-from typing import List
+from typing import List, Optional, Type
 
 from errors import ErrorCode
 
@@ -78,7 +78,8 @@ class Telemetry:
         process_type: ProcessType,
         telemetry_type: str = st.DEFAULT_TELEMETRY_TYPE,
         telemetry_rules: dict = dict(),
-        storage_class: AbstractTelemetryStorage = None,
+        storage_class:
+            Type[AbstractTelemetryStorage] = TelemetryInMemoryStorage,
     ):
         self._set_process_type(process_type)
         self._telemetry = defaultdict(int)
@@ -97,7 +98,8 @@ class Telemetry:
         self._storage_class = self._get_storage_class(storage_class)
 
     @classmethod
-    def add_process_type(cls, process_type_key: str, process_type: ProcessType) -> None:
+    def add_process_type(cls, process_type_key: str, process_type: ProcessType
+                         ) -> None:
         """
         Add a custom process type to the available process types to the
         already registered process types.
@@ -130,7 +132,9 @@ class Telemetry:
                 self._available_telemetry_types)
 
     @staticmethod
-    def _get_storage_class(storage_class: AbstractTelemetryStorage) -> None:
+    def _get_storage_class(
+            storage_class: Optional[Type[AbstractTelemetryStorage]]
+    ) -> AbstractTelemetryStorage:
         """
         validates and sets the storage class. If no storage class provided
         it is defaulted to TelemetryInMemoryStorage
@@ -144,7 +148,7 @@ class Telemetry:
         """
         # set default in memory storage if no storage class provided
         if not storage_class:
-            storage_class = TelemetryInMemoryStorage
+            return TelemetryInMemoryStorage()
 
         if not issubclass(storage_class, AbstractTelemetryStorage):
             raise exceptions.StorageClassOfIncorrectType(
@@ -220,7 +224,8 @@ class Telemetry:
         self._telemetry[st.RUN_TIME] = str(run_time.total_seconds())
 
     @_raise_exception_if_telemetry_closed
-    def add(self, sub_process: str, data: dict, errors: List[ErrorCode]) -> None:
+    def add(self, sub_process: str, data: dict, errors: List[ErrorCode]
+            ) -> None:
         """
         Add data validation errors and/or errors from data process to a
         telemetry sub process.
@@ -421,9 +426,9 @@ class Telemetry:
             sub_process (str): sub_process
 
         Returns:
-            bool: True if sub_process is inialized, False otherwis
+            bool: True if sub_process is inialized, False otherwise
         """
-        return self._telemetry.get(sub_process)
+        return self._telemetry.get(sub_process) is not None
 
     def _initialize_sub_process(self, sub_process: str) -> None:
         """sets the initial count object for a sub_process
