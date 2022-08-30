@@ -1,9 +1,10 @@
 """
 """
 from collections import defaultdict
+from concurrent.futures import process
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, Dict, Type
+from typing import Optional, Dict, Type, DefaultDict
 
 from errors import ErrorCode
 
@@ -21,9 +22,9 @@ from .validators.dict_validator import DictValidator
 class TelemetryData():
     base_counter: int = 0
     fail_counter: int = 0
-    errors: defaultdict[int] = \
+    errors: DefaultDict[str, int] = \
         field(default_factory=lambda: defaultdict(int))
-    counters: defaultdict[int] = \
+    counters: DefaultDict[str, int] = \
         field(default_factory=lambda: defaultdict(int))
 
 
@@ -38,14 +39,14 @@ class TelemetryModel():
     run_time_in_seconds: Optional[float] = None
     io_time_in_seconds: float = 0
     traffic_light: str = st.DEFAULT_TRAFIC_LIGHT_COLOR
-    telemetry: Dict[str, TelemetryData] = field(default_factory=TelemetryData)
+    telemetry: Dict[str, TelemetryData] = field(default_factory=dict)
 
 
 class Telemetry():
     _telemetry: TelemetryModel
     _telemetry_rules: dict
     _storage_class: Type[AbstractTelemetryStorage] = TelemetryInMemoryStorage
-    _available_process_types: ProcessTypes = ProcessTypes
+    _available_process_types: Type[ProcessTypes] = ProcessTypes
     _process_type: ProcessType
     _available_telemetry_types = st.TELEMETRY_TYPES
 
@@ -61,15 +62,15 @@ class Telemetry():
         storage_class:
             Type[AbstractTelemetryStorage] = TelemetryInMemoryStorage,
     ):
-        self._process_type = ProcessType
-        self._telemetry = TelemetryModel(**{
-            st.TELEMETRY_TYPE_KEY: telemetry_type,
-            st.CATEGORY_KEY: category,
-            st.SUB_CATEGORY_KEY: sub_category,
-            st.SOURCE_NAME_KEY: source_name,
-            st.PROCESS_TYPE_KEY: process_type.name,
-            st.TRAFFIC_LIGHT_KEY: st.DEFAULT_TRAFIC_LIGHT_COLOR})
+        self._process_type = process_type
         self._validate_telemetry_object()
+
+        self._telemetry = TelemetryModel(
+            telemetry_type=telemetry_type,
+            category=category,
+            sub_category=sub_category,
+            source_name=source_name,
+            process_type=process_type.name)
 
 
     @property
