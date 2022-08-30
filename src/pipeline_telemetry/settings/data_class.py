@@ -1,7 +1,7 @@
 """[summary]
 """
-from dataclasses import dataclass
-from typing import Any, List
+from dataclasses import dataclass, field
+from typing import Any, List, Optional
 
 from errors import ErrorCode
 
@@ -13,7 +13,7 @@ class ProcessType:
     """Immutable dataclass to define a process type and its subtypes."""
 
     process_type: str
-    subtypes: list = list
+    subtypes: list = field(default_factory=lambda: [])
 
     @property
     def name(self) -> str:
@@ -31,11 +31,11 @@ class TelemetryCounter:
     """Immutable dataclass to define a process type and its subtypes."""
 
     sub_process: str
-    process_types: List[ProcessType] = None
-    process_type: ProcessType = None
-    counter_name: str = None
+    process_types: Optional[List[ProcessType]] = None
+    process_type: Optional[ProcessType] = None
+    counter_name: Optional[str] = None
     increment: int = 1
-    error: ErrorCode = None
+    error: Optional[ErrorCode] = None
 
     def __hash__(self):
         hash_list = [process_type.process_type for process_type
@@ -81,9 +81,8 @@ class TelemetryCounter:
         if self.process_types:
             all_process_types.extend(self.process_types)
 
-        return list(
-            filter(lambda process_type: process_type is not None, all_process_types)
-        )
+        return [
+            process_type for process_type in all_process_types if process_type]
 
     def set_increment(self, increment: int):
         """Returns same telemetry counter with a new increment."""
