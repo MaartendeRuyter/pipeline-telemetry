@@ -1,5 +1,6 @@
 """[summary]
 """
+from typing import Optional
 import json
 import sqlite3
 
@@ -12,15 +13,15 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
     Class to provice telemetry in memory storage for use when unit testing
     """
 
-    db_in_memory = None
-    db_cursor = None
+    db_in_memory: Optional[sqlite3.Connection] = None
+    db_cursor: Optional[sqlite3.Cursor] = None
 
     def __init__(self):
         if not self.db_in_memory:
             self.initialize_db()
 
     @classmethod
-    def initialize_db(cls):
+    def initialize_db(cls) -> None:
         """
         class method to initialize the in memory db
         """
@@ -30,10 +31,14 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
             cls._define_db_table(cls.db_cursor)
 
     @classmethod
-    def close_db(cls):
+    def close_db(cls) -> None:
         """close cursor and connections"""
-        cls.db_cursor.close()
-        cls.db_in_memory.close()
+        if cls.db_cursor:
+            cls.db_cursor.close()
+        
+        if cls.db_in_memory:
+            cls.db_in_memory.close()
+        
         cls.db_cursor = None
         cls.db_in_memory = None
 
@@ -65,18 +70,19 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
         json_object = json.dumps(telemetry_copy)
 
-        self.db_cursor.execute(
-            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                telemetry_type,
-                category,
-                sub_category,
-                source_name,
-                process_type,
-                start_date_time,
-                run_time_in_seconds,
-                json_object,
-                traffic_light,
-                io_time_in_seconds
-            ],
-        )
+        if self.db_cursor:
+            self.db_cursor.execute(
+                "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    telemetry_type,
+                    category,
+                    sub_category,
+                    source_name,
+                    process_type,
+                    start_date_time,
+                    run_time_in_seconds,
+                    json_object,
+                    traffic_light,
+                    io_time_in_seconds
+                ],
+            )
