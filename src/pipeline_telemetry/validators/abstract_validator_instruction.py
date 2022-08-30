@@ -1,17 +1,28 @@
 """Module to define abstract validator class
 """
+from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from typing import List, Dict
+from typing import List, Type
 
 from errors import ErrorCode
 
 
+@dataclass(frozen=True)
+class BaseValidatorInstructionRuleData:
+    field_name: str
+
+    def __post_init__(self):
+        if type(self.field_name) is not str:
+            raise TypeError("Field 'field_name' must be of type 'str'.")
+
+
 class AbstractValidatorInstruction(metaclass=ABCMeta):
     """Abstract Validator Instruction class
-
     """
-    instruction = 'instruction_name'
-    fieldname = 'field_name_key'
+    RULE_DATA_CLASS: Type[BaseValidatorInstructionRuleData] = \
+        BaseValidatorInstructionRuleData
+    INSTRUCTION = 'instruction_name'
+    FIELDNAME = 'field_name'
 
     def __new__(cls):
         """ make this a singleton class """
@@ -19,7 +30,7 @@ class AbstractValidatorInstruction(metaclass=ABCMeta):
 
     @classmethod
     def validate(
-            cls, dict_to_validate: dict, rule_content: dict) -> list[ErrorCode]:
+            cls, dict_to_validate: dict, rule_dict: dict) -> list[ErrorCode]:
         """
         Public method to run the validation
         prior to validation the rule will be validated.
@@ -34,35 +45,31 @@ class AbstractValidatorInstruction(metaclass=ABCMeta):
         Raise:
             FieldNameMandatory: when field name not defined in rule
         """
-        cls._validate_rule(rule_content)
-        return cls._validate(dict_to_validate, rule_content)
+        rule_data = cls.RULE_DATA_CLASS(**rule_dict)
+        return cls._validate(dict_to_validate, rule_data)
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def _validate(
             cls, dict_to_validate: dict,
-            rule_content: dict) -> List[ErrorCode]:
+            rule_data: BaseValidatorInstructionRuleData) -> List[ErrorCode]:
         """
         method to do the actual validation
 
         returns:
-            - list of errors
+            - list of errorcodes
         """
-
-    @abstractmethod
-    @classmethod
-    def _validate_rule(cls, rule_content: Dict) -> None:
-        """Method to check the validity of the rule content."""
 
     @classmethod
-    def _get_field_name(cls, rule_content):
+    def _get_field_name(cls, rule_data: BaseValidatorInstructionRuleData
+            ) -> str:
         """
-        retrieves the field name in scope from the rule content
+        Retrieves the field name in scope from the rule content.
         """
-        return rule_content.get(cls.fieldname, None)
+        return getattr(rule_data, cls.FIELDNAME)
 
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def _validation_error(
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """
