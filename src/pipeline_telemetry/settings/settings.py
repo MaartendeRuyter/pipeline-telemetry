@@ -20,6 +20,7 @@ DEFAULT_TRAFIC_LIGHT_COLOR = TRAFIC_LIGHT_COLOR_GREEN
 
 BASE_COUNT_KEY = "base_counter"
 ERRORS_KEY = "errors"
+COUNTERS_KEY = "counters"
 FAIL_COUNT_KEY = "fail_counter"
 SOURCE_NAME_KEY = "source_name"
 CATEGORY_KEY = "category"
