@@ -7,6 +7,7 @@ decorators:
     - add_mongo_single_usage_telemetry
 """
 from functools import wraps
+from typing import Type
 
 from .main import Telemetry
 from .settings import exceptions
@@ -109,7 +110,7 @@ def add_mongo_single_usage_telemetry(sub_process: str = None) -> object:
 
 def add_single_usage_telemetry(
         sub_process: str = None,
-        storage_class: AbstractTelemetryStorage = None) -> object:
+        storage_class: Type[AbstractTelemetryStorage] = None) -> object:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. The telemetry object will be reset each the method
