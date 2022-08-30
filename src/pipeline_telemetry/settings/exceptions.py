@@ -37,8 +37,7 @@ class ExpectedCountMustBePositiveInt(Exception):
     def __init__(self):
         message = "".join(
             [
-                "Ruleset does not contain `expected_count` or ",
-                "expected count is negative",
+                "Ruleset field `expected_count` can not be negative.",
             ]
         )
         super().__init__(message)
@@ -57,7 +56,7 @@ class InstructionRegisteredTwice(Exception):
     def __init__(self, instruction_class):
         message = "".join(
             [
-                f"{instruction_class.instruction} from class ",
+                f"{instruction_class.INSTRUCTION} from class ",
                 f"{instruction_class.__name__}.",
             ]
         )
