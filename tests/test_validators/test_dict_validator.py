@@ -28,7 +28,7 @@ def test_dict_validator_register_instruction():
     # ensure that test is not corrupted by previous registrations
     DictValidator._instructions = {}
     DictValidator.register_instruction(InstructionTestClass)
-    assert InstructionTestClass.instruction in \
+    assert InstructionTestClass.INSTRUCTION in \
         list(DictValidator._instructions.keys())
 
 

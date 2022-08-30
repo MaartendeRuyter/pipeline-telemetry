@@ -3,23 +3,17 @@ This module provides test data for the telemetry tests
 """
 from errors import ErrorCode, ListErrors, ReturnValueWithStatus
 
-from pipeline_telemetry.settings.data_class import ProcessType, \
-    TelemetryCounter
-from pipeline_telemetry.settings.process_type import ProcessTypes
+from pipeline_telemetry import ProcessTypes, ProcessType, TelemetryCounter
 from pipeline_telemetry.settings.settings import \
     DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+from pipeline_telemetry.validators.abstract_validator_instruction import (
+    AbstractValidatorInstruction, BaseValidatorInstructionRuleData)
 
 
-class InstructionTestClass:
+class InstructionTestClass(AbstractValidatorInstruction):
     """Instruction class for test purposes."""
 
-    # pylint: disable=too-few-public-methods
-    instruction = "test_instruction"
-    fieldname = "field_name"
-
-    def __new__(cls):
-        """make this a singleton class"""
-        return cls
+    INSTRUCTION = "test_instruction"
 
 
 # default params for creating a test Telemetry object
