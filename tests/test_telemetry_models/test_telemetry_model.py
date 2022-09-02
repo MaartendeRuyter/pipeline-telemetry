@@ -4,9 +4,9 @@ Module to test telemetry model class for pipeline telemetry module.
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
+from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings import settings as st
-from pipeline_telemetry.telemetry_model import TelemetryModel
 
 # pylint: disable=protected-access
 

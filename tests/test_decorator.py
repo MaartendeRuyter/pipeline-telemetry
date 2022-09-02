@@ -1,15 +1,17 @@
 """Module to test decorator logic.
 """
 from inspect import isclass
+
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 
 from pipeline_telemetry.decorator import add_mongo_single_usage_telemetry, \
     add_mongo_telemetry, add_single_usage_telemetry, add_telemetry
 from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
-from pipeline_telemetry.settings import settings as st
+
 
 def test_default_decorator():
     """

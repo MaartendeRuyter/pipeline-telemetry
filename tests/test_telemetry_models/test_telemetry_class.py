@@ -6,12 +6,13 @@ from datetime import datetime
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_PROCESS_TYPE
 
+from pipeline_telemetry import Telemetry
+from pipeline_telemetry.data_classes import TelemetryData, TelemetryModel
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
-from pipeline_telemetry import Telemetry, TelemetryData, TelemetryModel
 
 # pylint: disable=protected-access
 

@@ -486,6 +486,25 @@ class Telemetry():
             process_type=process_type.name)
         self._telemetry.validate()
 
+    @classmethod
+    def add_process_type(cls, process_type_key: str, process_type: ProcessType
+                         ) -> None:
+        """
+        Add a custom process type to the available process types to the
+        already registered process types.
+
+        Args:
+            process_type (ProcessType): Process type that needs to be added
+            process_type_key (str): key that should be used when calling this
+                                    ProcessType
+        """
+        if not isinstance(process_type, ProcessType):
+            raise exceptions.ProcessTypeMustBeOfClassProcessType()
+        cls._available_process_types.register_process_type(
+            process_type_key, process_type
+        )
+
+
     @property
     def storage_class(self) -> Type[AbstractTelemetryStorage]:
         """Storage_class property."""

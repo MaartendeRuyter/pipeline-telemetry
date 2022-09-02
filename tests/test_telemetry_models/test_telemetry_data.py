@@ -3,8 +3,8 @@ Module to test telemetry main class for pipeline telemetry module.
 """
 from test_data import TEST_ERROR_CODE
 
+from pipeline_telemetry.data_classes import TelemetryData
 from pipeline_telemetry.settings import settings as st
-from pipeline_telemetry.telemetry_model import TelemetryData
 
 
 def test_telemetry_data_exists():

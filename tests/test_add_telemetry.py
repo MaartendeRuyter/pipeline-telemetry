@@ -3,9 +3,9 @@ import pytest
 from errors.error import ListErrors
 from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_TELEMETRY_RULES
 
+from pipeline_telemetry import Telemetry
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings import settings as st
-from pipeline_telemetry.telemetry_model import Telemetry
 
 
 def test_add_method_adds_errors_to_sub_process():

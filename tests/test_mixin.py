@@ -22,7 +22,7 @@ def test_set_source_name():
             self._telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
 
         def get_source_name(self):
-            return self._telemetry._telemetry['source_name']
+            return self._telemetry.telemetry.source_name
 
     tel_test = TelTest()
     test_source_name = 'abcd'
