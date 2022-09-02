@@ -104,7 +104,7 @@ def _raise_exception_if_telemetry_closed(method):
         Wrapper to check if run_time has been set
         If so the telemetry object is closed
         """
-        if self.telemetry.get(st.RUN_TIME):
+        if getattr(self.telemetry, st.RUN_TIME):
             raise exceptions.TelemetryObjectAlreadyClosed()
 
         return method(self, *args, **kwargs)

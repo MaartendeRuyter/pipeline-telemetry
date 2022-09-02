@@ -6,10 +6,9 @@ from test_data import TEST_ERROR_CODE
 
 from pipeline_telemetry.settings.exceptions import FieldNameMandatory
 from pipeline_telemetry.settings.telemetry_errors import ErrorCode
+from pipeline_telemetry.validators.abstract_validator_instruction import \
+    BaseValidatorInstructionRuleData
 from pipeline_telemetry.validators.has_key import HasKey
-
-from pipeline_telemetry.validators.abstract_validator_instruction import (
-    BaseValidatorInstructionRuleData)
 
 # pylint: disable=protected-access
 

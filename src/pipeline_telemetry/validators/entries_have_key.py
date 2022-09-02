@@ -8,7 +8,6 @@ from errors import ErrorCode, ListErrors
 
 from ..settings import exceptions
 from ..validators.dict_validator import DictValidator
-
 from .abstract_validator_instruction import AbstractValidatorInstruction, \
     BaseValidatorInstructionRuleData
 
@@ -142,6 +141,3 @@ class EntriesHaveKey(AbstractValidatorInstruction):
         key_specific_error = error_code.code + '@KEY_<' + fieldname + '>'
         return [ErrorCode(
             code=key_specific_error, description=error_code.description)]
-
-
-DictValidator.register_instruction(EntriesHaveKey)

@@ -7,7 +7,8 @@ import pipeline_telemetry.helper as HP
 from pipeline_telemetry import Telemetry, add_errors_from_return_value, \
     add_telemetry_counters_from_return_value, increase_base_count, \
     increase_fail_count, is_telemetry_counter, process_return_value
-from pipeline_telemetry.settings.settings import BASE_COUNT_KEY, FAIL_COUNT_KEY
+from pipeline_telemetry.settings.settings import BASE_COUNT_KEY, \
+    COUNTERS_KEY, ERRORS_KEY, FAIL_COUNT_KEY
 
 
 class HelperTest:
@@ -26,7 +27,8 @@ def test_add_result_value_with_status_without_errors():
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         return_value=return_value_without_error)
-    assert not test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors')
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert not getattr(telemetry_data, ERRORS_KEY)
 
 
 def test_add_result_value_with_status_with_one_error():
@@ -42,9 +44,9 @@ def test_add_result_value_with_status_with_one_error():
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         return_value=return_value_with_error)
-    assert td.TEST_ERROR_CODE.code in \
-        str(test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors'))
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors').get(
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert td.TEST_ERROR_CODE.code in getattr(telemetry_data, ERRORS_KEY)
+    assert getattr(telemetry_data, ERRORS_KEY).get(
         td.TEST_ERROR_CODE.code) == 1
 
 
@@ -57,29 +59,32 @@ def test_add_result_value_with_status_with_errors():
     test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     return_value_with_error = ReturnValueWithErrorStatus(
         error=td.TEST_ERROR_CODE)
+    # add the second error code to return_value_with_error
     return_value_with_error.add_error(td.TEST_ERROR_CODE)
     add_errors_from_return_value(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         return_value=return_value_with_error)
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('errors').get(
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, ERRORS_KEY).get(
         td.TEST_ERROR_CODE.code) == 2
 
 
 def test_process_telemetry_counters_in_return_value():
     """
     Test that when a ResultValueWithStatus instance with 2 telemetry counters
-    in the result is processed by process_telemetry_counters_in_return_value
-    the telemetry counters are processed.
+    (of which one with an error) in the result is processed by process_telemetry_counters_in_return_value both the error counter and
+    counter are increased
+   
     """
     test_obj = HelperTest()
     test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)
     add_telemetry_counters_from_return_value(
         object_with_telemetry=test_obj,
         return_value=td.TEST_RETURN_VALUE)
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(
-        'errors') is not None
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get('test_counter') == 1
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, ERRORS_KEY) is not None
+    assert getattr(telemetry_data, COUNTERS_KEY).get('test_counter') == 1
 
 
 def test_process_telemetry_counters_in_return_value_returns_list():
@@ -108,7 +113,8 @@ def test_increase_base_count():
     increase_base_count(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA")
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(BASE_COUNT_KEY) == 1
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, BASE_COUNT_KEY) == 1
 
 
 def test_increase_base_count_with_increment():
@@ -122,7 +128,8 @@ def test_increase_base_count_with_increment():
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA",
         increment=2)
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(BASE_COUNT_KEY) == 2
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, BASE_COUNT_KEY) == 2
 
 
 def test_increase_fail_count():
@@ -136,7 +143,8 @@ def test_increase_fail_count():
     increase_fail_count(
         object_with_telemetry=test_obj,
         sub_process="RETRIEVE_RAW_DATA")
-    assert test_obj._telemetry.get("RETRIEVE_RAW_DATA").get(FAIL_COUNT_KEY) == 1
+    telemetry_data = test_obj._telemetry.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, FAIL_COUNT_KEY) == 1
 
 
 def test_process_return_value(mocker):

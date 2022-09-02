@@ -4,13 +4,13 @@ Module to define the DictValidator class
 classes:
     - DictValidator
 """
-from typing import List, Dict, Type
+from typing import Dict, List, Type
 
 from errors import ErrorCode
 
-from .abstract_validator_instruction import AbstractValidatorInstruction
 from ..settings.exceptions import InstructionRegisteredTwice, \
     RuleCanHaveOnlyOneInstruction, UnknownInstruction
+from .abstract_validator_instruction import AbstractValidatorInstruction
 
 
 class DictValidator():

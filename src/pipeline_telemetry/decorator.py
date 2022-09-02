@@ -71,8 +71,9 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
             Wrapper for method where result log should be added
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
-                self._telemetry = Telemetry(**telemetry_params)
-                self._telemetry.storage_class = TelemetryMongoStorage
+                tel_params = telemetry_params.copy() | \
+                    {'storage_class': TelemetryMongoStorage}
+                self._telemetry = Telemetry(**tel_params)
                 result = method(self, *args, **kwargs)
                 self._telemetry.save_and_close()
                 self._telemetry = None
@@ -138,10 +139,10 @@ def add_single_usage_telemetry(
             if not telemetry_params:
                 raise exceptions.ClassTelemetryParamsNotDefined(self)
 
-            self._telemetry = Telemetry(**telemetry_params)
-
             if storage_class:
-                self._telemetry.storage_class = storage_class
+                telemetry_params['storage_class'] = storage_class
+
+            self._telemetry = Telemetry(**telemetry_params)
 
             # only if sub_process was defined set the base count for that
             # subprocess

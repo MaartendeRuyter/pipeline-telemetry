@@ -1,7 +1,7 @@
 """Module to define abstract validator class
 """
-from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
+from dataclasses import dataclass
 from typing import List, Type
 
 from errors import ErrorCode

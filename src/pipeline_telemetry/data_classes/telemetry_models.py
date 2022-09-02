@@ -3,8 +3,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import DefaultDict, Dict, Optional
 
-from ..settings import exceptions
-from ..settings import settings as st
+from errors import ErrorCode
+
+from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 
 
 @dataclass
@@ -22,8 +24,11 @@ class TelemetryData():
     def increase_fail_count(self, increment: int) -> None:
         self.fail_counter += increment
 
-    def increase_error_count(self, increment: int, error: str) -> None:
-        self.errors[error] += increment
+    def increase_error_count(
+            self, increment: int, error_code: ErrorCode) -> None:
+        
+        error_code_key =error_code.code
+        self.errors[error_code_key] += increment
 
     def increase_custom_count(self, increment: int, counter: str) -> None:
         self.counters[counter] += increment

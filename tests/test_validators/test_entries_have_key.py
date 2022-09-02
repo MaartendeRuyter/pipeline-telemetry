@@ -1,8 +1,8 @@
 """
 module to test entries_have_key instruction class
 """
-from pipeline_telemetry.validators.entries_have_key import \
-    EntriesHaveKeyRuleData, EntriesHaveKey
+from pipeline_telemetry.validators.entries_have_key import EntriesHaveKey, \
+    EntriesHaveKeyRuleData
 
 # pylint: disable=protected-access
 

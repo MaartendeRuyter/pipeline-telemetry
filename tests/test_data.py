@@ -3,11 +3,11 @@ This module provides test data for the telemetry tests
 """
 from errors import ErrorCode, ListErrors, ReturnValueWithStatus
 
-from pipeline_telemetry import ProcessTypes, ProcessType, TelemetryCounter
+from pipeline_telemetry import ProcessType, ProcessTypes, TelemetryCounter
 from pipeline_telemetry.settings.settings import \
     DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
-from pipeline_telemetry.validators.abstract_validator_instruction import (
-    AbstractValidatorInstruction, BaseValidatorInstructionRuleData)
+from pipeline_telemetry.validators.abstract_validator_instruction import \
+    AbstractValidatorInstruction
 
 
 class InstructionTestClass(AbstractValidatorInstruction):

@@ -1,5 +1,6 @@
 """Module to define ProcesTypes class."""
 from typing import List, Type
+
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.settings.settings import BaseEnumerator

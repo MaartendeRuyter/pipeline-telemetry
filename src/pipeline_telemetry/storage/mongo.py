@@ -15,6 +15,7 @@ mongoDB instance.
 from mongoengine import DateTimeField, DictField, Document, FloatField, \
     StringField, connect
 
+from ..data_classes import TelemetryModel
 from ..settings import settings as st
 from .generic import AbstractTelemetryStorage
 from .mongo_connection import MONGO_ACCESS_PARAMS
@@ -59,27 +60,30 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
     an instance of Telemetry.
     """
 
-    def store_telemetry(self, telemetry: dict) -> None:
+    def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """public method to persist telemetry object"""
         telemetry_mongo_kwargs = self._telemetry_model_kwargs(telemetry)
         TelemetryMongoModel(**telemetry_mongo_kwargs).save()
 
     @staticmethod
-    def _telemetry_model_kwargs(telemetry: dict) -> dict:
+    def _telemetry_model_kwargs(telemetry: TelemetryModel) -> dict:
         """
         Returns a dicts with kwargs that can be used to create a new
         TelemetryMongoStorage instance.
         """
-        telemetry_copy = telemetry.copy()
-        telemetry_type = telemetry_copy.pop(st.TELEMETRY_TYPE_KEY, None)
-        category = telemetry_copy.pop(st.CATEGORY_KEY, None)
-        sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
-        source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
-        process_type = telemetry_copy.pop(st.PROCESS_TYPE_KEY, None)
-        start_date_time = telemetry_copy.pop(st.START_TIME, None)
-        run_time_in_seconds = telemetry_copy.pop(st.RUN_TIME, None)
-        traffic_light = telemetry_copy.pop(st.TRAFFIC_LIGHT_KEY, None)
-        io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
+        telemetry_type = getattr(telemetry, st.TELEMETRY_TYPE_KEY)
+        category = getattr(telemetry, st.CATEGORY_KEY)
+        sub_category = getattr(telemetry, st.SUB_CATEGORY_KEY)
+        source_name = getattr(telemetry, st.SOURCE_NAME_KEY)
+        process_type = getattr(telemetry, st.PROCESS_TYPE_KEY)
+        start_date_time = getattr(telemetry, st.START_TIME)
+        run_time_in_seconds = getattr(telemetry, st.RUN_TIME)
+        traffic_light = getattr(telemetry, st.TRAFFIC_LIGHT_KEY)
+        io_time_in_seconds = getattr(telemetry, st.IO_TIME_KEY)
+        telemetry_data = {
+            k: v.__dict__ for k, v in
+            getattr(telemetry, st.TELEMETRY_FIELD_KEY).items()
+        }
 
         return {
             st.TELEMETRY_TYPE_KEY: telemetry_type,
@@ -90,6 +94,6 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
             st.START_TIME: start_date_time,
             st.RUN_TIME: run_time_in_seconds,
             st.TRAFFIC_LIGHT_KEY: traffic_light,
-            st.TELEMETRY_FIELD_KEY: telemetry_copy,
+            st.TELEMETRY_FIELD_KEY: telemetry_data,
             st.IO_TIME_KEY: io_time_in_seconds,
         }

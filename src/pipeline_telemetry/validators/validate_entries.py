@@ -2,12 +2,12 @@
 """
 from dataclasses import dataclass
 from typing import Dict, Optional
+
 import jmespath
 from errors import ErrorCode, ListErrors, add_error_data
 
 from ..settings import exceptions
 from ..validators.dict_validator import DictValidator
-
 from .abstract_validator_instruction import AbstractValidatorInstruction, \
     BaseValidatorInstructionRuleData
 
@@ -78,6 +78,3 @@ class ValidateEntries(AbstractValidatorInstruction):
             error_code: ErrorCode, fieldname: str) -> list[ErrorCode]:
         """ returns error code object in list with fieldname as error data """
         return [add_error_data(error=error_code, error_data=fieldname)]
-
-
-DictValidator.register_instruction(ValidateEntries)

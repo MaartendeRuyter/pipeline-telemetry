@@ -1,15 +1,16 @@
 """[summary]
 """
 from enum import Enum
+from typing import Dict, List
 
 from pipeline_telemetry.settings.data_class import ProcessType
 
 DEFAULT_TELEMETRY_TYPE = 'SINGLE TELEMETRY'
-TELEMETRY_TYPES = [
+TELEMETRY_TYPES: List[str] = [
     'PARTIAL TELEMETRY', DEFAULT_TELEMETRY_TYPE, 'DAILY AGGREGATION',
     'WEEKLY AGGREGATION', 'MONTHLY AGGREGATION', 'QUARTERLY AGGREGATION']
 
-telemetry_types = \
+telemetry_types: Dict[str, str] = \
     {type.upper().replace(' ', '_'): type.upper() for type in TELEMETRY_TYPES}
 
 TRAFIC_LIGHT_COLOR_GREEN = 'GREEN'
