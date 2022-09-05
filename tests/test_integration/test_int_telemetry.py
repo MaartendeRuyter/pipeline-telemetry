@@ -3,8 +3,7 @@
 from test_data import DEFAULT_TELEMETRY_PARAMS
 from test_integration_data import BASIC_RETRIEVE_DATA_TEST, \
     ITEMS_FIELD_HAS_DICT_TEST, MISSING_KEY_RETRIEVE_DATA_TEST, \
-    MUST_HAVE_KEY_IN_ITEMS_TEST, NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST, \
-    validate_result_from_telemetry
+    MUST_HAVE_KEY_IN_ITEMS_TEST, NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST
 
 from pipeline_telemetry.main import Telemetry
 
@@ -18,7 +17,8 @@ def test_basic_test_data():
     telemetry.increase_sub_process_base_count('RETRIEVE_RAW_DATA')
     telemetry.add('RETRIEVE_RAW_DATA', BASIC_RETRIEVE_DATA_TEST.data, None)
     telemetry.save_and_close()
-    assert validate_result_from_telemetry(telemetry, BASIC_RETRIEVE_DATA_TEST)
+    assert BASIC_RETRIEVE_DATA_TEST.validate_telemetry_data(
+        telemetry)
 
 
 def test_missing_key_integration_test():
@@ -31,8 +31,8 @@ def test_missing_key_integration_test():
     telemetry.add('RETRIEVE_RAW_DATA',
                   MISSING_KEY_RETRIEVE_DATA_TEST.data, None)
     telemetry.save_and_close()
-    assert validate_result_from_telemetry(
-        telemetry, MISSING_KEY_RETRIEVE_DATA_TEST)
+    assert MISSING_KEY_RETRIEVE_DATA_TEST.validate_telemetry_data(
+        telemetry)
 
 
 def test_must_have_key_in_items_integration_test():
@@ -48,8 +48,8 @@ def test_must_have_key_in_items_integration_test():
     telemetry.add('RETRIEVE_RAW_DATA',
                   MUST_HAVE_KEY_IN_ITEMS_TEST.data, None)
     telemetry.save_and_close()
-    assert validate_result_from_telemetry(
-        telemetry, MUST_HAVE_KEY_IN_ITEMS_TEST)
+    assert MUST_HAVE_KEY_IN_ITEMS_TEST.validate_telemetry_data(
+        telemetry)
 
 
 def test_no_items_have_must_have_key_in_items_integration_test():
@@ -65,8 +65,8 @@ def test_no_items_have_must_have_key_in_items_integration_test():
     telemetry.add('RETRIEVE_RAW_DATA',
                   NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST.data, None)
     telemetry.save_and_close()
-    assert validate_result_from_telemetry(
-        telemetry, NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST)
+    assert NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST.validate_telemetry_data(
+        telemetry)
 
 
 def test_items_has_dict_field_test():
@@ -82,6 +82,5 @@ def test_items_has_dict_field_test():
     telemetry.add('RETRIEVE_RAW_DATA',
                   ITEMS_FIELD_HAS_DICT_TEST.data, None)
     telemetry.save_and_close()
-    print(telemetry.telemetry)
-    assert validate_result_from_telemetry(
-        telemetry, ITEMS_FIELD_HAS_DICT_TEST)
+    assert ITEMS_FIELD_HAS_DICT_TEST.validate_telemetry_data(
+        telemetry)

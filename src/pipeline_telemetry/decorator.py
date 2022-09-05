@@ -139,10 +139,11 @@ def add_single_usage_telemetry(
             if not telemetry_params:
                 raise exceptions.ClassTelemetryParamsNotDefined(self)
 
-            if storage_class:
-                telemetry_params['storage_class'] = storage_class
-
-            self._telemetry = Telemetry(**telemetry_params)
+            storage_class_params = \
+                {'storage_class': storage_class} if storage_class else {}
+            
+            tel_params = telemetry_params | storage_class_params
+            self._telemetry = Telemetry(**tel_params)
 
             # only if sub_process was defined set the base count for that
             # subprocess

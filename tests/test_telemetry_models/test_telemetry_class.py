@@ -4,7 +4,7 @@ Module to test telemetry main class for pipeline telemetry module.
 from datetime import datetime
 
 import pytest
-from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_PROCESS_TYPE
+from test_data import DEFAULT_TELEMETRY_PARAMS, TEST_PROCESS_TYPE_3
 
 from pipeline_telemetry import Telemetry
 from pipeline_telemetry.data_classes import TelemetryData, TelemetryModel
@@ -326,7 +326,7 @@ def test_close_telemetry_instance_calls_store_telemetry(mocker):
         return_value=None,
     )
     _store_telemetry_spy = mocker.spy(
-        TelemetryInMemoryStorage, "store_telemetry_new")
+        TelemetryInMemoryStorage, "store_telemetry")
     Telemetry(**DEFAULT_TELEMETRY_PARAMS).save_and_close()
     assert _store_telemetry_spy.called
 
@@ -466,6 +466,6 @@ def test_validate_process_raises_exception_process_type_of_invalid_type():
     registered.
     """
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
-    telemetry_params['process_type'] = TEST_PROCESS_TYPE
+    telemetry_params['process_type'] = TEST_PROCESS_TYPE_3
     with pytest.raises(exceptions.ProcessTypeNotRegistered):
         Telemetry(**telemetry_params)

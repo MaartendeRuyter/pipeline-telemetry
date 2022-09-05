@@ -57,37 +57,6 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
             io_time_in_seconds real)"""
         )
 
-    # def store_telemetry_old(self, telemetry: dict) -> None:
-    #     """public method to persist telemetry object"""
-    #     telemetry_copy = telemetry.copy()
-    #     telemetry_type = telemetry_copy.pop(st.TELEMETRY_TYPE_KEY, None)
-    #     category = telemetry_copy.pop(st.CATEGORY_KEY, None)
-    #     sub_category = telemetry_copy.pop(st.SUB_CATEGORY_KEY, None)
-    #     source_name = telemetry_copy.pop(st.SOURCE_NAME_KEY, None)
-    #     process_type = telemetry_copy.pop(st.PROCESS_TYPE_KEY, None)
-    #     start_date_time = telemetry_copy.pop(st.START_TIME, None)
-    #     run_time_in_seconds = telemetry_copy.pop(st.RUN_TIME, None)
-    #     traffic_light = telemetry_copy.pop(st.TRAFFIC_LIGHT_KEY, None)
-    #     io_time_in_seconds = telemetry_copy.pop(st.IO_TIME_KEY, None)
-    #     json_object = json.dumps(telemetry_copy)
-
-    #     if self.db_cursor:
-    #         self.db_cursor.execute(
-    #             "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    #             [
-    #                 telemetry_type,
-    #                 category,
-    #                 sub_category,
-    #                 source_name,
-    #                 process_type,
-    #                 start_date_time,
-    #                 run_time_in_seconds,
-    #                 json_object,
-    #                 traffic_light,
-    #                 io_time_in_seconds
-    #             ],
-    #         )
-
     def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """public method to persist telemetry object"""
         telemetry_type = getattr(telemetry, st.TELEMETRY_TYPE_KEY)
@@ -115,9 +84,9 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
                     source_name,
                     process_type,
                     start_date_time,
-                    run_time_in_seconds,
+                    str(run_time_in_seconds),
                     json_object,
                     traffic_light,
-                    io_time_in_seconds
+                    str(io_time_in_seconds)
                 ],
             )

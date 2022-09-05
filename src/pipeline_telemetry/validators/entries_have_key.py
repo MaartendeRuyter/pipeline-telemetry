@@ -77,7 +77,7 @@ class EntriesHaveKey(AbstractValidatorInstruction):
         entry_is_not_a_dict_error = cls._validation_error(
             ListErrors.ENTRY_IS_NOT_A_DICT, fieldname)
         missing_key_in_entry_error = cls._validation_error(
-            ListErrors.KEY_NOT_FOUND_IN_ENTRY, fieldname + "_" + must_have_key)
+            ListErrors.KEY_NOT_FOUND_IN_ENTRY, fieldname + "__" + must_have_key)
 
         # for each entry do a has_key validation with the `must_have_key` field
         for entry in jmespath.search(fieldname, dict_to_validate):

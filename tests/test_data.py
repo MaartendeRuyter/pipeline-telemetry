@@ -24,6 +24,14 @@ DEFAULT_TELEMETRY_PARAMS = {
     "process_type": ProcessTypes.CREATE_DATA_FROM_URL,
 }
 
+DEFAULT_TELEMETRY_MODEL_PARAMS = {
+    "telemetry_type": 'SINGLE TELEMETRY',
+    "category": "WEATHER",
+    "sub_category": "DAILY_PREDICTIONS",
+    "source_name": "load_weather_data",
+    "process_type": ProcessTypes.CREATE_DATA_FROM_URL.name,
+}
+
 # custom process type for testing extending the default process types
 CUSTOM_PROCESS_TYPE = {"custom_process_type": ["CUSTOM_SUB_TYPE"]}
 
@@ -38,6 +46,10 @@ TEST_PROCESS_TYPE = ProcessType(
 
 TEST_PROCESS_TYPE_2 = ProcessType(
     process_type="test_process_type", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+)
+
+TEST_PROCESS_TYPE_3 = ProcessType(
+    process_type="test_process_type_3", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 )
 
 TEST_TELEMETRY_COUNTER = TelemetryCounter(

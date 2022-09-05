@@ -4,7 +4,9 @@ import sqlite3
 from datetime import datetime
 
 from freezegun import freeze_time
+from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
+from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
@@ -44,11 +46,11 @@ def test_in_memory_strorage_is_only_created_once():
 
 def test_store_telemetry_stores_object():
     """Test in memory storage instance has db_in_memory and db_cursor"""
-    telemetry = {"source_name": "test"}
     # Table reset for each test is needed as the table is a class property
     TelemetryInMemoryStorage._define_db_table(TelemetryInMemoryStorage.db_cursor)
     in_memory_storage = TelemetryInMemoryStorage()
-    in_memory_storage.store_telemetry(telemetry)
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**DEFAULT_TELEMETRY_MODEL_PARAMS))
     all_in_memory_objects = in_memory_storage.db_cursor.execute(
         "SELECT * FROM telemetry "
     )
@@ -58,15 +60,16 @@ def test_store_telemetry_stores_object():
 @freeze_time("2022-01-18 18:00:00.123456")
 def test_store_telemetry_stores_object_with_create_date(mocker):
     """Test in memory storage instance has db_in_memory and db_cursor"""
-    telemetry = {"source_name": "test", "start_date_time": datetime.now()}
+    frozen_time = {"start_date_time": datetime.now()}
+    telemetry = DEFAULT_TELEMETRY_MODEL_PARAMS | frozen_time
     # Table reset for each test is needed as the table is a class property
     TelemetryInMemoryStorage._define_db_table(TelemetryInMemoryStorage.db_cursor)
     in_memory_storage = TelemetryInMemoryStorage()
-    in_memory_storage.store_telemetry(telemetry)
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**telemetry))
     in_memory_record = in_memory_storage.db_cursor.execute(
         "SELECT * FROM telemetry LIMIT 1"
     ).fetchone()
-    print(in_memory_record)
     assert in_memory_record[5] == "2022-01-18 18:00:00.123456"
 
 
@@ -105,20 +108,19 @@ def test_store_telemetry_method_processes_and_saves_telemetry(mocker):
 def test_telemetry_model_kwargs_method():
     """Test _telemetry_model_kwargs method returns correct kwargs."""
     result = TelemetryMongoStorage()._telemetry_model_kwargs(
-        {
-            "telemetry_type": "test telemetry type",
-            "category": "test",
-            "sub_category": "sub_test",
-            "source_name": "tst_source_name",
-            "process_type": "tst_process_type",
-            "start_date_time": "tst_start_date_time",
-            "run_time_in_seconds": "tst_run_time_in_seconds",
-            "io_time_in_seconds": 1.1,
-            "field1": {"a": 1},
-            "field2": "value",
-            "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
-        }
-    )
+        TelemetryModel(
+            **{
+                "telemetry_type": "test telemetry type",
+                "category": "test",
+                "sub_category": "sub_test",
+                "source_name": "tst_source_name",
+                "process_type": "tst_process_type",
+                "start_date_time": "tst_start_date_time",
+                "run_time_in_seconds": "tst_run_time_in_seconds",
+                "io_time_in_seconds": 1.1,
+                "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
+            }
+        ))
 
     assert result == {
         "telemetry_type": "test telemetry type",
@@ -129,7 +131,7 @@ def test_telemetry_model_kwargs_method():
         "start_date_time": "tst_start_date_time",
         "run_time_in_seconds": "tst_run_time_in_seconds",
         "io_time_in_seconds": 1.1,
-        "telemetry": {"field1": {"a": 1}, "field2": "value"},
+        "telemetry": {},
         "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
     }
 

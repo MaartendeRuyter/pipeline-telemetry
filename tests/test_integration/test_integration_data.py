@@ -1,7 +1,9 @@
 """Module to define test data for the integration tests
 """
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
+from pipeline_telemetry import Telemetry
+from pipeline_telemetry.data_classes import TelemetryData
 from pipeline_telemetry.settings import settings as st
 
 
@@ -11,27 +13,20 @@ class IntegrationTestData:
 
     data: dict
     validation_rules: dict
-    telemetry_result: dict
+    expected_result: TelemetryData
+    result_field: str
 
-    @property
-    def result_field(self):
-        return self.telemetry_result.get("field")
+    def validate_telemetry_data(self, telemetry: Telemetry) -> bool:
+        test_result = telemetry.get(self.result_field)
+        expected_result = self.expected_result
 
-    @property
-    def expected_result(self):
-        return self.telemetry_result.get("result")
+        return test_result == expected_result
 
-
-def validate_result_from_telemetry(
-    telemetry: dict, test_data: IntegrationTestData
-) -> bool:
-    """
-    Validates if the telemetry data is according to expected results as defined
-    in IntegrationTestData object test_data
-    """
-    result_field = test_data.result_field
-    expected_result = test_data.expected_result
-    return telemetry.get(result_field) == expected_result
+        # return \
+        #     test_result.base_counter == expected_result.base_counter and \
+        #     test_result.fail_counter == expected_result.fail_counter and \
+        #     test_result.errors == expected_result.errors and \
+        #     test_result.counters == expected_result.counters
 
 
 BASIC_RETRIEVE_DATA_TEST = IntegrationTestData(
@@ -49,23 +44,23 @@ BASIC_RETRIEVE_DATA_TEST = IntegrationTestData(
             "validate_entries": {"field_name": "items", "expected_count": 4},
         }
     },
-    telemetry_result={
-        "field": "RETRIEVE_RAW_DATA",
-        "result": {"base_counter": 1, "fail_counter": 0, st.ERRORS_KEY: {}},
-    },
+    result_field="RETRIEVE_RAW_DATA",
+    expected_result=TelemetryData(**{
+        "base_counter": 1,
+        "fail_counter": 0
+    })
 )
 
 MISSING_KEY_RETRIEVE_DATA_TEST = IntegrationTestData(
     data={"no items key": []},
-    validation_rules={"RETRIEVE_RAW_DATA": {"has_key": {"field_name": "items"}}},
-    telemetry_result={
-        "field": "RETRIEVE_RAW_DATA",
-        "result": {
-            "base_counter": 1,
-            "fail_counter": 0,
-            st.ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1},
-        },
-    },
+    validation_rules={
+        "RETRIEVE_RAW_DATA": {"has_key": {"field_name": "items"}}},
+    result_field="RETRIEVE_RAW_DATA",
+    expected_result=TelemetryData(**{
+        "base_counter": 1,
+        "fail_counter": 0,
+        st.ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1}
+    }),
 )
 
 
@@ -76,14 +71,12 @@ MUST_HAVE_KEY_IN_ITEMS_TEST = IntegrationTestData(
             "entries_have_key": {"field_name": "items", "must_have_key": "key"}
         }
     },
-    telemetry_result={
-        "field": "RETRIEVE_RAW_DATA",
-        "result": {
-            "base_counter": 1,
-            "fail_counter": 0,
-            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 1},
-        },
-    },
+    result_field="RETRIEVE_RAW_DATA",
+    expected_result=TelemetryData(**{
+        "base_counter": 1,
+        "fail_counter": 0,
+        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 1}
+    }),
 )
 
 NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
@@ -93,15 +86,14 @@ NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
             "entries_have_key": {"field_name": "items", "must_have_key": "key"}
         }
     },
-    telemetry_result={
-        "field": "RETRIEVE_RAW_DATA",
-        "result": {
-            "base_counter": 1,
-            "fail_counter": 0,
-            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items_key>": 2},
-        },
-    },
+    result_field="RETRIEVE_RAW_DATA",
+    expected_result=TelemetryData(**{
+        "base_counter": 1,
+        "fail_counter": 0,
+        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 2}
+    }),
 )
+
 
 ITEMS_FIELD_HAS_DICT_TEST = IntegrationTestData(
     data={"items": {"key": 1, "no_key": 2}},
@@ -110,12 +102,10 @@ ITEMS_FIELD_HAS_DICT_TEST = IntegrationTestData(
             "entries_have_key": {"field_name": "items", "must_have_key": "key"}
         }
     },
-    telemetry_result={
-        "field": "RETRIEVE_RAW_DATA",
-        "result": {
-            "base_counter": 1,
-            "fail_counter": 0,
-            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
-        },
-    },
+    result_field="RETRIEVE_RAW_DATA",
+    expected_result=TelemetryData(**{
+        "base_counter": 1,
+        "fail_counter": 0,
+        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
+    }),
 )
