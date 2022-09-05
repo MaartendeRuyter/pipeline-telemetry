@@ -1,13 +1,12 @@
 """Module to define validate entries validator class
 """
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Optional
 
 import jmespath
 from errors import ErrorCode, ListErrors, add_error_data
 
 from ..settings import exceptions
-from ..validators.dict_validator import DictValidator
 from .abstract_validator_instruction import AbstractValidatorInstruction, \
     BaseValidatorInstructionRuleData
 

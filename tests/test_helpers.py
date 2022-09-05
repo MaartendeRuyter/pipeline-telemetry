@@ -75,7 +75,7 @@ def test_process_telemetry_counters_in_return_value():
     Test that when a ResultValueWithStatus instance with 2 telemetry counters
     (of which one with an error) in the result is processed by process_telemetry_counters_in_return_value both the error counter and
     counter are increased
-   
+
     """
     test_obj = HelperTest()
     test_obj._telemetry = Telemetry(**td.DEFAULT_TELEMETRY_PARAMS)

@@ -1,6 +1,6 @@
 """Module to define test data for the integration tests
 """
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 from pipeline_telemetry import Telemetry
 from pipeline_telemetry.data_classes import TelemetryData

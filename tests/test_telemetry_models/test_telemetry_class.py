@@ -16,6 +16,7 @@ from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 
 # pylint: disable=protected-access
 
+
 def test_telemetry_exists():
     """check that Telemetry class exists"""
     assert Telemetry
@@ -460,7 +461,7 @@ def test_validate_process_raises_exception_process_type_of_invalid_type():
         Telemetry(**telemetry_params)
 
 
-def test_validate_process_raises_exception_process_type_of_invalid_type():
+def test_validate_process_raises_exception_if_process_type_not_registered():
     """
     Test that _valid_process_type raises exception when process_type is not
     registered.

@@ -1,7 +1,5 @@
 """Module to test decorator logic.
 """
-from inspect import isclass
-
 import pytest
 from test_data import DEFAULT_TELEMETRY_PARAMS
 

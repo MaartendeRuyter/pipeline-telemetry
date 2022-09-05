@@ -26,8 +26,8 @@ class TelemetryData():
 
     def increase_error_count(
             self, increment: int, error_code: ErrorCode) -> None:
-        
-        error_code_key =error_code.code
+
+        error_code_key = error_code.code
         self.errors[error_code_key] += increment
 
     def increase_custom_count(self, increment: int, counter: str) -> None:
@@ -72,4 +72,3 @@ class TelemetryModel():
     def set_red_traffic_light(self) -> None:
         """Sets traffic light attribute to red."""
         self.traffic_light = st.TRAFIC_LIGHT_COLOR_RED
-

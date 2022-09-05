@@ -1,13 +1,8 @@
 """Module to define HasKey class validator
 """
-from dataclasses import dataclass
-from typing import Dict
-
 import jmespath
 from errors import ErrorCode, ListErrors
 
-from ..settings import exceptions
-from ..validators.dict_validator import DictValidator
 from .abstract_validator_instruction import AbstractValidatorInstruction, \
     BaseValidatorInstructionRuleData
 

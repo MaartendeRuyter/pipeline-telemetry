@@ -141,7 +141,7 @@ def add_single_usage_telemetry(
 
             storage_class_params = \
                 {'storage_class': storage_class} if storage_class else {}
-            
+
             tel_params = telemetry_params | storage_class_params
             self._telemetry = Telemetry(**tel_params)
 

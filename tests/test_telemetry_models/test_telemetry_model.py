@@ -15,6 +15,7 @@ def test_telemetry_model_exists():
     """check that TelemetryModel class exists"""
     assert TelemetryModel
 
+
 def test_check_telemetry_type_raises_exception_with_inv_type():
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
     telemetry_params[st.TELEMETRY_TYPE_KEY] = 'invalid'

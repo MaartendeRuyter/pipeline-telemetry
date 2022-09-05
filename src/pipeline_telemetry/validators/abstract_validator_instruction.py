@@ -61,8 +61,8 @@ class AbstractValidatorInstruction(metaclass=ABCMeta):
         """
 
     @classmethod
-    def _get_field_name(cls, rule_data: BaseValidatorInstructionRuleData
-            ) -> str:
+    def _get_field_name(
+            cls, rule_data: BaseValidatorInstructionRuleData) -> str:
         """
         Retrieves the field name in scope from the rule content.
         """

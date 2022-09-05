@@ -5,7 +5,6 @@ classes
     - Telemetry
 
 """
-from collections import defaultdict
 from datetime import datetime
 from typing import Dict, List, Optional, Type
 
@@ -70,7 +69,6 @@ class Telemetry():
         cls._available_process_types.register_process_type(
             process_type_key, process_type
         )
-
 
     @property
     def storage_class(self) -> Type[AbstractTelemetryStorage]:
@@ -151,8 +149,8 @@ class Telemetry():
         return self.telemetry
 
     def add_telemetry_counter(
-        self, telemetry_counter: TelemetryCounter,
-        increment: Optional[int] = None) -> None:
+            self, telemetry_counter: TelemetryCounter,
+            increment: Optional[int] = None) -> None:
         """
         Method to process a TelemetryCounter object with predefined counters.
 
@@ -183,7 +181,6 @@ class Telemetry():
                 custom_counter=counter_name,
                 increment=increment,
             )
-
 
     @_raise_exception_if_telemetry_closed
     def add(self, sub_process: str, data: dict, errors: List[ErrorCode]

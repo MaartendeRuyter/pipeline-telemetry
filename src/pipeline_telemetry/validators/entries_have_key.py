@@ -1,13 +1,10 @@
 """Module to define EntriesHaveKey class validator
 """
 from dataclasses import dataclass
-from typing import Optional
 
 import jmespath
 from errors import ErrorCode, ListErrors
 
-from ..settings import exceptions
-from ..validators.dict_validator import DictValidator
 from .abstract_validator_instruction import AbstractValidatorInstruction, \
     BaseValidatorInstructionRuleData
 
@@ -35,7 +32,6 @@ class EntriesHaveKey(AbstractValidatorInstruction):
     RULE_DATA_CLASS = EntriesHaveKeyRuleData
     INSTRUCTION = 'entries_have_key'
     must_have_key = 'must_have_key'
-
 
     @classmethod
     def _validate(
@@ -72,7 +68,7 @@ class EntriesHaveKey(AbstractValidatorInstruction):
         errors = []
         fieldname = cls._get_field_name(rule_data)
         must_have_key = cls._get_must_have_key(rule_data)
-    
+
         # prepare error messages
         entry_is_not_a_dict_error = cls._validation_error(
             ListErrors.ENTRY_IS_NOT_A_DICT, fieldname)
@@ -127,8 +123,8 @@ class EntriesHaveKey(AbstractValidatorInstruction):
         return []
 
     @classmethod
-    def _get_must_have_key(cls, rule_data: BaseValidatorInstructionRuleData
-            ) -> str:
+    def _get_must_have_key(
+            cls, rule_data: BaseValidatorInstructionRuleData) -> str:
         """
         retrieves the must_have_key from the rule content
         """

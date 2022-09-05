@@ -24,8 +24,8 @@ class ProcessTypes():
         cls._process_types.append(process_type)
 
     @classmethod
-    def register_process_types(cls, process_types: Type[BaseEnumerator]
-            ) -> None:
+    def register_process_types(
+            cls, process_types: Type[BaseEnumerator]) -> None:
         """Class method to register new errors from enumerator."""
         try:
             if not issubclass(process_types, BaseEnumerator):

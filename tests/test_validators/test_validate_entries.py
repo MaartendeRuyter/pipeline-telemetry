@@ -46,7 +46,7 @@ def test_get_expected_count():
     """
     check that _get_expected_count method returns value of
     expected_count
-    """    
+    """
     rule_data = ValidateEntriesRuleData(
         **{'field_name': 'test', 'expected_count': 1})
 

@@ -46,6 +46,7 @@ def test_add_to_method():
     telemetry_data = obj_with_telemetry._telemetry.get(sub_process)
     assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 2
 
+
 def test_add_telemetry_counter_to_telemetry(telemetry_inst):
     """
     Check that adding a telemetry counter to a Telemetry instance
@@ -98,6 +99,7 @@ def test_add_telemetry_counter_with_increment_arg(telemetry_inst):
         TD.TEST_TELEMETRY_COUNTER, increment=10)
     telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
     assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 10
+
 
 def test_add_telemetry_counter_raises_exception(telemetry_inst):
     """
