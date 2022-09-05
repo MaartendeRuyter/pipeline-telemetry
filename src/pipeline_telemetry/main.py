@@ -379,14 +379,14 @@ class Telemetry():
         return not self._sub_process_is_initialized(sub_process)
 
     def _validate_process_type(self) -> None:
-        """Sets the process type for the telemetrty instance."""
+        """Validates the process type for the telemetrty instance."""
         if not isinstance(self._process_type, ProcessType):
             raise exceptions.ProcessTypeMustBeOfClassProcessType
         if not self._available_process_types.is_registered(self._process_type):
             raise exceptions.ProcessTypeNotRegistered(self._process_type)
 
     def _initialize_sub_process(self, sub_process: str) -> None:
-        """sets the initial count object for a sub_process
+        """Initializes a sun process in the telemetry data.
 
         Args:
             sub_process (str): sub process name
