@@ -8,10 +8,13 @@ from errors import ReturnValueWithStatus
 
 from .helper import add_errors_from_return_value, \
     add_telemetry_counters_from_return_value
+from .main import Telemetry
 from .settings.data_class import TelemetryCounter
 
 
 class TelemetryMixin():
+
+    _telemetry: Telemetry
 
     def process_errors_from_return_value(
             self,  sub_process: str,
@@ -77,4 +80,4 @@ class TelemetryMixin():
             source_name (str): The source_name that should be added to the
                                telemetry object.
         """
-        self._telemetry._telemetry['source_name'] = source_name
+        self._telemetry.telemetry.source_name = source_name

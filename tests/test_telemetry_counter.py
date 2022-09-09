@@ -42,9 +42,9 @@ def test_add_to_method():
 
     # run add_to method on a Telemetry counter
     TD.TEST_TELEMETRY_COUNTER_INC_2.add_to(obj_with_telemetry)
-    assert sub_process in obj_with_telemetry._telemetry.telemetry
-    assert obj_with_telemetry._telemetry.get(
-        sub_process)["test_counter"] == 2
+    assert sub_process in obj_with_telemetry._telemetry.telemetry_data
+    telemetry_data = obj_with_telemetry._telemetry.get(sub_process)
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 2
 
 
 def test_add_telemetry_counter_to_telemetry(telemetry_inst):
@@ -53,7 +53,8 @@ def test_add_telemetry_counter_to_telemetry(telemetry_inst):
     creates a counter
     """
     telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 1
+    telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 1
 
 
 def test_add_error_telemetry_counter_to_telemetry(telemetry_inst):
@@ -62,7 +63,8 @@ def test_add_error_telemetry_counter_to_telemetry(telemetry_inst):
     creates a counter
     """
     telemetry_inst.add_telemetry_counter(TD.TEST_ERROR_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")[st.ERRORS_KEY]["HAS_KEY_ERR_0001"] == 1
+    telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, st.ERRORS_KEY)["HAS_KEY_ERR_0001"] == 1
 
 
 def test_add_telemetry_counter_when_sub_process_is_not_initialized():
@@ -72,7 +74,8 @@ def test_add_telemetry_counter_when_sub_process_is_not_initialized():
     """
     telemetry_inst = Telemetry(**TD.DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 1
+    telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 1
 
 
 def test_add_telemetry_counter_with_icrement_2_to_telemetry(telemetry_inst):
@@ -81,9 +84,10 @@ def test_add_telemetry_counter_with_icrement_2_to_telemetry(telemetry_inst):
     raises the counter with value of 2
     """
     telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 1
+    telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 1
     telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER_INC_2)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 3
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 3
 
 
 def test_add_telemetry_counter_with_increment_arg(telemetry_inst):
@@ -91,8 +95,10 @@ def test_add_telemetry_counter_with_increment_arg(telemetry_inst):
     Check invoking add_telemetry_counter method using increment argument adds
     the value of increment to the counter
     """
-    telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER, increment=10)
-    assert telemetry_inst.get("RETRIEVE_RAW_DATA")["test_counter"] == 10
+    telemetry_inst.add_telemetry_counter(
+        TD.TEST_TELEMETRY_COUNTER, increment=10)
+    telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
+    assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 10
 
 
 def test_add_telemetry_counter_raises_exception(telemetry_inst):

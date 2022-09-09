@@ -2,6 +2,8 @@
 """
 from abc import ABCMeta, abstractmethod
 
+from ..data_classes import TelemetryModel
+
 
 class AbstractTelemetryStorage(metaclass=ABCMeta):
     """ Abstract Telemetry Storage class
@@ -14,5 +16,5 @@ class AbstractTelemetryStorage(metaclass=ABCMeta):
     # pylint: disable=too-few-public-methods
 
     @abstractmethod
-    def store_telemetry(self, telemetry: dict) -> None:
+    def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """ public method to persist telemetry object"""

@@ -37,8 +37,7 @@ class ExpectedCountMustBePositiveInt(Exception):
     def __init__(self):
         message = "".join(
             [
-                "Ruleset does not contain `expected_count` or ",
-                "expected count is negative",
+                "Ruleset field `expected_count` can not be negative.",
             ]
         )
         super().__init__(message)
@@ -53,11 +52,10 @@ class UnknownInstruction(Exception):
 
 class InstructionRegisteredTwice(Exception):
     """custom exception for Telemetry Module"""
-
     def __init__(self, instruction_class):
         message = "".join(
             [
-                f"{instruction_class.instruction} from class ",
+                f"{instruction_class.INSTRUCTION} from class ",
                 f"{instruction_class.__name__}.",
             ]
         )
@@ -66,7 +64,6 @@ class InstructionRegisteredTwice(Exception):
 
 class RuleCanHaveOnlyOneInstruction(Exception):
     """custom exception for Telemetry Module"""
-
     def __init__(self, rule):
         message = "".join(
             ["Rule contains multiple keys / instruction : ", ", ".join(rule.keys())]
@@ -74,9 +71,16 @@ class RuleCanHaveOnlyOneInstruction(Exception):
         super().__init__(message)
 
 
+class SubProcessAlreadyInitialized(Exception):
+    """custom exception for Telemetry Module"""
+    def __init__(self, sub_process: str):
+        message = \
+            f"Sub Process `{sub_process}` already initialized."
+        super().__init__(message)
+
+
 class InvalidSubProcess(Exception):
     """custom exception for Telemetry Module"""
-
     def __init__(self, sub_process: str, process_type):
         message = "".join(
             [

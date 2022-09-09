@@ -7,6 +7,7 @@ decorators:
     - add_mongo_single_usage_telemetry
 """
 from functools import wraps
+from typing import Type
 
 from .main import Telemetry
 from .settings import exceptions
@@ -70,8 +71,9 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
             Wrapper for method where result log should be added
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
-                self._telemetry = Telemetry(**telemetry_params)
-                self._telemetry.storage_class = TelemetryMongoStorage
+                tel_params = telemetry_params.copy() | \
+                    {'storage_class': TelemetryMongoStorage}
+                self._telemetry = Telemetry(**tel_params)
                 result = method(self, *args, **kwargs)
                 self._telemetry.save_and_close()
                 self._telemetry = None
@@ -109,7 +111,7 @@ def add_mongo_single_usage_telemetry(sub_process: str = None) -> object:
 
 def add_single_usage_telemetry(
         sub_process: str = None,
-        storage_class: AbstractTelemetryStorage = None) -> object:
+        storage_class: Type[AbstractTelemetryStorage] = None) -> object:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. The telemetry object will be reset each the method
@@ -137,10 +139,11 @@ def add_single_usage_telemetry(
             if not telemetry_params:
                 raise exceptions.ClassTelemetryParamsNotDefined(self)
 
-            self._telemetry = Telemetry(**telemetry_params)
+            storage_class_params = \
+                {'storage_class': storage_class} if storage_class else {}
 
-            if storage_class:
-                self._telemetry.storage_class = storage_class
+            tel_params = telemetry_params | storage_class_params
+            self._telemetry = Telemetry(**tel_params)
 
             # only if sub_process was defined set the base count for that
             # subprocess

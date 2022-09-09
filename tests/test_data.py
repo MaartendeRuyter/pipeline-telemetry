@@ -3,23 +3,17 @@ This module provides test data for the telemetry tests
 """
 from errors import ErrorCode, ListErrors, ReturnValueWithStatus
 
-from pipeline_telemetry.settings.data_class import ProcessType, \
-    TelemetryCounter
-from pipeline_telemetry.settings.process_type import ProcessTypes
+from pipeline_telemetry import ProcessType, ProcessTypes, TelemetryCounter
 from pipeline_telemetry.settings.settings import \
     DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+from pipeline_telemetry.validators.abstract_validator_instruction import \
+    AbstractValidatorInstruction
 
 
-class InstructionTestClass:
+class InstructionTestClass(AbstractValidatorInstruction):
     """Instruction class for test purposes."""
 
-    # pylint: disable=too-few-public-methods
-    instruction = "test_instruction"
-    fieldname = "field_name"
-
-    def __new__(cls):
-        """make this a singleton class"""
-        return cls
+    INSTRUCTION = "test_instruction"
 
 
 # default params for creating a test Telemetry object
@@ -28,6 +22,14 @@ DEFAULT_TELEMETRY_PARAMS = {
     "sub_category": "DAILY_PREDICTIONS",
     "source_name": "load_weather_data",
     "process_type": ProcessTypes.CREATE_DATA_FROM_URL,
+}
+
+DEFAULT_TELEMETRY_MODEL_PARAMS = {
+    "telemetry_type": 'SINGLE TELEMETRY',
+    "category": "WEATHER",
+    "sub_category": "DAILY_PREDICTIONS",
+    "source_name": "load_weather_data",
+    "process_type": ProcessTypes.CREATE_DATA_FROM_URL.name,
 }
 
 # custom process type for testing extending the default process types
@@ -44,6 +46,10 @@ TEST_PROCESS_TYPE = ProcessType(
 
 TEST_PROCESS_TYPE_2 = ProcessType(
     process_type="test_process_type", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+)
+
+TEST_PROCESS_TYPE_3 = ProcessType(
+    process_type="test_process_type_3", subtypes=DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
 )
 
 TEST_TELEMETRY_COUNTER = TelemetryCounter(

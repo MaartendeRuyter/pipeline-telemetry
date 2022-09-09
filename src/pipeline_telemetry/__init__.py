@@ -49,6 +49,11 @@ from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes
 from .settings.settings import BaseEnumerator, DefaultProcessTypes
 from .settings.telemetry_errors import ValidationErrors
+from .validators import DictValidator, EntriesHaveKey, HasKey, ValidateEntries
 
 ProcessTypes.register_process_types(DefaultProcessTypes)
 ListErrors.register_errors(ValidationErrors)
+
+DictValidator.register_instruction(ValidateEntries)
+DictValidator.register_instruction(HasKey)
+DictValidator.register_instruction(EntriesHaveKey)

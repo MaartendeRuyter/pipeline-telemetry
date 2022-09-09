@@ -6,6 +6,7 @@ from test_data import DEFAULT_TELEMETRY_PARAMS
 from pipeline_telemetry.decorator import add_mongo_single_usage_telemetry, \
     add_mongo_telemetry, add_single_usage_telemetry, add_telemetry
 from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 from pipeline_telemetry.storage.mongo import TelemetryMongoStorage
 
@@ -59,10 +60,10 @@ def test_mongo_telemetry_decorator_sets_mongo_storage_class(mocker):
         def decorated_method(self):
             return self._telemetry.storage_class
 
-    assert isinstance(DecoratorTest().decorated_method(), TelemetryMongoStorage)
+    assert issubclass(DecoratorTest().decorated_method(), TelemetryMongoStorage)
 
 
-def test_calling_decorated_method_from_within_decorated_method(mocker):
+def test_calling_mongo_decorated_method_from_within_decorated_method(mocker):
     """
     Test that when telemetry is active it is not changed by any other telemetry
     decorated method that is being called.
@@ -75,25 +76,25 @@ def test_calling_decorated_method_from_within_decorated_method(mocker):
         "category": "OTHER VALUE",
     }
 
-    class DecoratorTest:
+    class DecoratorTestMongo:
         @add_mongo_telemetry(DEFAULT_TELEMETRY_PARAMS)
         def decorated_method(self):
             return self.second_decorated_method()
 
         @add_mongo_telemetry(changed_telemetry_params)
         def second_decorated_method(self):
-            return self._telemetry.get("category")
+            return self._telemetry.category
 
-    class_instance = DecoratorTest()
+    class_instance = DecoratorTestMongo()
     assert not hasattr(class_instance, "_telemetry")
     assert class_instance.decorated_method() == \
         DEFAULT_TELEMETRY_PARAMS.get("category")
     assert hasattr(class_instance, "_telemetry")
 
 
-def test_calling_mongo_decorated_method_from_within_decorated_method():
+def test_calling_decorated_method_from_within_decorated_method():
     """
-    Test that when a telemetry instance created with add_mongo_telemetry is
+    Test that when a telemetry instance created with add_telemetry is
     active it is not changed by any other telemetry decorated method that is
     being called.
     """
@@ -108,11 +109,12 @@ def test_calling_mongo_decorated_method_from_within_decorated_method():
 
         @add_telemetry(changed_telemetry_params)
         def second_decorated_method(self):
-            return self._telemetry.get("category")
+            return self._telemetry.category
 
     class_instance = DecoratorTest()
     assert not hasattr(class_instance, "_telemetry")
-    assert class_instance.decorated_method() == DEFAULT_TELEMETRY_PARAMS.get("category")
+    assert class_instance.decorated_method() == \
+        DEFAULT_TELEMETRY_PARAMS.get("category")
     assert hasattr(class_instance, "_telemetry")
 
 
@@ -121,14 +123,13 @@ def test_single_usage_decorator_raises_params_not_def_exc():
     Test that add_single_usage_telemetry decorator raises an exception when
     no telemetry params are defined in class of class instance.
     """
-
     class DecoratorTest:
         @add_single_usage_telemetry()
         def decorated_method(self):
             return "method result"
+
     with pytest.raises(exceptions.ClassTelemetryParamsNotDefined) as excep:
         DecoratorTest().decorated_method()
-
     assert 'Telemetry params not defined' in str(excep)
 
 
@@ -143,11 +144,11 @@ def test_single_usage_class_telemetry_settings():
 
         @add_single_usage_telemetry()
         def decorated_method(self):
-            return "method result"
+            pass
 
     class_instance = DecoratorTest()
     assert not hasattr(class_instance, "_telemetry")
-    assert class_instance.decorated_method() == "method result"
+    class_instance.decorated_method()
     assert hasattr(class_instance, "_telemetry")
 
 
@@ -163,12 +164,12 @@ def test_single_usage_telemetry_settings_with_sub_process():
 
         @add_single_usage_telemetry(sub_process=sub_process)
         def decorated_method(self):
-            return self._telemetry.telemetry
+            return self._telemetry
 
     class_instance = DecoratorTest()
 
     telemetry = class_instance.decorated_method()
-    assert telemetry.get(sub_process).get('base_counter') == 1
+    assert getattr(telemetry.get(sub_process), st.BASE_COUNT_KEY) == 1
 
 
 def test_single_usage_telemetry_settings_with_mongho_storage(mocker):
@@ -186,4 +187,4 @@ def test_single_usage_telemetry_settings_with_mongho_storage(mocker):
         def decorated_method(self):
             return self._telemetry.storage_class
 
-    assert isinstance(DecoratorTest().decorated_method(), TelemetryMongoStorage)
+    assert issubclass(DecoratorTest().decorated_method(), TelemetryMongoStorage)

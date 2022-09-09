@@ -1,4 +1,6 @@
 """Module to define ProcesTypes class."""
+from typing import List, Type
+
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings.data_class import ProcessType
 from pipeline_telemetry.settings.settings import BaseEnumerator
@@ -7,7 +9,7 @@ from pipeline_telemetry.settings.settings import BaseEnumerator
 class ProcessTypes():
     """Singleton Class for registering process_types"""
 
-    _process_types = []
+    _process_types: List[ProcessType] = []
 
     def __new__(cls):
         return cls
@@ -22,7 +24,8 @@ class ProcessTypes():
         cls._process_types.append(process_type)
 
     @classmethod
-    def register_process_types(cls, process_types: BaseEnumerator) -> None:
+    def register_process_types(
+            cls, process_types: Type[BaseEnumerator]) -> None:
         """Class method to register new errors from enumerator."""
         try:
             if not issubclass(process_types, BaseEnumerator):
@@ -31,7 +34,7 @@ class ProcessTypes():
             raise exceptions.ProcessTypesMustBeOfClassBaseEnumertor
 
         for process_type_key in process_types.keys():
-            process_type = process_types[process_type_key].value
+            process_type = getattr(process_types, process_type_key).value
             cls.register_process_type(
                 process_type_key=process_type_key, process_type=process_type)
 

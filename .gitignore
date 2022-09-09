@@ -36,6 +36,13 @@ nosetests.xml
 coverage.xml
 htmlcov
 
+# mypy reporting
+html
+any-exprs.txt
+types-of-anys.txt
+index.html
+mypy-html.css
+
 # Translations
 *.mo
 

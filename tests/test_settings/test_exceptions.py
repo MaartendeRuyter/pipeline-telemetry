@@ -34,7 +34,7 @@ def test_instruction_registered_twice_exception():
     """ test InstructionRegisteredTwice exception """
     class TestInstructrion():
         """ test class """
-        instruction = 'test_instruction'
+        INSTRUCTION = 'test_instruction'
 
     with pytest.raises(exceptions.InstructionRegisteredTwice) as exception:
         raise_exception(
@@ -85,7 +85,8 @@ def test_expected_count_must_be_positive_int_exception():
     with pytest.raises(exceptions.ExpectedCountMustBePositiveInt) as exception:
         raise exceptions.ExpectedCountMustBePositiveInt
 
-    assert 'Ruleset does not contain `expected_count` or' in str(exception)
+    assert \
+        'Ruleset field `expected_count` can not be negative' in str(exception)
 
 
 def test_invalid_sub_process():

@@ -4,12 +4,13 @@ Module to define the DictValidator class
 classes:
     - DictValidator
 """
-from typing import List
+from typing import Dict, List, Type
 
 from errors import ErrorCode
 
 from ..settings.exceptions import InstructionRegisteredTwice, \
     RuleCanHaveOnlyOneInstruction, UnknownInstruction
+from .abstract_validator_instruction import AbstractValidatorInstruction
 
 
 class DictValidator():
@@ -23,7 +24,7 @@ class DictValidator():
             method to run the validate of a dict
     """
 
-    _instructions = {}
+    _instructions: Dict[str, Type[AbstractValidatorInstruction]] = {}
 
     @classmethod
     def validate(cls,
@@ -62,13 +63,19 @@ class DictValidator():
         instruction = cls._instruction_from_rule(rule)
         if instruction not in cls._instructions:
             raise UnknownInstruction(instruction)
-        return cls._instructions.get(instruction).validate(
-            dict_to_validate=dict_to_validate,
-            rule_content=rule[1]
-        )
+        validation_rule = cls._instructions.get(instruction)
+
+        if validation_rule:
+            return validation_rule.validate(
+                dict_to_validate=dict_to_validate,
+                rule_dict=rule[1]
+            )
+
+        return []
 
     @classmethod
-    def register_instruction(cls, instruction_class: type) -> None:
+    def register_instruction(
+            cls, instruction_class: Type[AbstractValidatorInstruction]) -> None:
         """Registration at class level of the instruction
 
         Args:
@@ -77,15 +84,15 @@ class DictValidator():
         Raises:
             InstructionRegisteredTwice: [description]
         """
-        instruction = instruction_class.instruction
+        instruction = instruction_class.INSTRUCTION
         if instruction in cls._instructions:
             raise InstructionRegisteredTwice(instruction_class)
         cls._instructions.update({
-            instruction_class.instruction: instruction_class})
+            instruction_class.INSTRUCTION: instruction_class})
 
     @staticmethod
     def _instruction_from_rule(rule: tuple) -> str:
-        """Returns the instuction string from rule dict
+        """Returns the instruction string from rule dict
 
         Args:
             rule (tuple): The rule with the instruction on position 0 and
