@@ -90,3 +90,30 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
                     str(io_time_in_seconds)
                 ],
             )
+
+    def select_records(
+            self,
+            telemetry_type: str,
+            category: str,
+            sub_category: str,
+            source_name: str,
+            process_type: str) -> None:
+        
+        select_statement = \
+            ("SELECT * FROM telemetry WHERE telemetry_type=? AND "
+             "category=? AND "
+             "sub_category=? AND "
+             "source_name=? AND "
+             "process_type=?")
+        
+        if self.db_cursor:
+            return self.db_cursor.execute(
+                select_statement,
+                [
+                    telemetry_type,
+                    category,
+                    sub_category,
+                    source_name,
+                    process_type
+                ],
+            )
