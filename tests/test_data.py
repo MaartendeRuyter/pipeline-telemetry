@@ -36,6 +36,7 @@ DEFAULT_TELEMETRY_MODEL_PARAMS = {
 CUSTOM_PROCESS_TYPE = {"custom_process_type": ["CUSTOM_SUB_TYPE"]}
 
 TEST_ERROR_CODE = ErrorCode(code="TEST_CODE_0001", description="test error")
+TEST_ERROR_CODE_2 = ErrorCode(code="TEST_CODE_0002", description="test error")
 
 TEST_TELEMETRY_RULES = {"RETRIEVE_RAW_DATA": {"has_key": {"field_name": "items"}}}
 

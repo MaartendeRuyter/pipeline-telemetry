@@ -28,10 +28,26 @@ class TelemetryData():
             self, increment: int, error_code: ErrorCode) -> None:
 
         error_code_key = error_code.code
+        self._increase_error_count(
+            increment=increment, error_code_key=error_code_key)
+
+    def _increase_error_count(
+            self, increment: int, error_code_key: str) -> None:
         self.errors[error_code_key] += increment
 
     def increase_custom_count(self, increment: int, counter: str) -> None:
         self.counters[counter] += increment
+
+    def __add__(self, telemetry_data: 'TelemetryData') -> 'TelemetryData':
+        self.increase_base_count(telemetry_data.base_counter)
+        self.increase_fail_count(telemetry_data.fail_counter)
+        for error_code_key, increment in telemetry_data.errors.items():
+            self._increase_error_count(
+                increment=increment, error_code_key=error_code_key)
+        for counter, increment in telemetry_data.counters.items():
+            self.increase_custom_count(
+                increment=increment, counter=counter)
+        return self
 
 
 @dataclass
