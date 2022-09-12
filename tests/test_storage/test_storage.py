@@ -57,6 +57,41 @@ def test_store_telemetry_stores_object():
     assert len(all_in_memory_objects.fetchall()) == 1
 
 
+def test_select_records_returns_sql_lite_cursor():
+    """Test select_records method returns sqllite Cursor with one object."""
+    # Table reset for each test is needed as the table is a class property
+    TelemetryInMemoryStorage._define_db_table(TelemetryInMemoryStorage.db_cursor)
+    in_memory_storage = TelemetryInMemoryStorage()
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**DEFAULT_TELEMETRY_MODEL_PARAMS))
+    selected_in_memory_objects = in_memory_storage.select_records(
+        **DEFAULT_TELEMETRY_MODEL_PARAMS)
+    assert len(selected_in_memory_objects.fetchall()) == 1
+    assert isinstance(selected_in_memory_objects, sqlite3.Cursor)
+
+
+def test_select_records_returns_only_selected_records():
+    """
+    Test select_records method returns only records accordding to giv.encode()attriubures.
+    """
+    # Table reset for each test is needed as the table is a class property
+    TelemetryInMemoryStorage._define_db_table(TelemetryInMemoryStorage.db_cursor)
+    in_memory_storage = TelemetryInMemoryStorage()
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**DEFAULT_TELEMETRY_MODEL_PARAMS))
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**DEFAULT_TELEMETRY_MODEL_PARAMS))
+    in_memory_storage.store_telemetry(
+        TelemetryModel(**DEFAULT_TELEMETRY_MODEL_PARAMS |
+                       {'category': 'different_category'}))
+    selected_in_memory_objects = in_memory_storage.select_records(
+        **DEFAULT_TELEMETRY_MODEL_PARAMS)
+    assert len(selected_in_memory_objects.fetchall()) == 2
+    all_in_memory_objects = in_memory_storage.db_cursor.execute(
+        "SELECT * FROM telemetry ")
+    assert len(all_in_memory_objects.fetchall()) == 3
+
+
 @freeze_time("2022-01-18 18:00:00.123456")
 def test_store_telemetry_stores_object_with_create_date(mocker):
     """Test in memory storage instance has db_in_memory and db_cursor"""

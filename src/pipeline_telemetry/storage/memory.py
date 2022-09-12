@@ -5,6 +5,7 @@ import sqlite3
 from typing import Optional
 
 from ..data_classes import TelemetryModel
+from ..settings import exceptions
 from ..settings import settings as st
 from .generic import AbstractTelemetryStorage
 
@@ -59,6 +60,9 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
 
     def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """public method to persist telemetry object"""
+        if not self.db_cursor:
+            raise exceptions.StorageNotInitialized
+
         telemetry_type = getattr(telemetry, st.TELEMETRY_TYPE_KEY)
         category = getattr(telemetry, st.CATEGORY_KEY)
         sub_category = getattr(telemetry, st.SUB_CATEGORY_KEY)
@@ -74,46 +78,30 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         }
         json_object = json.dumps(telemetry_data)
 
-        if self.db_cursor:
-            self.db_cursor.execute(
-                "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [
-                    telemetry_type,
-                    category,
-                    sub_category,
-                    source_name,
-                    process_type,
-                    start_date_time,
-                    str(run_time_in_seconds),
-                    json_object,
-                    traffic_light,
-                    str(io_time_in_seconds)
-                ],
-            )
+        self.db_cursor.execute(
+            "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                telemetry_type, category, sub_category,
+                source_name, process_type, start_date_time,
+                str(run_time_in_seconds), json_object,
+                traffic_light, str(io_time_in_seconds)
+            ])
 
     def select_records(
-            self,
-            telemetry_type: str,
-            category: str,
-            sub_category: str,
-            source_name: str,
-            process_type: str) -> None:
-        
+            self, telemetry_type: str, category: str, sub_category: str,
+            source_name: str, process_type: str) -> sqlite3.Cursor:
+        """
+        Select telemetry records unique to a single process and source for as specific time period.
+        """
+        if not self.db_cursor:
+            raise exceptions.StorageNotInitialized
+
         select_statement = \
-            ("SELECT * FROM telemetry WHERE telemetry_type=? AND "
-             "category=? AND "
-             "sub_category=? AND "
-             "source_name=? AND "
-             "process_type=?")
-        
-        if self.db_cursor:
-            return self.db_cursor.execute(
-                select_statement,
-                [
-                    telemetry_type,
-                    category,
-                    sub_category,
-                    source_name,
-                    process_type
-                ],
-            )
+            ("SELECT * FROM telemetry WHERE "
+             f"telemetry_type='{telemetry_type}' AND "
+             f"category='{category}' AND "
+             f"sub_category='{sub_category}' AND "
+             f"source_name='{source_name}' AND "
+             f"process_type='{process_type}'")
+
+        return self.db_cursor.execute(select_statement)

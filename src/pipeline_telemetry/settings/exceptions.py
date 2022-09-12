@@ -52,6 +52,7 @@ class UnknownInstruction(Exception):
 
 class InstructionRegisteredTwice(Exception):
     """custom exception for Telemetry Module"""
+
     def __init__(self, instruction_class):
         message = "".join(
             [
@@ -64,6 +65,7 @@ class InstructionRegisteredTwice(Exception):
 
 class RuleCanHaveOnlyOneInstruction(Exception):
     """custom exception for Telemetry Module"""
+
     def __init__(self, rule):
         message = "".join(
             ["Rule contains multiple keys / instruction : ", ", ".join(rule.keys())]
@@ -73,6 +75,7 @@ class RuleCanHaveOnlyOneInstruction(Exception):
 
 class SubProcessAlreadyInitialized(Exception):
     """custom exception for Telemetry Module"""
+
     def __init__(self, sub_process: str):
         message = \
             f"Sub Process `{sub_process}` already initialized."
@@ -81,6 +84,7 @@ class SubProcessAlreadyInitialized(Exception):
 
 class InvalidSubProcess(Exception):
     """custom exception for Telemetry Module"""
+
     def __init__(self, sub_process: str, process_type):
         message = "".join(
             [
@@ -123,6 +127,14 @@ class StorageClassOfIncorrectType(Exception):
                 "class of AbstractTelemetryStorage",
             ]
         )
+        super().__init__(message)
+
+
+class StorageNotInitialized(Exception):
+    """custom exception for Telemetry Module"""
+
+    def __init__(self):
+        message = "Storage is not yet initialized"
         super().__init__(message)
 
 
