@@ -88,3 +88,73 @@ class TelemetryModel():
     def set_red_traffic_light(self) -> None:
         """Sets traffic light attribute to red."""
         self.traffic_light = st.TRAFIC_LIGHT_COLOR_RED
+
+    def __add__(
+            self, telemetry_model_to_add: 'TelemetryModel') -> 'TelemetryModel':
+        """
+        Method to add to telementry model instances.
+        Adding a 2 telemetry model instances implies adding all telemetry data
+        objects and adding iotime, run time and traffic light attributes to a
+        specific counter.
+        """
+        self.__add_base_count()
+        self.__add_sub_process(telemetry_model_to_add=telemetry_model_to_add)
+        self.__add_traffic_light(telemetry_model_to_add=telemetry_model_to_add)
+        self.__add_io_time(telemetry_model_to_add=telemetry_model_to_add)
+        self.__add_run_time(telemetry_model_to_add=telemetry_model_to_add)
+        return self
+
+    def __add_base_count(self) -> None:
+        """
+        Sub method for the __add__ method to increase base_counter of the
+        aggregation sub_process when adding TelemetryModel instances.
+        """
+        self.get_sub_process_data(
+            sub_process=st.AGGREGATION_KEY).increase_base_count(increment=1)
+
+    def __add_traffic_light(
+            self, telemetry_model_to_add: 'TelemetryModel') -> None:
+        """
+        Sub method for the __add__ method to add the traffic_light value of the
+        TelemetryModel instance to be added to the aggregation sub_process.
+        """
+        self.get_sub_process_data(
+            sub_process=st.AGGREGATION_KEY).increase_custom_count(
+                increment=1, counter=telemetry_model_to_add.traffic_light)
+
+    def __add_sub_process(
+            self, telemetry_model_to_add: 'TelemetryModel') -> None:
+        """
+        Sub method for the __add__ method to add the sub_processes of the two
+        TelemetryModel instances.
+        """
+        for sub_process in telemetry_model_to_add.telemetry:
+            sub_pr = self.get_sub_process_data(sub_process)
+            sub_pr += telemetry_model_to_add.get_sub_process_data(
+                sub_process=sub_process)
+
+    def __add_io_time(self, telemetry_model_to_add: 'TelemetryModel') -> None:
+        """
+        Sub method for the __add__ method to add the rounded io_time of the
+        TelemetryModel instance to be added to the aggregation sub_process.
+        """
+        self.get_sub_process_data(
+            sub_process=st.AGGREGATION_KEY).increase_custom_count(
+                increment=round(telemetry_model_to_add.io_time_in_seconds),
+                counter=st.IO_TIME_KEY)
+
+    def __add_run_time(self, telemetry_model_to_add: 'TelemetryModel') -> None:
+        """
+        Sub method for the __add__ method to add the rounded run_time of the
+        TelemetryModel instance to be added to the aggregation sub_process.
+        """
+        run_time_in_seconds = telemetry_model_to_add.run_time_in_seconds or 0
+        self.get_sub_process_data(
+            sub_process=st.AGGREGATION_KEY).increase_custom_count(
+                increment=round(run_time_in_seconds),
+                counter=st.RUN_TIME)
+
+    def get_sub_process_data(self, sub_process: str) -> TelemetryData:
+        if not self.telemetry.get(sub_process):
+            self.telemetry[sub_process] = TelemetryData()
+        return self.telemetry[sub_process]

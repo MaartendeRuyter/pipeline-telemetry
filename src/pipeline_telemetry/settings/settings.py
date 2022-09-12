@@ -33,6 +33,7 @@ TRAFFIC_LIGHT_KEY = "traffic_light"
 TELEMETRY_TYPE_KEY = "telemetry_type"
 IO_TIME_KEY = "io_time_in_seconds"
 TELEMETRY_FIELD_KEY = "telemetry"
+AGGREGATION_KEY = "telemetry_aggregation_stats"
 
 DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES = [
     "RETRIEVE_RAW_DATA",
