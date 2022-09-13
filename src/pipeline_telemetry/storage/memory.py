@@ -2,7 +2,8 @@
 """
 import json
 import sqlite3
-from typing import Optional
+from datetime import datetime
+from typing import Dict, Iterator, Optional
 
 from ..data_classes import TelemetryModel
 from ..settings import exceptions
@@ -89,7 +90,8 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
 
     def select_records(
             self, telemetry_type: str, category: str, sub_category: str,
-            source_name: str, process_type: str) -> sqlite3.Cursor:
+            source_name: str, process_type: str, from_date_time: datetime,
+            to_date_time: datetime) -> Iterator:
         """
         Select telemetry records unique to a single process and source for as specific time period.
         """
@@ -102,6 +104,8 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
              f"category='{category}' AND "
              f"sub_category='{sub_category}' AND "
              f"source_name='{source_name}' AND "
-             f"process_type='{process_type}'")
+             f"process_type='{process_type}' AND "
+             f"start_date_time > '{from_date_time}' AND "
+             f"start_date_time < '{to_date_time}'")
 
         return self.db_cursor.execute(select_statement)
