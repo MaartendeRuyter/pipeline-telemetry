@@ -1,15 +1,15 @@
 """Module to test storage module.
 """
-import pytest
 import sqlite3
 from datetime import datetime, timedelta
 
+import pytest
 from freezegun import freeze_time
 from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
 from pipeline_telemetry.data_classes import TelemetryModel
-from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.settings import exceptions
+from pipeline_telemetry.settings import settings as st
 from pipeline_telemetry.storage.generic import AbstractTelemetryStorage
 from pipeline_telemetry.storage.memory import TelemetryInMemoryStorage
 
@@ -81,6 +81,7 @@ def test_close_db_in_memory_can_be_closed_twice():
     in_memory_storage = TelemetryInMemoryStorage()
     in_memory_storage.close_db()
     assert in_memory_storage.close_db() is None
+
 
 def test_in_memory_strorage_is_only_created_once():
     """Test that once the database is created it will not be reinitialized"""

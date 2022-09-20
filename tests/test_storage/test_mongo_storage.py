@@ -2,7 +2,6 @@
 """
 from datetime import datetime, timedelta
 
-from freezegun import freeze_time
 from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
 from pipeline_telemetry.data_classes import TelemetryModel
