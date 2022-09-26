@@ -1,3 +1,15 @@
+"""
+Module to provide the TelemetryData classes
+
+Dataclasses defined in Module
+
+- TelemetryData: Data class to hold the actual (error)counters in a
+                 TelemetryModel object
+
+- TelemetryModel: Data class to define the Telemetry object category, type,
+                  source etc. Holds the reference to the actual counters defined
+                  in TelemetryData dataclass.
+"""
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -11,21 +23,43 @@ from pipeline_telemetry.settings import settings as st
 
 @dataclass
 class TelemetryData():
+    """
+    Class to define the telemetry (error)counters.
+
+    attributes:
+    - base_counter (int): counter for the TelemetryData object. 
+    - fail_counter (int): fail counter for the TelemetryData object.
+    - counters (dict): dict of sub (custom) counters [str: int]
+    - errors (dict): dict of error counters [str: int]
+
+    public methods:
+    - increase_base_count
+    - increase_fail_count
+    - increase_custom_count
+    - increase_error_count
+
+    counters can be added in which case base, fail, custom and error counters
+    will be summed up seperately. Add method will return self with added
+    TelemetryData object.
+    """
     base_counter: int = 0
     fail_counter: int = 0
-    errors: DefaultDict[str, int] = field(
-        default_factory=lambda: defaultdict(int))
     counters: DefaultDict[str, int] = field(
+        default_factory=lambda: defaultdict(int))
+    errors: DefaultDict[str, int] = field(
         default_factory=lambda: defaultdict(int))
 
     def increase_base_count(self, increment: int) -> None:
+        """Increase the base counter with a given increment."""
         self.base_counter += increment
 
     def increase_fail_count(self, increment: int) -> None:
+        """Increase the fail counter with a given increment."""
         self.fail_counter += increment
 
     def increase_error_count(
             self, increment: int, error_code: ErrorCode) -> None:
+        """Increase an error counter with a given increment."""
 
         error_code_key = error_code.code
         self._increase_error_count(
@@ -36,9 +70,13 @@ class TelemetryData():
         self.errors[error_code_key] += increment
 
     def increase_custom_count(self, increment: int, counter: str) -> None:
+        """Increase a custom counter with a given increment."""
         self.counters[counter] += increment
 
     def __add__(self, telemetry_data: 'TelemetryData') -> 'TelemetryData':
+        """
+        Add telemetry_data object to self by adding up all counters seperately.
+        """
         self.increase_base_count(telemetry_data.base_counter)
         self.increase_fail_count(telemetry_data.fail_counter)
         for error_code_key, increment in telemetry_data.errors.items():
