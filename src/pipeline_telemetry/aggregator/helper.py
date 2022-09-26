@@ -18,12 +18,18 @@ Single day date range generators.
 
 
 """
-from datetime import datetime, timedelta, date
-from typing import Iterator, NewType, Tuple
+from datetime import date, datetime, timedelta
+from typing import Iterator, NamedTuple
 
-DateRange = NewType('DateRange', Tuple[date, date])
 
-DateTimeRange = NewType('DateTimeRange', Tuple[datetime, datetime])
+class DateRange(NamedTuple):
+    from_date: date
+    to_date: date
+
+
+class DateTimeRange(NamedTuple):
+    from_date: datetime
+    to_date: datetime
 
 
 def date_range_to_date_time_range(
@@ -31,7 +37,7 @@ def date_range_to_date_time_range(
     start_date, end_date = date_range
     start_date_time = datetime(*start_date.timetuple()[:6])
     end_date_time = datetime(*end_date.timetuple()[:6])
-    return DateTimeRange((start_date_time, end_date_time))
+    return DateTimeRange(start_date_time, end_date_time)
 
 
 def date_range_generator(
@@ -53,7 +59,7 @@ def date_range_generator(
     end_date = start_date + time_delta
     while end_date <= end_date_time.date():
         yield date_range_to_date_time_range(
-            DateRange((start_date, end_date)))
+            DateRange(start_date, end_date))
         start_date, end_date = end_date, end_date + time_delta
 
 
