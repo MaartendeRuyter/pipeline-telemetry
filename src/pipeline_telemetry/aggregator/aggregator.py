@@ -86,7 +86,13 @@ class DailyAggregator():
         self.__telemetry_storage = telemetry_storage
         self._set_target_telemetry_model()
 
+    @property
+    def target_telemetry(self):
+        return self.__target_telemetry
+
     def aggregate(self, start_date: date, end_date: date) -> None:
+        """Method to run all aggregations in the given time period.
+        """
         date_time_ranges = self._get_date_ranges(
             start_date=start_date, end_date=end_date)
         for date_time_range in date_time_ranges:
@@ -114,10 +120,6 @@ class DailyAggregator():
 
         return self.__aggregator(
             self.__target_telemetry.copy()).aggregate(telemety_objects)
-
-    @property
-    def target_telemetry(self):
-        return self.__target_telemetry
 
     def _set_target_telemetry_model(self):
         target_telem_params = self.__telemetry_selector._asdict() | \
