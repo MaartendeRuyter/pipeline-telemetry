@@ -47,7 +47,7 @@ def date_range_generator(
     """Iterator for a list of DateTimeRange object
 
     Args:
-        start_date_time (datetime): start date 
+        start_date_time (datetime): start date
         end_date_time (datetime): end date
         time_delta (timedelta): lengt of date time range
 

@@ -27,7 +27,7 @@ class TelemetryData():
     Class to define the telemetry (error)counters.
 
     attributes:
-    - base_counter (int): counter for the TelemetryData object. 
+    - base_counter (int): counter for the TelemetryData object.
     - fail_counter (int): fail counter for the TelemetryData object.
     - counters (dict): dict of sub (custom) counters [str: int]
     - errors (dict): dict of error counters [str: int]
@@ -107,7 +107,7 @@ class TelemetryModel():
     def copy(self) -> 'TelemetryModel':
         """
         Method to return a copy of the telemetry model. In a telemetry copy
-        only the attributes telemetry_type, categroy, sub_category, source_name 
+        only the attributes telemetry_type, categroy, sub_category, source_name
         and process_type are copied.
         """
         return TelemetryModel(

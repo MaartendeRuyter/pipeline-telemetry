@@ -63,24 +63,6 @@ def test_telememtry_list_params():
     assert not telemetry_list_params
 
 
-def test_telememtry_list_params():
-    """Test if telemetry list params returns correct params."""
-    telemetry_selector = TelemetrySelector(
-        category='test', sub_category='sub_test', source_name='source',
-        process_type='process_type')
-
-    aggr = DailyAggregator(
-        telemetry_selector=telemetry_selector,
-        telemetry_storage=TelemetryTestList()
-    )
-    telemetry_list_params = aggr._telememtry_list_params(
-        date_time_range=next(get_daily_date_range_yesterday()))
-    # ensure all relevant but no other keys are in telemetry_list_params
-    for key in keys_in_telemetry_list_params:
-        assert telemetry_list_params.pop(key)
-    assert not telemetry_list_params
-
-
 def test_run_aggregation():
     """Method to test a single aggregation."""
     telemetry_selector = TelemetrySelector(
@@ -111,6 +93,7 @@ def test_run_aggregation_for_one_day():
     assert len(storage.stored_telemetry) == 1
     result_telemetry = storage.stored_telemetry[0]
     assert result_telemetry.telemetry['DATA_STORAGE'].base_counter == 3
+
 
 def test_run_aggregation_for_two_days():
     """Method to test that two aggregations were stored."""

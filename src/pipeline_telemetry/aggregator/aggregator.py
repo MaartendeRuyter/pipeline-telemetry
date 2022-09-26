@@ -16,8 +16,7 @@ Usage
 
 """
 from datetime import date, datetime
-from typing import Callable, Dict, Iterator, List, NamedTuple, Protocol, \
-    Type, Union
+from typing import Dict, Iterator, List, NamedTuple, Protocol, Type, Union
 
 from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import settings as st
@@ -75,8 +74,6 @@ class DailyAggregator():
     FROM_TELEMETRY_TYPE = st.SINGLE_TELEMETRY_TYPE
     TO_TELEMETRY_TYPE = st.DAILY_AGGR_TELEMETRY_TYPE
 
-    __date_range_generator: Callable = get_daily_date_ranges
-
     __telemetry_selector: TelemetrySelector
     __target_telemetry: TelemetryModel
     __telemetry_storage: TelemetryStorage
@@ -104,14 +101,14 @@ class DailyAggregator():
         """
         return get_daily_date_ranges(
             start_date=start_date, end_date=end_date)
-    
+
     def _run_aggregation(
             self, date_time_range: DateTimeRange) -> TelemetryModel:
         """
         Method to run the actual aggregation and return the aggregated telemetry model.
         """
         telemetry_list_params = \
-                self._telememtry_list_params(date_time_range)
+            self._telememtry_list_params(date_time_range)
         telemety_objects = self.__telemetry_storage.telemetry_list(
             **telemetry_list_params)
 
