@@ -28,11 +28,11 @@ def test_date_range_generator():
     result = [daterange for daterange in daterange_generator]
     assert result == [
         DateTimeRange(
-            (str_to_date_time('2022-01-18'), str_to_date_time('2022-01-19'))),
+            str_to_date_time('2022-01-18'), str_to_date_time('2022-01-19')),
         DateTimeRange(
-            (str_to_date_time('2022-01-19'), str_to_date_time('2022-01-20'))),
+            str_to_date_time('2022-01-19'), str_to_date_time('2022-01-20')),
         DateTimeRange(
-            (str_to_date_time('2022-01-20'), str_to_date_time('2022-01-21')))]
+            str_to_date_time('2022-01-20'), str_to_date_time('2022-01-21'))]
 
 
 def test_date_range_generator_with_during_day_time_stamps():
