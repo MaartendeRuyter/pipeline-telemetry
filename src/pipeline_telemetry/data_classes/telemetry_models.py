@@ -104,6 +104,19 @@ class TelemetryModel():
     def validate(self) -> None:
         self._check_telemetry_type()
 
+    def copy(self) -> 'TelemetryModel':
+        """
+        Method to return a copy of the telemetry model. In a telemetry copy
+        only the attributes telemetry_type, categroy, sub_category, source_name 
+        and process_type are copied.
+        """
+        return TelemetryModel(
+            telemetry_type=self.telemetry_type,
+            category=self.category,
+            sub_category=self.sub_category,
+            source_name=self.source_name,
+            process_type=self.process_type)
+
     def _check_telemetry_type(self) -> None:
         """Check validaty of provided telemetry type.
 
