@@ -15,13 +15,14 @@ Usage
 >>> aggregated_telemetry = aggregator.aggregate_from(telemetry_queryset)
 
 """
-from datetime import datetime
-from typing import Dict, Iterator, NamedTuple, Protocol, Union
+from datetime import date, datetime
+from typing import Callable, Dict, Iterator, List, NamedTuple, Protocol, \
+    Type, Union
 
 from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import settings as st
 
-from .helper import DateTimeRange
+from .helper import DateTimeRange, get_daily_date_ranges
 
 
 class TelemetrySelector(NamedTuple):
@@ -31,7 +32,7 @@ class TelemetrySelector(NamedTuple):
     process_type: str
 
 
-class TelemetryList(Protocol):
+class TelemetryStorage(Protocol):
 
     def telemetry_list(
             self, telemetry_type: str, category: str, sub_category: str,
@@ -40,17 +41,15 @@ class TelemetryList(Protocol):
         """
         Method to return an iteraror TelemetryModel instances retrieved from a database query with the provided arguments.
         """
-        ... 
+        ...
 
-class TelemetryProtocol(Protocol):
-    """For the purpose of the TelemetryAggregator adddimg all the new telemetry needs to be able to ad"""
-
-    def __add__(self, telemetry: 'TelemetryProtocol') -> 'TelemetryProtocol':
+    def store_telemetry(self, telemetry: TelemetryModel) -> None:
+        """ public method to persist telemetry object"""
         ...
 
 
 class TelemetryList(Protocol):
-    def __next__(self) -> TelemetryProtocol:
+    def __next__(self) -> TelemetryModel:
         ...
 
     def __iter__(self) -> 'TelemetryList':
@@ -59,13 +58,13 @@ class TelemetryList(Protocol):
 
 class TelemetryAggregator():
 
-    __telemetry: TelemetryProtocol
+    __telemetry: TelemetryModel
 
-    def __init__(self, telemetry: TelemetryProtocol) -> None:
+    def __init__(self, telemetry: TelemetryModel) -> None:
         self.__telemetry = telemetry
 
-    def aggregate_from(
-            self, telemetry_list: TelemetryList) -> TelemetryProtocol:
+    def aggregate(
+            self, telemetry_list: TelemetryList) -> TelemetryModel:
         for telemetry in telemetry_list:
             self.__telemetry += telemetry
         return self.__telemetry
@@ -76,32 +75,72 @@ class DailyAggregator():
     FROM_TELEMETRY_TYPE = st.SINGLE_TELEMETRY_TYPE
     TO_TELEMETRY_TYPE = st.DAILY_AGGR_TELEMETRY_TYPE
 
+    __date_range_generator: Callable = get_daily_date_ranges
+
     __telemetry_selector: TelemetrySelector
-    __target_telemetry_model: TelemetryModel
-    __telemetry_storage: TelemetryList
+    __target_telemetry: TelemetryModel
+    __telemetry_storage: TelemetryStorage
+    __aggregator: Type[TelemetryAggregator] = TelemetryAggregator
 
     def __init__(
             self, telemetry_selector: TelemetrySelector,
-            telemetry_storage: TelemetryList) -> None:
+            telemetry_storage: TelemetryStorage) -> None:
         self.__telemetry_selector = telemetry_selector
         self.__telemetry_storage = telemetry_storage
         self._set_target_telemetry_model()
 
+    def aggregate(self, start_date: date, end_date: date) -> None:
+        date_time_ranges = self._get_date_ranges(
+            start_date=start_date, end_date=end_date)
+        for date_time_range in date_time_ranges:
+            aggregated_telemetry = self._run_aggregation(date_time_range)
+            self.__telemetry_storage.store_telemetry(aggregated_telemetry)
+
+    def _get_date_ranges(
+            self, start_date: date, end_date: date) -> List[DateTimeRange]:
+        """
+        Method to return the list of date ranges based upon start and end
+        date.
+        """
+        return get_daily_date_ranges(
+            start_date=start_date, end_date=end_date)
+    
+    def _run_aggregation(
+            self, date_time_range: DateTimeRange) -> TelemetryModel:
+        """
+        Method to run the actual aggregation and return the aggregated telemetry model.
+        """
+        telemetry_list_params = \
+                self._telememtry_list_params(date_time_range)
+        telemety_objects = self.__telemetry_storage.telemetry_list(
+            **telemetry_list_params)
+
+        return self.__aggregator(
+            self.__target_telemetry.copy()).aggregate(telemety_objects)
+
     @property
-    def target_telemetry_model(self):
-        return self.__target_telemetry_model    
+    def target_telemetry(self):
+        return self.__target_telemetry
 
     def _set_target_telemetry_model(self):
         target_telem_params = self.__telemetry_selector._asdict() | \
             {'telemetry_type': self.TO_TELEMETRY_TYPE}
 
-        self.__target_telemetry_model = TelemetryModel(**target_telem_params)
+        self.__target_telemetry = TelemetryModel(**target_telem_params)
 
-    def _storage_query_params(
-            self, date_time_range: DateTimeRange
-    ) -> Dict[str, Union[str, datetime]]:
-        storage_q_params = \
-            self.__telemetry_selector.__dict__ | \
+    def _telememtry_list_params(self, date_time_range: DateTimeRange) \
+            -> Dict[str, Union[str, datetime]]:
+        """
+        Method to return telemetry_list_params that can be used to retrieve a
+        list of TelemetryModel objects from the storage model.
+
+        i.e. these params serve as input to the telemetry_list method of the
+        storage_class
+        """
+        telemetry_list_params = \
+            self.__telemetry_selector._asdict() | \
             {'telemetry_type': self.FROM_TELEMETRY_TYPE}
-
-        return
+        telemetry_list_params.update(
+            from_date_time=date_time_range.from_date,
+            to_date_time=date_time_range.to_date)
+        return telemetry_list_params

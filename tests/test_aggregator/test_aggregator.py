@@ -23,4 +23,4 @@ def test_aggegator_from_adds_all_telemetry_list_items():
     new_telemetry = 1
     aggregator = TelemetryAggregator(new_telemetry)
     telemetry_list = [2, 3, 4]
-    assert aggregator.aggregate_from(telemetry_list) == 10
+    assert aggregator.aggregate(telemetry_list) == 10
