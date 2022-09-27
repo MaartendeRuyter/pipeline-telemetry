@@ -24,6 +24,34 @@ from typing import Iterator, NamedTuple, Protocol
 from pipeline_telemetry.data_classes import TelemetryModel
 
 
+class TelemetrySelector(NamedTuple):
+    """Named tuple to define mandatory attributed for a Telemetry selection.
+
+    This object should be used as input to the Telemetry Aggregator
+
+    >>> telemetry_selector = TelemetrySelector(
+        category, sub_category, source_name, process_type)
+    >>> aggeregator = AggregatorClass(
+            telemetry_selector=telemetry_selector,
+            telemetry_storage=TelemetryStorageClass()
+        )
+    """
+    category: str
+    sub_category: str
+    source_name: str
+    process_type: str
+
+
+class TelemetryListArgs(NamedTuple):
+    telemetry_type: str
+    category: str
+    sub_category: str
+    source_name: str
+    process_type: str
+    from_date_time: datetime
+    to_date_time: datetime
+
+
 class TelemetryList(Protocol):
     def __next__(self) -> TelemetryModel:
         ...
@@ -44,6 +72,7 @@ class TelemetryAggregator():
         for telemetry in telemetry_list:
             self.__telemetry += telemetry
         return self.__telemetry
+
 
 class DateRange(NamedTuple):
     from_date: date

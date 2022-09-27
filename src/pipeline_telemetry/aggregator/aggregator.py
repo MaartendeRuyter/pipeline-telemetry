@@ -6,29 +6,22 @@ The aggregation of is added to a telemetry object that is provide to aggregate m
 
 Usage
 
-
 >>> # create new telemetry object
 >>> telemetry_object = Telemetry(**telemtry_params)
 >>> # create aggregator
 >>> aggregator = TelemetryAggregator(telemetry_object)
 >>> # aggregate a telemetry queryset and return the result
->>> aggregated_telemetry = aggregator.aggregate_from(telemetry_queryset)
+>>> aggregated_telemetry = aggregator.aggregate(telemetry_queryset)
 
 """
 from datetime import date, datetime
-from typing import Dict, Iterator, List, NamedTuple, Protocol, Type, Union
+from typing import Iterator, Protocol, Type
 
 from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import settings as st
 
-from .helper import DateTimeRange, TelemetryAggregator, get_daily_date_ranges
-
-
-class TelemetrySelector(NamedTuple):
-    category: str
-    sub_category: str
-    source_name: str
-    process_type: str
+from .helper import DateTimeRange, TelemetryAggregator, TelemetryListArgs, \
+    TelemetrySelector, get_daily_date_ranges
 
 
 class TelemetryStorage(Protocol):
@@ -45,7 +38,6 @@ class TelemetryStorage(Protocol):
     def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """ public method to persist telemetry object"""
         ...
-
 
 
 class DailyAggregator():
@@ -69,6 +61,10 @@ class DailyAggregator():
     def target_telemetry(self):
         return self.__target_telemetry
 
+    @property
+    def storage_class(self):
+        return self.__telemetry_storage
+
     def aggregate(self, start_date: date, end_date: date) -> None:
         """Method to run all aggregations in the given time period.
         """
@@ -79,7 +75,7 @@ class DailyAggregator():
             self.__telemetry_storage.store_telemetry(aggregated_telemetry)
 
     def _get_date_ranges(
-            self, start_date: date, end_date: date) -> List[DateTimeRange]:
+            self, start_date: date, end_date: date) -> Iterator[DateTimeRange]:
         """
         Method to return the list of date ranges based upon start and end
         date.
@@ -93,17 +89,17 @@ class DailyAggregator():
         Method to run the actual aggregation and return the aggregated telemetry model.
         """
         telemetry_list_params = \
-            self._telememtry_list_params(date_time_range)
+            self._telememtry_list_params(date_time_range)._asdict()
         telemetry_objects = self.__telemetry_storage.telemetry_list(
             **telemetry_list_params)
-        
+
         initial_telemetry_obj = self.__target_telemetry.copy()
         aggregator = self.__aggregator(initial_telemetry_obj)
         aggregated_telemetry = aggregator.aggregate(telemetry_objects)
 
         return self._set_start_date_time_for_aggregated_telemetry(
             aggregated_telemetry, date_time_range)
-        
+
     @staticmethod
     def _set_start_date_time_for_aggregated_telemetry(
             telemetry_obj: TelemetryModel,
@@ -125,7 +121,7 @@ class DailyAggregator():
         self.__target_telemetry = TelemetryModel(**target_telem_params)
 
     def _telememtry_list_params(self, date_time_range: DateTimeRange) \
-            -> Dict[str, Union[str, datetime]]:
+            -> TelemetryListArgs:
         """
         Method to return telemetry_list_params that can be used to retrieve a
         list of TelemetryModel objects from the storage model.
@@ -133,10 +129,10 @@ class DailyAggregator():
         i.e. these params serve as input to the telemetry_list method of the
         storage_class
         """
-        telemetry_list_params = \
-            self.__telemetry_selector._asdict() | \
-            {'telemetry_type': self.FROM_TELEMETRY_TYPE}
-        telemetry_list_params.update(
+        telemetry_list_params = self.__telemetry_selector._asdict()
+        return TelemetryListArgs(
+            telemetry_type=self.FROM_TELEMETRY_TYPE,
             from_date_time=date_time_range.from_date,
-            to_date_time=date_time_range.to_date)
-        return telemetry_list_params
+            to_date_time=date_time_range.to_date,
+            **telemetry_list_params
+        )
