@@ -13,6 +13,7 @@ Contents
    telemetry mixin
    process_type
    telemetry counters
+   telemetry aggregation
    storage class
    reference/index
    contributing
