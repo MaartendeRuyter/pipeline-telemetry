@@ -1,6 +1,6 @@
-====================
-Telemetry aggegation
-====================
+=====================
+Telemetry aggregation
+=====================
 Telemetry aggregation allows you to combine multiple telemetry objects into a single telemetry object by adding up all counters and errors. This allows you
 for example to take ll telemetry objects created during the day and create a single daily Telemetry object that can be reported upon seperately ::
 
@@ -29,7 +29,7 @@ The aggregetors themselves define the telemetry_type from which to aggregate. Th
 
 DailyAggregator
 ---------------
-This aggregetor creates daily aggregations (with telemetry_type `DAILY AGGREGATION`) from selected telemetry objects with telemetry_type 'SINGLE TELEMETRY'. ``DailyAggregator`` can be instantiated as follows::
+This aggregetor creates daily aggregations (with telemetry_type 'DAILY AGGREGATION') from selected telemetry objects with telemetry_type 'SINGLE TELEMETRY'. ``DailyAggregator`` can be instantiated as follows::
 
     from pipeline_telemetry import DailyAggregator, TelemetrySelector
 
@@ -62,6 +62,5 @@ MongoDB Aggregator
 ------------------
 A mongo DB version of the aggregator classes have been made such that you no longer have to provide the MongoDB storage class yourself.
 
-Available MongoDB aggregators
-- DailyMongoAggregator
-
+Available MongoDB aggregators.
+``DailyMongoAggregator``

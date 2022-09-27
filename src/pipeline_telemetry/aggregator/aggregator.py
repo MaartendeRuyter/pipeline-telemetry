@@ -45,11 +45,11 @@ class DailyAggregator():
     Aggregator to aggregate all SINGLE TELEMETRY objects for a single day
     into a telemetry objetc of type DAILY AGGREGATION.
 
-    When initializig the class a TelemetrySelector should provided that 
+    When initializig the class a TelemetrySelector should provided that
     determine which telemnetry objects are in scope
 
     The following methods are available to run the actual aggregations
-    
+
     - aggregate: makes daily aggregations from start_date to end_date
     - aggregate_yesteraday: makes daily aggregation for yesterday
     """
@@ -155,8 +155,3 @@ class DailyAggregator():
             to_date_time=date_time_range.to_date,
             **telemetry_list_params
         )
-
-
-
-
-
