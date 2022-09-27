@@ -21,7 +21,7 @@ from typing import Dict, Iterator, List, NamedTuple, Protocol, Type, Union
 from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import settings as st
 
-from .helper import DateTimeRange, get_daily_date_ranges
+from .helper import DateTimeRange, TelemetryAggregator, get_daily_date_ranges
 
 
 class TelemetrySelector(NamedTuple):
@@ -46,27 +46,6 @@ class TelemetryStorage(Protocol):
         """ public method to persist telemetry object"""
         ...
 
-
-class TelemetryList(Protocol):
-    def __next__(self) -> TelemetryModel:
-        ...
-
-    def __iter__(self) -> 'TelemetryList':
-        ...
-
-
-class TelemetryAggregator():
-
-    __telemetry: TelemetryModel
-
-    def __init__(self, telemetry: TelemetryModel) -> None:
-        self.__telemetry = telemetry
-
-    def aggregate(
-            self, telemetry_list: TelemetryList) -> TelemetryModel:
-        for telemetry in telemetry_list:
-            self.__telemetry += telemetry
-        return self.__telemetry
 
 
 class DailyAggregator():
@@ -115,11 +94,29 @@ class DailyAggregator():
         """
         telemetry_list_params = \
             self._telememtry_list_params(date_time_range)
-        telemety_objects = self.__telemetry_storage.telemetry_list(
+        telemetry_objects = self.__telemetry_storage.telemetry_list(
             **telemetry_list_params)
+        
+        initial_telemetry_obj = self.__target_telemetry.copy()
+        aggregator = self.__aggregator(initial_telemetry_obj)
+        aggregated_telemetry = aggregator.aggregate(telemetry_objects)
 
-        return self.__aggregator(
-            self.__target_telemetry.copy()).aggregate(telemety_objects)
+        return self._set_start_date_time_for_aggregated_telemetry(
+            aggregated_telemetry, date_time_range)
+        
+    @staticmethod
+    def _set_start_date_time_for_aggregated_telemetry(
+            telemetry_obj: TelemetryModel,
+            date_time_range: DateTimeRange) -> TelemetryModel:
+        """
+        Method to set the telemetry start_date_time attribute to the date_time
+        for which the aggregation was run as start_date_time is set to now() by
+        default.
+        """
+        # For daily telemetry aggregation the date of the aggregated object
+        # is the from_date attribute in the date_time_range
+        telemetry_obj.start_date_time = date_time_range.from_date
+        return telemetry_obj
 
     def _set_target_telemetry_model(self):
         target_telem_params = self.__telemetry_selector._asdict() | \

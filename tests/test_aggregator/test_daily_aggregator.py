@@ -107,3 +107,6 @@ def test_run_aggregation_for_two_days():
     )
     aggr.aggregate(DAY_BEFORE_YESTERDAY, TODAY)
     assert len(storage.stored_telemetry) == 2
+    first_telemetry = storage.stored_telemetry[0]
+    second_telemetry = storage.stored_telemetry[1]
+    assert first_telemetry.start_date_time.date() == DAY_BEFORE_YESTERDAY

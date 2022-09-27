@@ -19,8 +19,31 @@ Single day date range generators.
 
 """
 from datetime import date, datetime, timedelta
-from typing import Iterator, NamedTuple
+from typing import Iterator, NamedTuple, Protocol
 
+from pipeline_telemetry.data_classes import TelemetryModel
+
+
+class TelemetryList(Protocol):
+    def __next__(self) -> TelemetryModel:
+        ...
+
+    def __iter__(self) -> 'TelemetryList':
+        ...
+
+
+class TelemetryAggregator():
+
+    __telemetry: TelemetryModel
+
+    def __init__(self, telemetry: TelemetryModel) -> None:
+        self.__telemetry = telemetry
+
+    def aggregate(
+            self, telemetry_list: TelemetryList) -> TelemetryModel:
+        for telemetry in telemetry_list:
+            self.__telemetry += telemetry
+        return self.__telemetry
 
 class DateRange(NamedTuple):
     from_date: date
