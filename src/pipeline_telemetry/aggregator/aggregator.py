@@ -14,7 +14,7 @@ Usage
 >>> aggregated_telemetry = aggregator.aggregate(telemetry_queryset)
 
 """
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Iterator, Protocol, Type
 
 from pipeline_telemetry.data_classes import TelemetryModel
@@ -41,6 +41,18 @@ class TelemetryStorage(Protocol):
 
 
 class DailyAggregator():
+    """
+    Aggregator to aggregate all SINGLE TELEMETRY objects for a single day
+    into a telemetry objetc of type DAILY AGGREGATION.
+
+    When initializig the class a TelemetrySelector should provided that 
+    determine which telemnetry objects are in scope
+
+    The following methods are available to run the actual aggregations
+    
+    - aggregate: makes daily aggregations from start_date to end_date
+    - aggregate_yesteraday: makes daily aggregation for yesterday
+    """
 
     FROM_TELEMETRY_TYPE = st.SINGLE_TELEMETRY_TYPE
     TO_TELEMETRY_TYPE = st.DAILY_AGGR_TELEMETRY_TYPE
@@ -73,6 +85,13 @@ class DailyAggregator():
         for date_time_range in date_time_ranges:
             aggregated_telemetry = self._run_aggregation(date_time_range)
             self.__telemetry_storage.store_telemetry(aggregated_telemetry)
+
+    def aggregate_yesterday(self) -> None:
+        """Method to run the aggregation for yesterday.
+        """
+        start_date = date.today(),
+        end_date = date.today() - timedelta(days=1)
+        self.aggregate(start_date=start_date, end_date=end_date)
 
     def _get_date_ranges(
             self, start_date: date, end_date: date) -> Iterator[DateTimeRange]:
@@ -136,3 +155,8 @@ class DailyAggregator():
             to_date_time=date_time_range.to_date,
             **telemetry_list_params
         )
+
+
+
+
+
