@@ -38,6 +38,8 @@ decorators:
 """
 from errors import ListErrors
 
+from .aggregator import DailyAggregator, DailyMongoAggregator, \
+    TelemetryAggregator, TelemetrySelector
 from .decorator import add_mongo_single_usage_telemetry, add_mongo_telemetry, \
     add_single_usage_telemetry, add_telemetry
 from .helper import add_errors_from_return_value, \

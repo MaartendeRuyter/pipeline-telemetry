@@ -12,6 +12,9 @@ MONGO_DB_PORT
 If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
+from datetime import datetime
+from typing import Any, Dict, Iterator
+
 from mongoengine import DateTimeField, DictField, Document, FloatField, \
     StringField, connect
 
@@ -51,6 +54,17 @@ class TelemetryMongoModel(Document):
             "start_date_time",
         ],
     }
+
+    def to_dict(self) -> Dict:
+        """
+        Method to convert TelemetryMongoModel instance to a dict that can be
+        used to instatiate a TelemetryModel object.
+        The mongo object '_id' field needs to be removed as it is not used by
+        TelemetryModel.
+        """
+        telemetry_dict = self.to_mongo().to_dict()
+        telemetry_dict.pop('_id')
+        return telemetry_dict
 
 
 class TelemetryMongoStorage(AbstractTelemetryStorage):
@@ -97,3 +111,29 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
             st.TELEMETRY_FIELD_KEY: telemetry_data,
             st.IO_TIME_KEY: io_time_in_seconds,
         }
+
+    def select_records(
+            self, telemetry_type: str, category: str, sub_category: str,
+            source_name: str, process_type: str, from_date_time: datetime,
+            to_date_time: datetime) -> Iterator:
+        """
+        Select telemetry records unique to a single process, source category
+        and sub category for as specific time period.
+        """
+        query_details = {
+            'telemetry_type': telemetry_type,
+            'category': category, 'sub_category': sub_category,
+            'source_name': source_name, 'process_type': process_type
+        }
+
+        return TelemetryMongoModel.objects(
+            start_date_time__gte=from_date_time,
+            start_date_time__lte=to_date_time,
+            **query_details
+        )
+
+    @staticmethod
+    def _db_object_to_dict(db_object: Any) -> Dict:
+        """Returns a db object as a dict object."""
+        # Mongo onbject need to be converted to Dict object first
+        return db_object.to_dict()

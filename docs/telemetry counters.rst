@@ -21,7 +21,7 @@ In order to make your code more readable you can predefine telemetry counters. T
         
         telemetry.save_and_close()
 
-In this example two telemetry_counters define in a counters module are added to the te telemetry object. In case of successful processing of data object the number of processed data points is added to the counter defined in PROCESSED_DATA_POINTS telemetry_counter
+In this example two telemetry_counters define in a counters module are added to the telemetry object. In case of successful processing of data object the number of processed data points is added to the counter defined in PROCESSED_DATA_POINTS telemetry_counter
 
 set_increment
 -------------
