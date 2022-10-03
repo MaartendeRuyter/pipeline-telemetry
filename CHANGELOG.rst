@@ -182,3 +182,10 @@ Changelog
 -------------------
 
 * Added ``set_telemetry_source_name`` method to ``TelemetryMixin`` class
+
+0.9.0 (2022-10-03)
+-------------------
+
+* Added ``DailyMongoAggregator`` and ``DailyAggregator`` classes to allow
+  automated aggregation of multiple intraday telemetry objects to daily
+  telemetry objects.
