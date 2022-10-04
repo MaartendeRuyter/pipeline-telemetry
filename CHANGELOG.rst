@@ -189,3 +189,9 @@ Changelog
 * Added ``DailyMongoAggregator`` and ``DailyAggregator`` classes to allow
   automated aggregation of multiple intraday telemetry objects to daily
   telemetry objects.
+
+
+0.9.1 (2022-10-04)
+-------------------
+
+* Fixed defect in MongoStorage.

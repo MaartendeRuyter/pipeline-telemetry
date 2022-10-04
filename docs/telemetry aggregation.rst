@@ -36,7 +36,7 @@ This aggregetor creates daily aggregations (with telemetry_type 'DAILY AGGREGATI
     telemetry_selection_params = TelemetrySelector(
         category=your_category,
         sub_category=your_sub_category,
-        source=your_source,
+        source_name=your_source,
         process_type=your_process_type
     )
 

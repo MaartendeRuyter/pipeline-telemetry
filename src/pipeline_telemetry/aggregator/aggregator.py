@@ -89,7 +89,7 @@ class DailyAggregator():
     def aggregate_yesterday(self) -> None:
         """Method to run the aggregation for yesterday.
         """
-        start_date = date.today(),
+        start_date = date.today()
         end_date = date.today() - timedelta(days=1)
         self.aggregate(start_date=start_date, end_date=end_date)
 

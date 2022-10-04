@@ -17,7 +17,7 @@ class TelemetryMixin():
     _telemetry: Telemetry
 
     def process_errors_from_return_value(
-            self,  sub_process: str,
+            self, sub_process: str,
             return_value: ReturnValueWithStatus) -> None:
         """
         Adds errors from return_value to _telemetry object for a specific
