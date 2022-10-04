@@ -64,6 +64,9 @@ class TelemetryMongoModel(Document):
         """
         telemetry_dict = self.to_mongo().to_dict()
         telemetry_dict.pop('_id')
+        # run_time_on_seconds is stored as str in Mongo but needs to be a float
+        # when processing telemetry data
+        telemetry_dict[st.RUN_TIME] = float(telemetry_dict[st.RUN_TIME])
         return telemetry_dict
 
 
@@ -106,7 +109,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
             st.SOURCE_NAME_KEY: source_name,
             st.PROCESS_TYPE_KEY: process_type,
             st.START_TIME: start_date_time,
-            st.RUN_TIME: run_time_in_seconds,
+            st.RUN_TIME: str(round(run_time_in_seconds, 2)),
             st.TRAFFIC_LIGHT_KEY: traffic_light,
             st.TELEMETRY_FIELD_KEY: telemetry_data,
             st.IO_TIME_KEY: io_time_in_seconds,

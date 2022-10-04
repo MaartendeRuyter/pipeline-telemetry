@@ -62,7 +62,7 @@ def test_telemetry_model_kwargs_method():
                 "source_name": "tst_source_name",
                 "process_type": "tst_process_type",
                 "start_date_time": "tst_start_date_time",
-                "run_time_in_seconds": "tst_run_time_in_seconds",
+                "run_time_in_seconds": 1.123,
                 "io_time_in_seconds": 1.1,
                 "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
             }
@@ -75,7 +75,7 @@ def test_telemetry_model_kwargs_method():
         "source_name": "tst_source_name",
         "process_type": "tst_process_type",
         "start_date_time": "tst_start_date_time",
-        "run_time_in_seconds": "tst_run_time_in_seconds",
+        "run_time_in_seconds": "1.12",
         "io_time_in_seconds": 1.1,
         "telemetry": {},
         "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
