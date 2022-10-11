@@ -4,10 +4,11 @@ from test_aggregator_data import DAY_BEFORE_YESTERDAY, TODAY, YESTERDAY, \
     TelemetryTestList
 
 from pipeline_telemetry import DailyAggregator, TelemetrySelector
-from pipeline_telemetry.aggregator.helper import TelemetryListArgs, \
-    get_daily_date_range_yesterday
+from pipeline_telemetry.aggregator.helper import TelemetryListArgs
 from pipeline_telemetry.data_classes import TelemetryModel
 from pipeline_telemetry.settings import settings as st
+from pipeline_telemetry.settings.date_ranges import \
+    get_daily_date_range_yesterday
 
 keys_in_telemetry_list_params = [
     'telemetry_type', 'category', 'sub_category', 'source_name',

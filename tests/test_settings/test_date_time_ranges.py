@@ -1,4 +1,4 @@
-""" Module for testing aggregator helper functions
+""" Module for testing date_ranges functions.
 """
 from datetime import date, datetime, timedelta
 

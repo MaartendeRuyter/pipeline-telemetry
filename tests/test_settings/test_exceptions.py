@@ -146,3 +146,37 @@ def test_class_telemetry_params_not_defined():
     assert \
         f"Telemetry params not defined for class {obj.__class__.__name__}" in \
         str(exception)
+
+
+def test_unknown_telemety_type():
+    """ test UnknownTelemetryType exception """
+    telem_type = 'SINGLE'
+    with pytest.raises(
+            exceptions.UnknownTelemetryType) as exception:
+        raise exceptions.UnknownTelemetryType(telem_type)
+
+    assert \
+        f"Unknown telemetry_type `{telem_type}` used in aggregator" in \
+        str(exception)
+
+
+def test_must_have_key_mandatory():
+    """ test MustHaveKeyMandatory exception """
+    instruction = 'instruction'
+    with pytest.raises(
+            exceptions.MustHaveKeyMandatory) as exception:
+        raise exceptions.MustHaveKeyMandatory(instruction)
+
+    assert f"For `{instruction}` instruction" in str(exception)
+
+
+def test_requested_date_time_range_method_not_found():
+    """ test RequestedDataTimeRangeMethodNotFound exception """
+    telemetry_aggr_type = 'telemetry_aggr_type'
+    with pytest.raises(
+            exceptions.RequestedDataTimeRangeMethodNotFound) as exception:
+        raise exceptions.RequestedDataTimeRangeMethodNotFound(
+            telemetry_aggr_type)
+
+    assert f"No date_time_range method found for {telemetry_aggr_type}." \
+        in str(exception)
