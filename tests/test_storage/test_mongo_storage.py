@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
 from pipeline_telemetry.data_classes import TelemetryModel
-from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR
+from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, \
+    RUN_TIME
 from pipeline_telemetry.storage.mongo import TelemetryMongoModel, \
     TelemetryMongoStorage
 from pipeline_telemetry.storage.mongo_connection import get_mongo_db_port
@@ -100,3 +101,16 @@ def test_default_access_params():
     def_params = mc.MONGO_ACCESS_PARAMS
     assert def_params["port"] == mc.DEFAULT_MONGO_DB_PORT
     assert def_params["host"] == mc.DEFAULT_MONGO_DB_HOST
+
+
+def test_mongo_model_to_dict():
+    """
+    Test to_dict method returns a dict with run_time_in_seconds atrribute converted to float.
+    """
+    telemetry = TelemetryMongoModel()
+    telemetry._id = 'test _id'
+    telemetry.run_time_in_seconds = '1'
+    telemetry_to_dict = telemetry.to_dict()
+    assert isinstance(telemetry_to_dict, dict)
+    assert isinstance(getattr(telemetry, RUN_TIME), str)
+    assert isinstance(telemetry_to_dict[RUN_TIME], float)

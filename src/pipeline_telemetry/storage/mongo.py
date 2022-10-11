@@ -30,7 +30,6 @@ class TelemetryMongoModel(Document):
     """
     Class to provice telemetry Mongo Model for persistance in MongoDB
     """
-
     category = StringField()
     sub_category = StringField()
     source_name = StringField()
@@ -63,7 +62,7 @@ class TelemetryMongoModel(Document):
         TelemetryModel.
         """
         telemetry_dict = self.to_mongo().to_dict()
-        telemetry_dict.pop('_id')
+        telemetry_dict.pop('_id', None)
         # run_time_on_seconds is stored as str in Mongo but needs to be a float
         # when processing telemetry data
         telemetry_dict[st.RUN_TIME] = float(telemetry_dict[st.RUN_TIME])
@@ -77,10 +76,31 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
     an instance of Telemetry.
     """
 
+    def store_aggregated_telemetry(self, telemetry: TelemetryModel) -> None:
+        """public method to persist telemetry object"""
+        self._remove_existing_aggregation_telemetry(telemetry)
+        self.store_telemetry(telemetry)
+
     def store_telemetry(self, telemetry: TelemetryModel) -> None:
         """public method to persist telemetry object"""
         telemetry_mongo_kwargs = self._telemetry_model_kwargs(telemetry)
         TelemetryMongoModel(**telemetry_mongo_kwargs).save()
+
+    def _remove_existing_aggregation_telemetry(
+            self, telemetry: TelemetryModel) -> None:
+        """
+        Removes any already existing aggregations for a specific telemetry
+        aggregation.
+        If you want to run and store a new aggregation object (for example a
+        daily aggrgation) then the already daily aggregation for that day must
+        be removed.
+
+        Args:
+            telemetry (TelemetryModel): The new telemetry aggregation object
+        """
+        query_params_exist_aggr = self._get_aggr_telem_query_params(telemetry)
+        for telemetry_inst in self.select_records(**query_params_exist_aggr):
+            telemetry_inst.delete()
 
     @staticmethod
     def _telemetry_model_kwargs(telemetry: TelemetryModel) -> dict:
@@ -131,7 +151,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
 
         return TelemetryMongoModel.objects(
             start_date_time__gte=from_date_time,
-            start_date_time__lte=to_date_time,
+            start_date_time__lt=to_date_time,
             **query_details
         )
 

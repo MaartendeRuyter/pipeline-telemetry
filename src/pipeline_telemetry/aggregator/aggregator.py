@@ -18,10 +18,16 @@ from datetime import date, datetime, timedelta
 from typing import Iterator, Protocol, Type
 
 from pipeline_telemetry.data_classes import TelemetryModel
+from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings import settings as st
+from pipeline_telemetry.settings.date_ranges import DateTimeRange, \
+    get_daily_date_ranges
 
-from .helper import DateTimeRange, TelemetryAggregator, TelemetryListArgs, \
-    TelemetrySelector, get_daily_date_ranges
+from .helper import TelemetryAggregator, TelemetryListArgs, TelemetrySelector
+
+DATE_TIME_RANGE_GENERATOR = {
+    st.DAILY_AGGR_TELEMETRY_TYPE: get_daily_date_ranges,
+}
 
 
 class TelemetryStorage(Protocol):
@@ -99,7 +105,11 @@ class DailyAggregator():
         Method to return the list of date ranges based upon start and end
         date.
         """
-        return get_daily_date_ranges(
+        generator = DATE_TIME_RANGE_GENERATOR.get(self.TO_TELEMETRY_TYPE)
+        if not generator:
+            raise exceptions.UnknownTelemetryType(self.TO_TELEMETRY_TYPE)
+
+        return generator(
             start_date=start_date, end_date=end_date)
 
     def _run_aggregation(
@@ -107,6 +117,7 @@ class DailyAggregator():
         """
         Method to run the actual aggregation and return the aggregated telemetry model.
         """
+        # gather the database instances to be aggregated
         telemetry_list_params = \
             self._telememtry_list_params(date_time_range)._asdict()
         telemetry_objects = self.__telemetry_storage.telemetry_list(
@@ -133,11 +144,17 @@ class DailyAggregator():
         telemetry_obj.start_date_time = date_time_range.from_date
         return telemetry_obj
 
-    def _set_target_telemetry_model(self):
-        target_telem_params = self.__telemetry_selector._asdict() | \
-            {'telemetry_type': self.TO_TELEMETRY_TYPE}
-
-        self.__target_telemetry = TelemetryModel(**target_telem_params)
+    def _set_target_telemetry_model(self) -> None:
+        """
+        Method to create and set the initial instance of the target telemetry
+        model.
+        """
+        self.__target_telemetry = TelemetryModel(
+            telemetry_type=self.TO_TELEMETRY_TYPE,
+            source_name=self.__telemetry_selector.source_name,
+            process_type=self.__telemetry_selector.process_type,
+            category=self.__telemetry_selector.category,
+            sub_category=self.__telemetry_selector.sub_category)
 
     def _telememtry_list_params(self, date_time_range: DateTimeRange) \
             -> TelemetryListArgs:

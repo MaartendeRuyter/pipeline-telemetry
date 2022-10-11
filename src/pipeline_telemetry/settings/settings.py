@@ -1,8 +1,9 @@
 """[summary]
 """
 from enum import Enum
-from typing import Dict, List
+from typing import Callable, Dict, List
 
+import pipeline_telemetry.settings.date_ranges as dr
 from pipeline_telemetry.settings.data_class import ProcessType
 
 SINGLE_TELEMETRY_TYPE = 'SINGLE TELEMETRY'
@@ -12,6 +13,12 @@ MONTHLY_AGGR_TELEMETRY_TYPE = 'MONTHLY AGGREGATION'
 QUARTERLY_AGGR_TELEMETRY_TYPE = 'QUARTERLY AGGREGATION'
 PARTIAL_AGGR_TELEMETRY_TYPE = 'PARTIAL AGGREGATION'
 
+# Constant to define date_range method specific to a given
+# TELEMETRY aggregation type
+AGGR_DATE_TIME_RANGE_METHODS: dict[str, Callable] = {
+    DAILY_AGGR_TELEMETRY_TYPE: dr.get_daily_date_range_for_single_date,
+    WEEKLY_AGGR_TELEMETRY_TYPE: dr.get_weekly_date_range_for_single_date,
+    MONTHLY_AGGR_TELEMETRY_TYPE: dr.get_monthly_date_range_for_single_date}
 
 DEFAULT_TELEMETRY_TYPE = SINGLE_TELEMETRY_TYPE
 TELEMETRY_TYPES: List[str] = [
@@ -25,7 +32,7 @@ telemetry_types: Dict[str, str] = \
 TRAFIC_LIGHT_COLOR_GREEN = 'GREEN'
 TRAFIC_LIGHT_COLOR_ORANGE = 'ORANGE'
 TRAFIC_LIGHT_COLOR_RED = 'RED'
-DEFAULT_TRAFIC_LIGHT_COLOR = TRAFIC_LIGHT_COLOR_GREEN
+DEFAULT_TRAFIC_LIGHT_COLOR: str = TRAFIC_LIGHT_COLOR_GREEN
 
 
 BASE_COUNT_KEY = "base_counter"

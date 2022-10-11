@@ -119,7 +119,45 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
              f"sub_category='{sub_category}' AND "
              f"source_name='{source_name}' AND "
              f"process_type='{process_type}' AND "
-             f"start_date_time > '{from_date_time}' AND "
+             f"start_date_time >= '{from_date_time}' AND "
              f"start_date_time < '{to_date_time}'")
 
         return self.db_cursor.execute(select_statement)
+
+    def _remove_existing_aggregation_telemetry(
+            self, telemetry: TelemetryModel) -> None:
+        """
+        Removes any already existing aggregations for a specific telemetry
+        aggregation.
+        If you want to run and store a new aggregation object (for example a
+        daily aggrgation) then the already daily aggregation for that day must
+        be removed.
+
+        Args:
+            telemetry (TelemetryModel): The new telemetry aggregation object
+        """
+        query_params_exist_aggr = self._get_aggr_telem_query_params(telemetry)
+        self.delete_records(**query_params_exist_aggr)
+
+    def delete_records(
+            self, telemetry_type: str, category: str, sub_category: str,
+            source_name: str, process_type: str, from_date_time: datetime,
+            to_date_time: datetime) -> None:
+        """
+        Delete telemetry records unique to a single process, source category
+        and sub category for as specific time period.
+        """
+        if not self.db_cursor:
+            raise exceptions.StorageNotInitialized
+
+        select_statement = \
+            ("DELETE * FROM telemetry WHERE "
+             f"telemetry_type='{telemetry_type}' AND "
+             f"category='{category}' AND "
+             f"sub_category='{sub_category}' AND "
+             f"source_name='{source_name}' AND "
+             f"process_type='{process_type}' AND "
+             f"start_date_time > '{from_date_time}' AND "
+             f"start_date_time < '{to_date_time}'")
+
+        self.db_cursor.execute(select_statement)
