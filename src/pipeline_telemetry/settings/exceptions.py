@@ -2,6 +2,7 @@
 Module to define customer excpetions for data_validator module
 
 exceptions
+- UnknownTelemetryType
 - FieldNameMandatory
 - UnknownInstruction
 - InstructionRegisteredTwice
@@ -11,8 +12,18 @@ exceptions
 - StorageClassOfIncorrectType
 - ProcessTypeMustBeOfClassProcessType
 - ProcessTypeNotRegistered
+- RequestedDataTimeRangeMethodNotFound
 """
 from typing import List
+
+
+class UnknownTelemetryType(Exception):
+    """custom exception for Telemetry Module"""
+
+    def __init__(self, telemetry_type):
+        message = \
+            f"Unknown telemetry_type `{telemetry_type}` used in aggregator"
+        super().__init__(message)
 
 
 class FieldNameMandatory(Exception):
@@ -180,4 +191,11 @@ class ClassTelemetryParamsNotDefined(Exception):
         class_name = object.__class__.__name__
         message = \
             f"Telemetry params not defined for class {class_name}"
+        super().__init__(message)
+
+
+class RequestedDataTimeRangeMethodNotFound(Exception):
+    def __init__(self, telemetry_aggr_type: str):
+        message = \
+            f"No date_time_range method found for {telemetry_aggr_type}."
         super().__init__(message)
