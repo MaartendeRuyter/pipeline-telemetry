@@ -180,12 +180,10 @@ Changelog
 
 0.4.5 (2022-06-09)
 -------------------
-
 * Added ``set_telemetry_source_name`` method to ``TelemetryMixin`` class
 
 0.9.0 (2022-10-03)
 -------------------
-
 * Added ``DailyMongoAggregator`` and ``DailyAggregator`` classes to allow
   automated aggregation of multiple intraday telemetry objects to daily
   telemetry objects.
@@ -193,5 +191,8 @@ Changelog
 
 0.9.1 (2022-10-04)
 -------------------
-
 * Fixed defect in MongoStorage.
+
+0.9.2 (2022-10-11)
+-------------------
+* Added automatic deletion of old aggegration telemetry
