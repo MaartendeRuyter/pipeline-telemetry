@@ -18,7 +18,7 @@ def read(*names, **kwargs):
 
 setup(
     name="pipeline-telemetry",
-    version="0.9.2",
+    version="0.9.3",
     license="LGPL-3.0-or-later",
     description="Create and store data pipeline telemetry data",
     long_description="%s\n%s"
@@ -49,6 +49,7 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         # 'Programming Language :: Python :: Implementation :: CPython',
         # 'Programming Language :: Python :: Implementation :: PyPy',
         # # uncomment if you test on these interpreters:
