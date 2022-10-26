@@ -18,6 +18,10 @@ matrix:
     - env:
         - TOXENV=py39,codecov
       python: "3.9"
+    - env:
+        - TOXENV=py310,codecov
+      python: 'nightly'
+
 before_install:
   - python --version
   - uname -a
