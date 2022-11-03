@@ -2,6 +2,12 @@
 Changelog
 =========
 
+0.9.4 (2022-11-03)
+-------------------
+* Added ``PartialToSingleMongoAggregator`` and ``PartialToSingleAggregator``
+  classes to allow automated aggregation of multiple partial telemetry objects to a single telemetry object.
+
+
 0.9.3 (2022-10-26)
 -------------------
 * Added support for python 3.11
@@ -10,6 +16,7 @@ Changelog
 0.9.2 (2022-10-11)
 -------------------
 * Added automatic deletion of old aggegration telemetry
+
 
 0.9.1 (2022-10-04)
 -------------------

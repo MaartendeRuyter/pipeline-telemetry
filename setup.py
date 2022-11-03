@@ -18,7 +18,7 @@ def read(*names, **kwargs):
 
 setup(
     name="pipeline-telemetry",
-    version="0.9.3",
+    version="0.9.4",
     license="LGPL-3.0-or-later",
     description="Create and store data pipeline telemetry data",
     long_description="%s\n%s"

@@ -39,6 +39,7 @@ decorators:
 from errors import ListErrors
 
 from .aggregator import DailyAggregator, DailyMongoAggregator, \
+    PartialToSingleAggregator, PartialToSingleMongoAggregator, \
     TelemetryAggregator, TelemetrySelector
 from .decorator import add_mongo_single_usage_telemetry, add_mongo_telemetry, \
     add_single_usage_telemetry, add_telemetry
