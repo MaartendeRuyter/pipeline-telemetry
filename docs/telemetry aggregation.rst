@@ -57,9 +57,9 @@ The following methods are available for the aggregator object::
     aggregator.aggeregat_yesterda()
 
 
-PartialToDailyAggregator
+PartialToSingleAggregator
 ------------------------
-This aggregetor creates single aggregations (with telemetry_type 'SINGLE AGGREGATION') from selected telemetry objects with telemetry_type 'PARTIAL TELEMETRY'. PartialToDailyAggregators can be used when data jobs are split into sepreate jobs each creating their own partial telemetry. PartialToDailyAggregator can then be used to merge all the Partial telemetry object into a single aggregation object.
+This aggregetor creates single aggregations (with telemetry_type 'SINGLE AGGREGATION') from selected telemetry objects with telemetry_type 'PARTIAL TELEMETRY'. PartialToSingleAggregators can be used when data jobs are split into sepreate jobs each creating their own partial telemetry. PartialToSingleAggregator can then be used to merge all the Partial telemetry object into a single aggregation object.
 
 
 MongoDB Aggregator
@@ -68,4 +68,4 @@ A mongo DB version of the aggregator classes have been made such that you no lon
 
 Available MongoDB aggregators.
 ``DailyMongoAggregator``
-``PartialToDailyMongoAggregator``
+``PartialToSingleyMongoAggregator``
