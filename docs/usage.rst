@@ -3,14 +3,14 @@ Usage
 =====
 
 This package enables a standardized way to monitor the quality and/or
-performance of your datapipeline. Its main usecase is to enable easy collection
+performance of your datapipeline. The main usecase is to enable easy collection
 and storage of telemetry information about the collection and storage of data
 in your data pipeline. 
 
 Telemetry data is collected and stored from within a single data
 collection and storage job. Each time this job is run a telemetry object will
-be created accoriding to your predefined settings. Within your pipeline logic
-you can then start to add telemetry data to this object. 
+be created according to your predefined settings. Within your pipeline logic
+you can add telemetry data to this object. 
 
 As each time the job runs a telemetry object will be created (and stored) you
 will be able to report on the quality of your pipeline jobs by just looking at
