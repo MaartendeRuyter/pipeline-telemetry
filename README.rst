@@ -1,33 +1,104 @@
-# Pipeline Telemetry
+========
+Overview
+========
 
-**Pipeline Telemetry** makes it easy for project to generate store telemetry data from within your data pipelines.
+.. start-badges
 
-```python
+.. list-table::
+    :stub-columns: 1
 
-    from counters import INVALID_DATA, PROCESSED_DATA_POINTS
+    * - docs
+      - |docs|
+    * - tests
+      - |codecov|
+    * - package
+      - | |version| |wheel|
+        | |supported-versions|
+        | |supported-implementations|
+        | |commits-since|
+.. |docs| image:: https://readthedocs.org/projects/pipeline-telemetry/badge/?style=flat
+    :target: https://pipeline-telemetry.readthedocs.io/
+    :alt: Documentation Status
+
+.. |travis| image:: https://api.travis-ci.com/MaartendeRuyter/pipeline-telemetry.svg?branch=master
+    :alt: Travis-CI Build Status
+    :target: https://travis-ci.com/github/MaartendeRuyter/pipeline-telemetry
+
+.. |requires| image:: https://requires.io/github/MaartendeRuyter/pipeline-telemetry/requirements.svg?branch=master
+    :alt: Requirements Status
+    :target: https://requires.io/github/MaartendeRuyter/pipeline-telemetry/requirements/?branch=master
+
+.. |codecov| image:: https://codecov.io/gh/MaartendeRuyter/pipeline-telemetry/branch/master/graphs/badge.svg?branch=master
+    :alt: Coverage Status
+    :target: https://codecov.io/github/MaartendeRuyter/pipeline-telemetry
+
+.. |version| image:: https://img.shields.io/pypi/v/pipeline-telemetry.svg
+    :alt: PyPI Package latest release
+    :target: https://pypi.org/project/pipeline-telemetry
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/pipeline-telemetry.svg
+    :alt: PyPI Wheel
+    :target: https://pypi.org/project/pipeline-telemetry
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/pipeline-telemetry.svg
+    :alt: Supported versions
+    :target: https://pypi.org/project/pipeline-telemetry
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/pipeline-telemetry.svg
+    :alt: Supported implementations
+    :target: https://pypi.org/project/pipeline-telemetry
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/MaartendeRuyter/pipeline-telemetry/v0.0.1.svg
+    :alt: Commits since latest release
+    :target: https://github.com/MaartendeRuyter/pipeline-telemetry/compare/v0.0.1...master
 
 
-    def my_data_pipeline():
-        telemetry = Telemetry(**TELEMETRY_PARAMS)
+.. end-badges
 
-        from url in data_urls:
-            data = get_data_from_url(url)
-            telemetry.add_telemetry_counter(telemetry_counter=URL_RETRIEVALS)    # increase counter for retrieved URLS
-            if data.invalid:
-                telemetry.add_telemetry_counter(telemetry_counter=INVALID_DATA)  # increase counter for failed retrievals
-                continue
-            
-            processed_data_points = process_and_store_data(data)
-            telemetry.add_telemetry_counter(                                     # increase counter number of datapoints retrieved
-                telemetry_counter=PROCESSED_DATA_POINTS,
-                increment=len(processed_data_points))  
-        
-        telemetry.save_and_close()
-```
+Create and store data pipeline telemetry data
 
-In this example data is retrieved for a list of urls. Total retrievals, insuccesfull retrievals as well as number of processed datapoints are stored in the telemetry object.
-This allows you to closely monitor the quality and behavior of your datapipeline. For example all retrievals might be OK but if the number of processed datapoints suddenly drops there might be an issue with some the endpoints.
+* Free software: GNU Lesser General Public License v3 or later (LGPLv3+)
+
+Installing pipeline-telemetry
+=============================
+
+::
+
+    pip install pipeline-telemetry
+
+You can also install the in-development version with::
+
+    pip install https://github.com/MaartendeRuyter/pipeline-telemetry/archive/master.zip
 
 
+Documentation
+=============
 
-[![Supported Versions](https://img.shields.io/pypi/pyversions/pipeline-telemetry.svg)](https://pypi.org/project/pipeline-telemetry)
+
+https://pipeline-telemetry.readthedocs.io/
+
+
+Testing
+=======
+
+To run all the tests run::
+
+    tox
+
+Note, to combine the coverage data from all the tox environments run:
+
+.. list-table::
+    :widths: 10 90
+    :stub-columns: 1
+
+    - - Windows
+      - ::
+
+            set PYTEST_ADDOPTS=--cov-append
+            tox
+
+    - - Other
+      - ::
+
+            PYTEST_ADDOPTS=--cov-append tox
+

@@ -16,7 +16,7 @@ project = "Pipeline Telemetry"
 year = "2024"
 author = "Maarten de Ruyter"
 copyright = "{0}, {1}".format(year, author)
-version = release = "1.0.1"
+version = release = "1.0.2"
 
 extensions = []
 
