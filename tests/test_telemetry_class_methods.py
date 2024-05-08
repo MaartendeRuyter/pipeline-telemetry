@@ -2,6 +2,7 @@
 module to test the class methods fro Telemetry class of telemetry module
 
 """
+
 import pytest
 
 from pipeline_telemetry.main import Telemetry
@@ -14,10 +15,10 @@ def test_telemetry_class_method_add_process_type():
     check that Telemetry class method add_process_type adds a process type
     """
     process_type = ProcessType(
-        process_type='custom_process_type',
-        subtypes=['custom_sub_process_type'])
-    Telemetry.add_process_type('TEST_TYPE', process_type)
-    assert Telemetry('test', 'test', 'test', process_type)
+        process_type="custom_process_type", subtypes=["custom_sub_process_type"]
+    )
+    Telemetry.add_process_type("TEST_TYPE", process_type)
+    assert Telemetry("test", "test", "test", process_type)
 
 
 def test_sub_process_types_also_added():
@@ -26,11 +27,11 @@ def test_sub_process_types_also_added():
     including all sub_processes.
     """
     process_type = ProcessType(
-        process_type='custom_process_type',
-        subtypes=['custom_sub_process_type'])
-    Telemetry.add_process_type('TEST_TYPE', process_type)
-    telemetry = Telemetry('category', 'sub_category', 'name', process_type)
-    assert telemetry._process_type.sub_processes == ['custom_sub_process_type']
+        process_type="custom_process_type", subtypes=["custom_sub_process_type"]
+    )
+    Telemetry.add_process_type("TEST_TYPE", process_type)
+    telemetry = Telemetry("category", "sub_category", "name", process_type)
+    assert telemetry._process_type.sub_processes == ["custom_sub_process_type"]
 
 
 def test_add_process_type_raises_exception():
@@ -39,4 +40,4 @@ def test_add_process_type_raises_exception():
     other the a ProcessType is offered
     """
     with pytest.raises(exceptions.ProcessTypeMustBeOfClassProcessType):
-        Telemetry.add_process_type('TYPE_NAME', 'not a ProcessType')
+        Telemetry.add_process_type("TYPE_NAME", "not a ProcessType")

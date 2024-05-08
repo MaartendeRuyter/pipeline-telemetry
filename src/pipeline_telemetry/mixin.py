@@ -2,23 +2,25 @@
 Module to define TelemetryMixin class for adding methods to
 a class that allow easy Telemetry updates
 """
+
 from typing import Any, List, Union
 
 from errors import ReturnValueWithStatus
 
-from .helper import add_errors_from_return_value, \
-    add_telemetry_counters_from_return_value
+from .helper import (
+    add_errors_from_return_value,
+    add_telemetry_counters_from_return_value,
+)
 from .main import Telemetry
 from .settings.data_class import TelemetryCounter
 
 
-class TelemetryMixin():
-
+class TelemetryMixin:
     _telemetry: Telemetry
 
     def process_errors_from_return_value(
-            self, sub_process: str,
-            return_value: ReturnValueWithStatus) -> None:
+        self, sub_process: str, return_value: ReturnValueWithStatus
+    ) -> None:
         """
         Adds errors from return_value to _telemetry object for a specific
         sub_process.
@@ -33,10 +35,12 @@ class TelemetryMixin():
         add_errors_from_return_value(
             object_with_telemetry=self,
             sub_process=sub_process,
-            return_value=return_value)
+            return_value=return_value,
+        )
 
     def process_telemetry_counters_from_return_value(
-            self, return_value: ReturnValueWithStatus) -> List[Any]:
+        self, return_value: ReturnValueWithStatus
+    ) -> List[Any]:
         """
         Adds TelemetryCounters from return_value to _telemetry object for a
         specific sub_process.
@@ -52,11 +56,12 @@ class TelemetryMixin():
                 processed by this method.
         """
         return add_telemetry_counters_from_return_value(
-            object_with_telemetry=self,
-            return_value=return_value)
+            object_with_telemetry=self, return_value=return_value
+        )
 
     def process_telemetry_counters_from_list(
-            self, result_list: List[Union[Any, TelemetryCounter]]) -> list[Any]:
+        self, result_list: List[Union[Any, TelemetryCounter]]
+    ) -> list[Any]:
         """
         Adds TelemetryCounters from result_list to _telemetry object.
 

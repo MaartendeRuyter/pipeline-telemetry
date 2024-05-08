@@ -38,7 +38,7 @@ For Initializing a telemetry object the following attributes are needed
     * - telemetry_type
       - str
       - Optional
-      - Value from predefined set of :ref:`telemetry types<Telemetry types>`.
+      - Value from predefined telemetry types.
 
 
 These 3 identifiers allow you to find and group your telemetry data for a

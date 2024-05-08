@@ -1,0 +1,18 @@
+# dev requirements
+flake8
+freezegun
+isort
+mypy
+pytest
+pytest-cov
+ruff
+setuptools
+tox
+twine
+wheel
+
+
+#generic requirements
+error-manager 
+mongoengine
+jmespath

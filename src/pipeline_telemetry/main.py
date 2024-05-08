@@ -5,6 +5,7 @@ classes
     - Telemetry
 
 """
+
 from datetime import datetime
 from typing import Dict, List, Optional, Type
 
@@ -21,7 +22,7 @@ from .storage.memory import TelemetryInMemoryStorage
 from .validators.dict_validator import DictValidator
 
 
-class Telemetry():
+class Telemetry:
     _telemetry: TelemetryModel
     _telemetry_rules: dict
     _storage_class: Type[AbstractTelemetryStorage]
@@ -36,25 +37,24 @@ class Telemetry():
         source_name: str,
         process_type: ProcessType,
         telemetry_type: str = st.DEFAULT_TELEMETRY_TYPE,
-        telemetry_rules: dict = dict(),
-        storage_class:
-            Type[AbstractTelemetryStorage] = TelemetryInMemoryStorage,
+        telemetry_rules: Optional[dict] = None,
+        storage_class: Type[AbstractTelemetryStorage] = TelemetryInMemoryStorage,
     ):
         self._process_type = process_type
         self._validate_process_type()
         self._storage_class = storage_class
-        self._telemetry_rules = telemetry_rules
+        self._telemetry_rules = telemetry_rules or {}
         self._telemetry = TelemetryModel(
             telemetry_type=telemetry_type,
             category=category,
             sub_category=sub_category,
             source_name=source_name,
-            process_type=process_type.name)
+            process_type=process_type.name,
+        )
         self._telemetry.validate()
 
     @classmethod
-    def add_process_type(cls, process_type_key: str, process_type: ProcessType
-                         ) -> None:
+    def add_process_type(cls, process_type_key: str, process_type: ProcessType) -> None:
         """
         Add a custom process type to the available process types to the
         already registered process types.
@@ -149,8 +149,8 @@ class Telemetry():
         return self.telemetry
 
     def add_telemetry_counter(
-            self, telemetry_counter: TelemetryCounter,
-            increment: Optional[int] = None) -> None:
+        self, telemetry_counter: TelemetryCounter, increment: Optional[int] = None
+    ) -> None:
         """
         Method to process a TelemetryCounter object with predefined counters.
 
@@ -183,8 +183,7 @@ class Telemetry():
             )
 
     @_raise_exception_if_telemetry_closed
-    def add(self, sub_process: str, data: dict, errors: List[ErrorCode]
-            ) -> None:
+    def add(self, sub_process: str, data: dict, errors: List[ErrorCode]) -> None:
         """
         Add data validation errors and/or errors from data process to a
         telemetry sub process.
@@ -237,7 +236,8 @@ class Telemetry():
         """
         for error_code in errors:
             self.increase_sub_process_error_count(
-                error_code=error_code, sub_process=sub_process)
+                error_code=error_code, sub_process=sub_process
+            )
 
     @_raise_exception_if_telemetry_closed
     def set_orange_traffic_light(self) -> None:
@@ -286,7 +286,8 @@ class Telemetry():
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_base_count(
-            self, sub_process: str, increment: int = 1) -> None:
+        self, sub_process: str, increment: int = 1
+    ) -> None:
         """
         Increases the base count for a subprocess.
 
@@ -300,7 +301,8 @@ class Telemetry():
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_fail_count(
-            self, sub_process: str, increment: int = 1) -> None:
+        self, sub_process: str, increment: int = 1
+    ) -> None:
         """
         Increases the fail count for a subprocess.
 
@@ -332,11 +334,12 @@ class Telemetry():
             raise exceptions.BaseCountForSubProcessNotAdded(sub_process)
 
         self.get(sub_process).increase_error_count(
-            increment=increment, error_code=error_code)
+            increment=increment, error_code=error_code
+        )
 
     @_raise_exception_if_telemetry_closed
     def increase_sub_process_custom_count(
-            self, custom_counter: str, sub_process: str, increment: int = 1
+        self, custom_counter: str, sub_process: str, increment: int = 1
     ) -> None:
         """
         Increases a custom counter for a subprocess.
@@ -354,7 +357,8 @@ class Telemetry():
             self._initialize_sub_process(sub_process)
 
         self.get(sub_process).increase_custom_count(
-            increment=increment, counter=custom_counter)
+            increment=increment, counter=custom_counter
+        )
 
     def _sub_process_is_initialized(self, sub_process: str) -> bool:
         """Returns True if provided sub_process is initialized

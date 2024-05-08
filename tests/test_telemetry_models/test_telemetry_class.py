@@ -1,6 +1,7 @@
 """
 Module to test telemetry main class for pipeline telemetry module.
 """
+
 from datetime import datetime
 
 import pytest
@@ -29,56 +30,57 @@ def test_telemetry_instance_creation():
 
 def test_telemetry_instance_has_telemetry_type_property():
     """check that Telemetry instance has a telemetry_type property"""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry_type == \
-        st.DEFAULT_TELEMETRY_TYPE
+    assert (
+        Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry_type
+        == st.DEFAULT_TELEMETRY_TYPE
+    )
 
 
 def test_telemetry_instance_has_source_name_property():
     """check that Telemetry instance has a source_name property"""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).source_name == \
-        "load_weather_data"
+    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).source_name == "load_weather_data"
 
 
 def test_telemetry_instance_has_category_property():
     """check that Telemetry instance has a source_name property"""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).category == \
-        "WEATHER"
+    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).category == "WEATHER"
 
 
 def test_telemetry_instance_has_sub_category_property():
     """check that Telemetry instance has a sub_category property"""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_category == \
-        "DAILY_PREDICTIONS"
+    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_category == "DAILY_PREDICTIONS"
 
 
 def test_telemetry_instance_has_traffic_light_property():
     """
     Test that Telemetry instance has a traffic_light property that is
     set to the default value."""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).traffic_light == \
-        st.DEFAULT_TRAFIC_LIGHT_COLOR
+    assert (
+        Telemetry(**DEFAULT_TELEMETRY_PARAMS).traffic_light
+        == st.DEFAULT_TRAFIC_LIGHT_COLOR
+    )
 
 
 def test_telemetry_instance_has_sub_process_types_property():
     """check that Telemetry instance has a sub_processes_types property"""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types == \
-        DEFAULT_TELEMETRY_PARAMS['process_type'].sub_processes
+    assert (
+        Telemetry(**DEFAULT_TELEMETRY_PARAMS).sub_process_types
+        == DEFAULT_TELEMETRY_PARAMS["process_type"].sub_processes
+    )
 
 
 def test_telemetry_instance_has_telemetry_property():
     """
     Test that a Telemetry instance has a telemetry property that is an
     instance of class TelemetryModel"""
-    assert isinstance(Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry,
-                      TelemetryModel)
+    assert isinstance(Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry, TelemetryModel)
 
 
 def test_telemetry_instance_has_a_start_date_time_property():
     """
     Test that a Telemetry instance has a start_date_time property that is an
     instance of class TelemetryModel"""
-    assert isinstance(Telemetry(**DEFAULT_TELEMETRY_PARAMS).start_date_time,
-                      datetime)
+    assert isinstance(Telemetry(**DEFAULT_TELEMETRY_PARAMS).start_date_time, datetime)
 
 
 def test_telemetry_instance_has_io_time_in_seconds_property():
@@ -173,8 +175,7 @@ def test_increase_sub_process_base_count():
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count("RETRIEVE_RAW_DATA")
-    assert getattr(
-        telemetry_inst.get("RETRIEVE_RAW_DATA"), st.BASE_COUNT_KEY) == 1
+    assert getattr(telemetry_inst.get("RETRIEVE_RAW_DATA"), st.BASE_COUNT_KEY) == 1
 
 
 def test_increase_sub_process_fail_count():
@@ -183,8 +184,7 @@ def test_increase_sub_process_fail_count():
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_fail_count("RETRIEVE_RAW_DATA")
-    assert getattr(
-        telemetry_inst.get("RETRIEVE_RAW_DATA"), st.FAIL_COUNT_KEY) == 1
+    assert getattr(telemetry_inst.get("RETRIEVE_RAW_DATA"), st.FAIL_COUNT_KEY) == 1
 
 
 def test_increase_non_exsiting_sub_process_raises_exception():
@@ -205,8 +205,7 @@ def test_increase_sub_process_base_count_to_telemetry():
     telemetry = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry.increase_sub_process_base_count("RETRIEVE_RAW_DATA")
     telemetry.increase_sub_process_base_count("RETRIEVE_RAW_DATA", increment=2)
-    assert getattr(
-        telemetry.get("RETRIEVE_RAW_DATA"), st.BASE_COUNT_KEY) == 3
+    assert getattr(telemetry.get("RETRIEVE_RAW_DATA"), st.BASE_COUNT_KEY) == 3
 
 
 def test_increase_sub_process_count_not_allowed_with_closed_telemetry():
@@ -326,8 +325,7 @@ def test_close_telemetry_instance_calls_store_telemetry(mocker):
         ),
         return_value=None,
     )
-    _store_telemetry_spy = mocker.spy(
-        TelemetryInMemoryStorage, "store_telemetry")
+    _store_telemetry_spy = mocker.spy(TelemetryInMemoryStorage, "store_telemetry")
     Telemetry(**DEFAULT_TELEMETRY_PARAMS).save_and_close()
     assert _store_telemetry_spy.called
 
@@ -338,8 +336,7 @@ def test_get_storage_class_returns_in_memory_storage_by_default():
     instance if no storage class is provided
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
-    assert issubclass(
-        telemetry_inst._storage_class, TelemetryInMemoryStorage)
+    assert issubclass(telemetry_inst._storage_class, TelemetryInMemoryStorage)
 
 
 def test_storage_class_returns_the_correct_storage_class():
@@ -347,6 +344,7 @@ def test_storage_class_returns_the_correct_storage_class():
     check that storage_class attribute returns the correct
     Storage class.
     """
+
     # pylint: disable=too-few-public-methods
     class TestStorage(AbstractTelemetryStorage):
         """test class"""
@@ -354,8 +352,9 @@ def test_storage_class_returns_the_correct_storage_class():
         def store_telemetry(self, telemetry):
             """test method"""
             return None
+
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
-    telemetry_params['storage_class'] = TestStorage
+    telemetry_params["storage_class"] = TestStorage
     telemetry_inst = Telemetry(**telemetry_params)
     assert telemetry_inst.storage_class is TestStorage
 
@@ -374,8 +373,10 @@ def test_storage_class_close_method_closes_db():
 
 def test_new_telemetry_has_default_traffic_light_color():
     """New telemetry instance should have default trafic light color."""
-    assert Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry.traffic_light == \
-        st.DEFAULT_TRAFIC_LIGHT_COLOR
+    assert (
+        Telemetry(**DEFAULT_TELEMETRY_PARAMS).telemetry.traffic_light
+        == st.DEFAULT_TRAFIC_LIGHT_COLOR
+    )
 
 
 def test_set_telemetry_traffic_light_to_orange():
@@ -436,7 +437,7 @@ def test_instanciating_telemetry_with_invalid_telemetry_type():
     raises an exception.
     """
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
-    telemetry_params['telemetry_type'] = 'invalid_type'
+    telemetry_params["telemetry_type"] = "invalid_type"
     with pytest.raises(exceptions.InvalidTelemetryType):
         Telemetry(**telemetry_params)
 
@@ -456,7 +457,7 @@ def test_validate_process_raises_exception_process_type_of_invalid_type():
     of type ProcessType.
     """
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
-    telemetry_params['process_type'] = "process_type_of_invalid_type"
+    telemetry_params["process_type"] = "process_type_of_invalid_type"
     with pytest.raises(exceptions.ProcessTypeMustBeOfClassProcessType):
         Telemetry(**telemetry_params)
 
@@ -467,6 +468,6 @@ def test_validate_process_raises_exception_if_process_type_not_registered():
     registered.
     """
     telemetry_params = DEFAULT_TELEMETRY_PARAMS.copy()
-    telemetry_params['process_type'] = TEST_PROCESS_TYPE_3
+    telemetry_params["process_type"] = TEST_PROCESS_TYPE_3
     with pytest.raises(exceptions.ProcessTypeNotRegistered):
         Telemetry(**telemetry_params)

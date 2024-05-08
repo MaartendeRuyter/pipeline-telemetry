@@ -6,15 +6,16 @@ decorators:
     - add_single_usage_telemetry
     - add_mongo_single_usage_telemetry
 """
+
 from functools import wraps
-from typing import Type
+from typing import Callable, Optional, Type
 
 from .main import Telemetry
 from .settings import exceptions
 from .storage import AbstractTelemetryStorage, TelemetryMongoStorage
 
 
-def add_telemetry(telemetry_params: dict) -> object:
+def add_telemetry(telemetry_params: dict) -> Callable:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. When using this decorator the storage
@@ -51,7 +52,7 @@ def add_telemetry(telemetry_params: dict) -> object:
     return wrapper
 
 
-def add_mongo_telemetry(telemetry_params: dict) -> object:
+def add_mongo_telemetry(telemetry_params: dict) -> Callable:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. When using this decorator the mongo storage
@@ -71,8 +72,9 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
             Wrapper for method where result log should be added
             """
             if (not hasattr(self, "_telemetry")) or (not self._telemetry):
-                tel_params = telemetry_params.copy() | \
-                    {'storage_class': TelemetryMongoStorage}
+                tel_params = telemetry_params.copy() | {
+                    "storage_class": TelemetryMongoStorage
+                }
                 self._telemetry = Telemetry(**tel_params)
                 result = method(self, *args, **kwargs)
                 self._telemetry.save_and_close()
@@ -86,7 +88,7 @@ def add_mongo_telemetry(telemetry_params: dict) -> object:
     return wrapper
 
 
-def add_mongo_single_usage_telemetry(sub_process: str = None) -> object:
+def add_mongo_single_usage_telemetry(sub_process: Optional[str] = None) -> object:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. The telemetry object will be reset each the method
@@ -104,14 +106,14 @@ def add_mongo_single_usage_telemetry(sub_process: str = None) -> object:
             added to the telemetry object
     """
     return add_single_usage_telemetry(
-        sub_process=sub_process,
-        storage_class=TelemetryMongoStorage
+        sub_process=sub_process, storage_class=TelemetryMongoStorage
     )
 
 
 def add_single_usage_telemetry(
-        sub_process: str = None,
-        storage_class: Type[AbstractTelemetryStorage] = None) -> object:
+    sub_process: Optional[str] = None,
+    storage_class: Optional[Type[AbstractTelemetryStorage]] = None,
+) -> object:
     """
     Decorator method to add a telemetry to the class from which the
     decorator was called. The telemetry object will be reset each the method
@@ -135,12 +137,16 @@ def add_single_usage_telemetry(
             """
             Wrapper for method where result log should be added
             """
-            telemetry_params = getattr(self, 'TELEMETRY_PARAMS', False)
+            telemetry_params = getattr(self, "TELEMETRY_PARAMS", False)
             if not telemetry_params:
                 raise exceptions.ClassTelemetryParamsNotDefined(self)
 
-            storage_class_params = \
-                {'storage_class': storage_class} if storage_class else {}
+            if not isinstance(telemetry_params, dict):
+                raise exceptions.ClassTelemetryParamsNotOfTypeDict(self)
+
+            storage_class_params = (
+                {"storage_class": storage_class} if storage_class else {}
+            )
 
             tel_params = telemetry_params | storage_class_params
             self._telemetry = Telemetry(**tel_params)
@@ -148,8 +154,7 @@ def add_single_usage_telemetry(
             # only if sub_process was defined set the base count for that
             # subprocess
             if sub_process:
-                self._telemetry.increase_sub_process_base_count(
-                    sub_process=sub_process)
+                self._telemetry.increase_sub_process_base_count(sub_process=sub_process)
             result = method(self, *args, **kwargs)
             self._telemetry.save_and_close()
             self._telemetry = None

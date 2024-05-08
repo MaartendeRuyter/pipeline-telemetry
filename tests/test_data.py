@@ -1,13 +1,14 @@
 """
 This module provides test data for the telemetry tests
 """
+
 from errors import ErrorCode, ListErrors, ReturnValueWithStatus
 
 from pipeline_telemetry import ProcessType, ProcessTypes, TelemetryCounter
-from pipeline_telemetry.settings.settings import \
-    DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
-from pipeline_telemetry.validators.abstract_validator_instruction import \
-    AbstractValidatorInstruction
+from pipeline_telemetry.settings.settings import DEFAULT_CREATE_DATA_SUB_PROCESS_TYPES
+from pipeline_telemetry.validators.abstract_validator_instruction import (
+    AbstractValidatorInstruction,
+)
 
 
 class InstructionTestClass(AbstractValidatorInstruction):
@@ -25,7 +26,7 @@ DEFAULT_TELEMETRY_PARAMS = {
 }
 
 DEFAULT_TELEMETRY_MODEL_PARAMS = {
-    "telemetry_type": 'SINGLE TELEMETRY',
+    "telemetry_type": "SINGLE TELEMETRY",
     "category": "WEATHER",
     "sub_category": "DAILY_PREDICTIONS",
     "source_name": "load_weather_data",
@@ -121,7 +122,6 @@ TEST_TC_MULT_PROCESS_TYPES_2 = TelemetryCounter(
 )
 
 
-TEST_RESULT = [1, TEST_TELEMETRY_COUNTER, 2,
-               TEST_ERROR_TELEMETRY_COUNTER]
+TEST_RESULT = [1, TEST_TELEMETRY_COUNTER, 2, TEST_ERROR_TELEMETRY_COUNTER]
 
 TEST_RETURN_VALUE = ReturnValueWithStatus(result=TEST_RESULT)

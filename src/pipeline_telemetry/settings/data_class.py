@@ -1,5 +1,5 @@
-"""[summary]
-"""
+"""[summary]"""
+
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
@@ -38,8 +38,9 @@ class TelemetryCounter:
     error: Optional[ErrorCode] = None
 
     def __hash__(self):
-        hash_list = [process_type.process_type for process_type
-                     in self.process_types or []]
+        hash_list = [
+            process_type.process_type for process_type in self.process_types or []
+        ]
         hash_list.append(self.sub_process)
         if self.process_type:
             hash_list.append(self.process_type.process_type)
@@ -50,7 +51,9 @@ class TelemetryCounter:
         hash_list.append(str(self.increment))
         return hash(tuple(hash_list))
 
-    def add_to(self, object_with_telemetry: Any, increment: int = None) -> None:
+    def add_to(
+        self, object_with_telemetry: Any, increment: Optional[int] = None
+    ) -> None:
         """
         Method to add to add self (the TelemetryCounter) to an object telemetry
         instance
@@ -81,10 +84,9 @@ class TelemetryCounter:
         if self.process_types:
             all_process_types.extend(self.process_types)
 
-        return [
-            process_type for process_type in all_process_types if process_type]
+        return [process_type for process_type in all_process_types if process_type]
 
-    def set_increment(self, increment: int):
+    def set_increment(self, increment: int) -> "TelemetryCounter":
         """Returns same telemetry counter with a new increment."""
         return TelemetryCounter(
             sub_process=self.sub_process,

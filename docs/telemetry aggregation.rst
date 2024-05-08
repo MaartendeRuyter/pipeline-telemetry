@@ -58,7 +58,7 @@ The following methods are available for the aggregator object::
 
 
 PartialToSingleAggregator
-------------------------
+-------------------------
 This aggregetor creates single aggregations (with telemetry_type 'SINGLE AGGREGATION') from selected telemetry objects with telemetry_type 'PARTIAL TELEMETRY'. PartialToSingleAggregators can be used when data jobs are split into sepreate jobs each creating their own partial telemetry. PartialToSingleAggregator can then be used to merge all the Partial telemetry object into a single aggregation object.
 
 

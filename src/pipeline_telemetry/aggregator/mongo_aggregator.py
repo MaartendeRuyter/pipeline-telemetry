@@ -16,12 +16,12 @@ available classes:
 - DailyMongoAggregator
 
 """
+
 from abc import ABC
 
 from pipeline_telemetry.storage import TelemetryMongoStorage
 
-from .aggregator import AbstractAggregator, DailyAggregator, \
-    PartialToSingleAggregator
+from .aggregator import AbstractAggregator, DailyAggregator, PartialToSingleAggregator
 from .helper import TelemetrySelector
 
 
@@ -43,7 +43,7 @@ class AbstractMongoAggregator(ABC):
     def __new__(cls, telemetry_selector: TelemetrySelector):
         return cls.AGGREGATOR_CLASS(
             telemetry_selector=telemetry_selector,
-            telemetry_storage=TelemetryMongoStorage()
+            telemetry_storage=TelemetryMongoStorage(),
         )
 
 
@@ -59,6 +59,7 @@ class DailyMongoAggregator(AbstractMongoAggregator):
             telemetry_selector=telemetry_selector
         )
     """
+
     AGGREGATOR_CLASS = DailyAggregator
 
 
@@ -70,4 +71,5 @@ class PartialToSingleMongoAggregator(AbstractMongoAggregator):
     When using this aggregator class the storage_class is automatically set
     to TelemetryMongoStorage and can not be provided as argument.
     """
+
     AGGREGATOR_CLASS = PartialToSingleAggregator

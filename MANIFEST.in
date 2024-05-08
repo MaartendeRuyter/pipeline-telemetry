@@ -8,11 +8,9 @@ include .bumpversion.cfg
 include .cookiecutterrc
 include .coveragerc
 include .editorconfig
-include tox.ini
-include .travis.yml
+
 include .appveyor.yml
 include .readthedocs.yml
-include .pre-commit-config.yaml
 include AUTHORS.rst
 include CHANGELOG.rst
 include CONTRIBUTING.rst

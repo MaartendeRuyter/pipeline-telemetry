@@ -1,5 +1,5 @@
-"""Module to test the momgo Aggregators.
-"""
+"""Module to test the momgo Aggregators."""
+
 from test_aggregator_data import TEST_TELEMETRY_SELECTOR
 
 from pipeline_telemetry import DailyAggregator, DailyMongoAggregator

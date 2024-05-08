@@ -14,6 +14,7 @@ exceptions
 - ProcessTypeNotRegistered
 - RequestedDataTimeRangeMethodNotFound
 """
+
 from typing import List
 
 
@@ -21,8 +22,7 @@ class UnknownTelemetryType(Exception):
     """custom exception for Telemetry Module"""
 
     def __init__(self, telemetry_type):
-        message = \
-            f"Unknown telemetry_type `{telemetry_type}` used in aggregator"
+        message = f"Unknown telemetry_type `{telemetry_type}` used in aggregator"
         super().__init__(message)
 
 
@@ -88,8 +88,7 @@ class SubProcessAlreadyInitialized(Exception):
     """custom exception for Telemetry Module"""
 
     def __init__(self, sub_process: str):
-        message = \
-            f"Sub Process `{sub_process}` already initialized."
+        message = f"Sub Process `{sub_process}` already initialized."
         super().__init__(message)
 
 
@@ -181,21 +180,27 @@ class InvalidSubProcessForProcessType(Exception):
 
 class InvalidTelemetryType(Exception):
     def __init__(self, available_types: List[str]):
-        message = \
-            f"Telemetry Type must be of type: {', '.join(available_types)}."
+        message = f"Telemetry Type must be of type: {', '.join(available_types)}."
         super().__init__(message)
 
 
 class ClassTelemetryParamsNotDefined(Exception):
     def __init__(self, object):
         class_name = object.__class__.__name__
-        message = \
-            f"Telemetry params not defined for class {class_name}"
+        message = f"Telemetry params not defined for class {class_name}"
+        super().__init__(message)
+
+
+class ClassTelemetryParamsNotOfTypeDict(Exception):
+    def __init__(self, object):
+        class_name = object.__class__.__name__
+        message = (
+            f"Telemetry params defined for class {class_name} must be a of type dict."
+        )
         super().__init__(message)
 
 
 class RequestedDataTimeRangeMethodNotFound(Exception):
     def __init__(self, telemetry_aggr_type: str):
-        message = \
-            f"No date_time_range method found for {telemetry_aggr_type}."
+        message = f"No date_time_range method found for {telemetry_aggr_type}."
         super().__init__(message)

@@ -1,6 +1,7 @@
 """
 Module to test telemetry main class for pipeline telemetry module.
 """
+
 from test_data import TEST_ERROR_CODE, TEST_ERROR_CODE_2
 
 from pipeline_telemetry.data_classes import TelemetryData
@@ -34,21 +35,21 @@ def test_telemetry_data_inc_errors_count():
 
 def test_telemetry_data_inc_custom_count():
     tel_data = TelemetryData()
-    tel_data.increase_custom_count(increment=1, counter='counter')
-    assert getattr(tel_data, st.COUNTERS_KEY)['counter'] == 1
+    tel_data.increase_custom_count(increment=1, counter="counter")
+    assert getattr(tel_data, st.COUNTERS_KEY)["counter"] == 1
 
 
 def test_add_telemetry_custom_count_data():
     tel_data_1 = TelemetryData()
     tel_data_2 = TelemetryData()
-    tel_data_1.increase_custom_count(increment=1, counter='counter')
-    tel_data_2.increase_custom_count(increment=2, counter='counter')
-    tel_data_1.increase_custom_count(increment=3, counter='counter_1')
-    tel_data_2.increase_custom_count(increment=4, counter='counter_2')
+    tel_data_1.increase_custom_count(increment=1, counter="counter")
+    tel_data_2.increase_custom_count(increment=2, counter="counter")
+    tel_data_1.increase_custom_count(increment=3, counter="counter_1")
+    tel_data_2.increase_custom_count(increment=4, counter="counter_2")
     tel_data_1 += tel_data_2
-    assert getattr(tel_data_1, st.COUNTERS_KEY)['counter'] == 3
-    assert getattr(tel_data_1, st.COUNTERS_KEY)['counter_1'] == 3
-    assert getattr(tel_data_1, st.COUNTERS_KEY)['counter_2'] == 4
+    assert getattr(tel_data_1, st.COUNTERS_KEY)["counter"] == 3
+    assert getattr(tel_data_1, st.COUNTERS_KEY)["counter_1"] == 3
+    assert getattr(tel_data_1, st.COUNTERS_KEY)["counter_2"] == 4
 
 
 def test_add_telemetry_base_and_fail_count_data():

@@ -1,5 +1,5 @@
-"""[summary]
-"""
+"""[summary]"""
+
 import json
 import sqlite3
 from datetime import datetime
@@ -19,8 +19,8 @@ def dict_factory(cursor, row):
     """
     col_names = [col[0] for col in cursor.description]
     telemetry = {key: value for key, value in zip(col_names, row)}
-    telemetry_str = telemetry.pop('telemetry', "{}")
-    telemetry.update({'telemetry': json.loads(telemetry_str)})
+    telemetry_str = telemetry.pop("telemetry", "{}")
+    telemetry.update({"telemetry": json.loads(telemetry_str)})
     return telemetry
 
 
@@ -28,6 +28,7 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
     """
     Class to provice telemetry in memory storage for use when unit testing
     """
+
     db_in_memory: Optional[sqlite3.Connection] = None
     db_cursor: Optional[sqlite3.Cursor] = None
 
@@ -82,29 +83,41 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         sub_category = getattr(telemetry, st.SUB_CATEGORY_KEY)
         source_name = getattr(telemetry, st.SOURCE_NAME_KEY)
         process_type = getattr(telemetry, st.PROCESS_TYPE_KEY)
-        start_date_time = getattr(telemetry, st.START_TIME)
+        start_date_time = getattr(telemetry, st.START_TIME).isoformat()
         run_time_in_seconds = getattr(telemetry, st.RUN_TIME)
         traffic_light = getattr(telemetry, st.TRAFFIC_LIGHT_KEY)
         io_time_in_seconds = getattr(telemetry, st.IO_TIME_KEY)
         telemetry_dict = {
-            k: v.__dict__ for k, v in
-            getattr(telemetry, st.TELEMETRY_FIELD_KEY).items()
+            k: v.__dict__ for k, v in getattr(telemetry, st.TELEMETRY_FIELD_KEY).items()
         }
         telemetry_json = json.dumps(telemetry_dict)
 
         self.db_cursor.execute(
             "insert into telemetry values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                telemetry_type, category, sub_category,
-                source_name, process_type, start_date_time,
-                str(run_time_in_seconds), telemetry_json,
-                traffic_light, str(io_time_in_seconds)
-            ])
+                telemetry_type,
+                category,
+                sub_category,
+                source_name,
+                process_type,
+                start_date_time,
+                str(run_time_in_seconds),
+                telemetry_json,
+                traffic_light,
+                str(io_time_in_seconds),
+            ],
+        )
 
     def select_records(
-            self, telemetry_type: str, category: str, sub_category: str,
-            source_name: str, process_type: str, from_date_time: datetime,
-            to_date_time: datetime) -> Iterator:
+        self,
+        telemetry_type: str,
+        category: str,
+        sub_category: str,
+        source_name: str,
+        process_type: str,
+        from_date_time: datetime,
+        to_date_time: datetime,
+    ) -> Iterator:
         """
         Select telemetry records unique to a single process, source category
         and sub category for as specific time period.
@@ -112,20 +125,20 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         if not self.db_cursor:
             raise exceptions.StorageNotInitialized
 
-        select_statement = \
-            ("SELECT * FROM telemetry WHERE "
-             f"telemetry_type='{telemetry_type}' AND "
-             f"category='{category}' AND "
-             f"sub_category='{sub_category}' AND "
-             f"source_name='{source_name}' AND "
-             f"process_type='{process_type}' AND "
-             f"start_date_time >= '{from_date_time}' AND "
-             f"start_date_time < '{to_date_time}'")
+        select_statement = (
+            "SELECT * FROM telemetry WHERE "
+            f"telemetry_type='{telemetry_type}' AND "
+            f"category='{category}' AND "
+            f"sub_category='{sub_category}' AND "
+            f"source_name='{source_name}' AND "
+            f"process_type='{process_type}' AND "
+            f"start_date_time >= '{from_date_time}' AND "
+            f"start_date_time < '{to_date_time}'"
+        )
 
         return self.db_cursor.execute(select_statement)
 
-    def _remove_existing_aggregation_telemetry(
-            self, telemetry: TelemetryModel) -> None:
+    def _remove_existing_aggregation_telemetry(self, telemetry: TelemetryModel) -> None:
         """
         Removes any already existing aggregations for a specific telemetry
         aggregation.
@@ -140,9 +153,15 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         self.delete_records(**query_params_exist_aggr)
 
     def delete_records(
-            self, telemetry_type: str, category: str, sub_category: str,
-            source_name: str, process_type: str, from_date_time: datetime,
-            to_date_time: datetime) -> None:
+        self,
+        telemetry_type: str,
+        category: str,
+        sub_category: str,
+        source_name: str,
+        process_type: str,
+        from_date_time: datetime,
+        to_date_time: datetime,
+    ) -> None:
         """
         Delete telemetry records unique to a single process, source category
         and sub category for as specific time period.
@@ -150,14 +169,15 @@ class TelemetryInMemoryStorage(AbstractTelemetryStorage):
         if not self.db_cursor:
             raise exceptions.StorageNotInitialized
 
-        select_statement = \
-            ("DELETE * FROM telemetry WHERE "
-             f"telemetry_type='{telemetry_type}' AND "
-             f"category='{category}' AND "
-             f"sub_category='{sub_category}' AND "
-             f"source_name='{source_name}' AND "
-             f"process_type='{process_type}' AND "
-             f"start_date_time > '{from_date_time}' AND "
-             f"start_date_time < '{to_date_time}'")
+        select_statement = (
+            "DELETE * FROM telemetry WHERE "
+            f"telemetry_type='{telemetry_type}' AND "
+            f"category='{category}' AND "
+            f"sub_category='{sub_category}' AND "
+            f"source_name='{source_name}' AND "
+            f"process_type='{process_type}' AND "
+            f"start_date_time > '{from_date_time}' AND "
+            f"start_date_time < '{to_date_time}'"
+        )
 
         self.db_cursor.execute(select_statement)

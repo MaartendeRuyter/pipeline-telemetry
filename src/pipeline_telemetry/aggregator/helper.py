@@ -18,6 +18,7 @@ Single day date range generators.
 
 
 """
+
 from datetime import datetime
 from typing import NamedTuple, Protocol
 
@@ -41,6 +42,7 @@ class TelemetrySelector(NamedTuple):
     selecting the AggregatorClass) and provides you with metods to run the
     aggergation for a specific period.
     """
+
     category: str
     sub_category: str
     source_name: str
@@ -58,22 +60,18 @@ class TelemetryListArgs(NamedTuple):
 
 
 class TelemetryList(Protocol):
-    def __next__(self) -> TelemetryModel:
-        ...
+    def __next__(self) -> TelemetryModel: ...
 
-    def __iter__(self) -> 'TelemetryList':
-        ...
+    def __iter__(self) -> "TelemetryList": ...
 
 
-class TelemetryAggregator():
-
+class TelemetryAggregator:
     __telemetry: TelemetryModel
 
     def __init__(self, telemetry: TelemetryModel) -> None:
         self.__telemetry = telemetry
 
-    def aggregate(
-            self, telemetry_list: TelemetryList) -> TelemetryModel:
+    def aggregate(self, telemetry_list: TelemetryList) -> TelemetryModel:
         for telemetry in telemetry_list:
             self.__telemetry += telemetry
         return self.__telemetry

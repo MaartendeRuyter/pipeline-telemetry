@@ -1,5 +1,5 @@
-"""Module to test aggregator logic.
-"""
+"""Module to test aggregator logic."""
+
 from pipeline_telemetry import TelemetryAggregator
 
 

@@ -1,6 +1,7 @@
 """
 Module to test telemetry counter login for pipeline telemetry module.
 """
+
 import pytest
 import test_data as TD
 
@@ -32,7 +33,7 @@ def test_add_to_method():
     sub_process = TD.TEST_TELEMETRY_COUNTER_INC_2.sub_process
     telemetry = Telemetry(**TD.DEFAULT_TELEMETRY_PARAMS)
 
-    class ClassToTestAddTo():
+    class ClassToTestAddTo:
         _telemetry = telemetry
 
     obj_with_telemetry = ClassToTestAddTo()
@@ -95,8 +96,7 @@ def test_add_telemetry_counter_with_increment_arg(telemetry_inst):
     Check invoking add_telemetry_counter method using increment argument adds
     the value of increment to the counter
     """
-    telemetry_inst.add_telemetry_counter(
-        TD.TEST_TELEMETRY_COUNTER, increment=10)
+    telemetry_inst.add_telemetry_counter(TD.TEST_TELEMETRY_COUNTER, increment=10)
     telemetry_data = telemetry_inst.get("RETRIEVE_RAW_DATA")
     assert getattr(telemetry_data, st.COUNTERS_KEY)["test_counter"] == 10
 
@@ -229,8 +229,10 @@ def test_telementry_counter_hash():
 
 def test_tc_hash_does_include_the_increment():
     """Test that increment value changes the hash."""
-    assert not TD.TEST_TELEMETRY_COUNTER.__hash__() == \
-        TD.TEST_TELEMETRY_COUNTER_INC_2.__hash__()
+    assert (
+        not TD.TEST_TELEMETRY_COUNTER.__hash__()
+        == TD.TEST_TELEMETRY_COUNTER_INC_2.__hash__()
+    )
 
 
 def test_tc_hash_works_with_errors():
@@ -238,8 +240,10 @@ def test_tc_hash_works_with_errors():
     Test that a telementry counters with different errors return a different
     hash.
     """
-    assert not TD.TEST_ERROR_TELEMETRY_COUNTER.__hash__() == \
-        TD.TEST_ERROR_TELEMETRY_COUNTER_2.__hash__()
+    assert (
+        not TD.TEST_ERROR_TELEMETRY_COUNTER.__hash__()
+        == TD.TEST_ERROR_TELEMETRY_COUNTER_2.__hash__()
+    )
 
 
 def test_tc_hash_works_with_counters():
@@ -247,8 +251,10 @@ def test_tc_hash_works_with_counters():
     Test that a telementry counters with different counters return a different
     hash.
     """
-    assert not TD.TEST_TELEMETRY_COUNTER.__hash__() == \
-        TD.TEST_TELEMETRY_COUNTER_2.__hash__()
+    assert (
+        not TD.TEST_TELEMETRY_COUNTER.__hash__()
+        == TD.TEST_TELEMETRY_COUNTER_2.__hash__()
+    )
 
 
 def test_tc_hash_does_include_process_types_field():
@@ -256,8 +262,10 @@ def test_tc_hash_does_include_process_types_field():
     Test that a telementry counters with a different list of process types
     return a different hash.
     """
-    assert not TD.TEST_TC_MULT_PROCESS_TYPES.__hash__() == \
-        TD.TEST_TC_MULT_PROCESS_TYPES_2.__hash__()
+    assert (
+        not TD.TEST_TC_MULT_PROCESS_TYPES.__hash__()
+        == TD.TEST_TC_MULT_PROCESS_TYPES_2.__hash__()
+    )
 
 
 def test_tc_hash_does_include_sub_process_field():
@@ -265,5 +273,7 @@ def test_tc_hash_does_include_sub_process_field():
     Test that a telementry counters with a different sub_process
     return a different hash.
     """
-    assert not TD.TEST_TELEMETRY_COUNTER.__hash__() == \
-        TD.TEST_TELEMETRY_COUNTER_3.__hash__()
+    assert (
+        not TD.TEST_TELEMETRY_COUNTER.__hash__()
+        == TD.TEST_TELEMETRY_COUNTER_3.__hash__()
+    )

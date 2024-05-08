@@ -1,5 +1,5 @@
-"""Helper module for pipeline_telemetry
-"""
+"""Helper module for pipeline_telemetry"""
+
 from typing import Any, List, Union
 
 from errors import ReturnValueWithStatus
@@ -15,20 +15,20 @@ def is_telemetry_counter(counter: Union[TelemetryCounter, Any]) -> bool:
 
 
 def add_errors_from_return_value(
-        object_with_telemetry: Any, sub_process: str,
-        return_value: ReturnValueWithStatus) -> None:
+    object_with_telemetry: Any, sub_process: str, return_value: ReturnValueWithStatus
+) -> None:
     """
     Helper method to add the errors from a ReturnValueWithStatus instance to the
     telemetry instance of the object_with_telemetry.
     """
     object_with_telemetry._telemetry.add(
-        sub_process=sub_process,
-        data=[], errors=return_value.errors)
+        sub_process=sub_process, data=[], errors=return_value.errors
+    )
 
 
 def add_telemetry_counters_from_return_value(
-        object_with_telemetry: Any,
-        return_value: ReturnValueWithStatus) -> List[Any]:
+    object_with_telemetry: Any, return_value: ReturnValueWithStatus
+) -> List[Any]:
     """
     Helper method to add the TelemetryCounters from a ReturnValueWithStatus
     instance to the telemetry instance of the object_with_telemetry.
@@ -44,8 +44,8 @@ def add_telemetry_counters_from_return_value(
 
 
 def process_return_value(
-        object_with_telemetry: Any, sub_process: str,
-        return_value: ReturnValueWithStatus) -> List[Any]:
+    object_with_telemetry: Any, sub_process: str, return_value: ReturnValueWithStatus
+) -> List[Any]:
     """Processes a return value object.
     All errors and telemetry counters in return_value errors and result list
     will be processed and added to the telemetry object in
@@ -60,11 +60,9 @@ def process_return_value(
     Returns:
         List[Any]: _description_
     """
-    add_errors_from_return_value(
-        object_with_telemetry, sub_process, return_value)
+    add_errors_from_return_value(object_with_telemetry, sub_process, return_value)
 
-    return add_telemetry_counters_from_return_value(
-        object_with_telemetry, return_value)
+    return add_telemetry_counters_from_return_value(object_with_telemetry, return_value)
 
 
 def increase_base_count(

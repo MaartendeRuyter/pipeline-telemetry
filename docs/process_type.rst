@@ -63,7 +63,7 @@ external environment. This process_type allows for the following ``subtypes``
 
 Creating your own process types and subtypes
 --------------------------------------------
-The package allows for custom process types and subtypes to be defined. This can easily be done with the ``ProcessType`` class. Be aware that your custom process types need to be :ref:`registered<Registering process types>` with the ``Telemetry`` class before they can be used. In the example below the process type CUSTOM_GET_WEATHER_DATA is defined with 5 sub process types.:: 
+The package allows for custom process types and subtypes to be defined. This can easily be done with the ``ProcessType`` class. Be aware that your custom process types need to be registered with the ``Telemetry`` class before they can be used. In the example below the process type CUSTOM_GET_WEATHER_DATA is defined with 5 sub process types.:: 
 
     from pipeline_telemetry import ProcessType, Telemetry
 
@@ -152,5 +152,5 @@ After registration ``GET_CLIMATE_DATA`` ProcessType can be used when creating
     
     telemetry_obj = Telemetry(**TELEMETRY_LOAD_CLIMATE_DATA)
 
-You can now :ref:`add telemetry<Adding telemetry datapoints>` to this telemetry object using subprocess, 'RETRIEVE_CLIMATE_OBJECT_FROM_API', 'CONVERT_TO_YEARLY_CLIMATE_OBJECT' and 
+You can now add telemetry to this telemetry object using subprocess, 'RETRIEVE_CLIMATE_OBJECT_FROM_API', 'CONVERT_TO_YEARLY_CLIMATE_OBJECT' and 
 'STORE_YEARLY_CLIMATE'.

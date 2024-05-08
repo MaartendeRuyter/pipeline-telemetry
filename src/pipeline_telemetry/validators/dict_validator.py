@@ -4,16 +4,20 @@ Module to define the DictValidator class
 classes:
     - DictValidator
 """
+
 from typing import Dict, List, Type
 
 from errors import ErrorCode
 
-from ..settings.exceptions import InstructionRegisteredTwice, \
-    RuleCanHaveOnlyOneInstruction, UnknownInstruction
+from ..settings.exceptions import (
+    InstructionRegisteredTwice,
+    RuleCanHaveOnlyOneInstruction,
+    UnknownInstruction,
+)
 from .abstract_validator_instruction import AbstractValidatorInstruction
 
 
-class DictValidator():
+class DictValidator:
     """Class to allow a dict validation according to a set of rules.
 
     class methods:
@@ -27,9 +31,9 @@ class DictValidator():
     _instructions: Dict[str, Type[AbstractValidatorInstruction]] = {}
 
     @classmethod
-    def validate(cls,
-                 dict_to_validate: dict,
-                 validation_rules: dict) -> List[ErrorCode]:
+    def validate(
+        cls, dict_to_validate: dict, validation_rules: dict
+    ) -> List[ErrorCode]:
         """Public class method to run the validation.
 
         :param dict_to_validate: data dict to be validated
@@ -45,8 +49,7 @@ class DictValidator():
         return errors
 
     @classmethod
-    def _apply_rule(
-            cls, dict_to_validate: dict, rule: tuple) -> List[ErrorCode]:
+    def _apply_rule(cls, dict_to_validate: dict, rule: tuple) -> List[ErrorCode]:
         """[summary]
 
         Args:
@@ -67,15 +70,15 @@ class DictValidator():
 
         if validation_rule:
             return validation_rule.validate(
-                dict_to_validate=dict_to_validate,
-                rule_dict=rule[1]
+                dict_to_validate=dict_to_validate, rule_dict=rule[1]
             )
 
         return []
 
     @classmethod
     def register_instruction(
-            cls, instruction_class: Type[AbstractValidatorInstruction]) -> None:
+        cls, instruction_class: Type[AbstractValidatorInstruction]
+    ) -> None:
         """Registration at class level of the instruction
 
         Args:
@@ -87,8 +90,7 @@ class DictValidator():
         instruction = instruction_class.INSTRUCTION
         if instruction in cls._instructions:
             raise InstructionRegisteredTwice(instruction_class)
-        cls._instructions.update({
-            instruction_class.INSTRUCTION: instruction_class})
+        cls._instructions.update({instruction_class.INSTRUCTION: instruction_class})
 
     @staticmethod
     def _instruction_from_rule(rule: tuple) -> str:

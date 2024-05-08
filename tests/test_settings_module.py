@@ -1,5 +1,5 @@
-"""Module to test settings module.
-"""
+"""Module to test settings module."""
+
 from pipeline_telemetry.settings import settings
 
 
@@ -12,4 +12,4 @@ def test_telemetry_type_settings():
     for k, v in settings.telemetry_types.items():
         assert k == k.upper()
         assert v == v.upper()
-        assert v == k.replace('_', ' ')
+        assert v == k.replace("_", " ")

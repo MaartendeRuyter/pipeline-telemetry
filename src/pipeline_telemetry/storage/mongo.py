@@ -12,11 +12,18 @@ MONGO_DB_PORT
 If no host and port are defined the connection will dedault to a localhost
 mongoDB instance.
 """
+
 from datetime import datetime
 from typing import Any, Dict, Iterator
 
-from mongoengine import DateTimeField, DictField, Document, FloatField, \
-    StringField, connect
+from mongoengine import (
+    DateTimeField,
+    DictField,
+    Document,
+    FloatField,
+    StringField,
+    connect,
+)
 
 from ..data_classes import TelemetryModel
 from ..settings import settings as st
@@ -30,6 +37,7 @@ class TelemetryMongoModel(Document):
     """
     Class to provice telemetry Mongo Model for persistance in MongoDB
     """
+
     category = StringField()
     sub_category = StringField()
     source_name = StringField()
@@ -62,7 +70,7 @@ class TelemetryMongoModel(Document):
         TelemetryModel.
         """
         telemetry_dict = self.to_mongo().to_dict()
-        telemetry_dict.pop('_id', None)
+        telemetry_dict.pop("_id", None)
         # run_time_on_seconds is stored as str in Mongo but needs to be a float
         # when processing telemetry data
         telemetry_dict[st.RUN_TIME] = float(telemetry_dict[st.RUN_TIME])
@@ -86,8 +94,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         telemetry_mongo_kwargs = self._telemetry_model_kwargs(telemetry)
         TelemetryMongoModel(**telemetry_mongo_kwargs).save()
 
-    def _remove_existing_aggregation_telemetry(
-            self, telemetry: TelemetryModel) -> None:
+    def _remove_existing_aggregation_telemetry(self, telemetry: TelemetryModel) -> None:
         """
         Removes any already existing aggregations for a specific telemetry
         aggregation.
@@ -118,8 +125,7 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         traffic_light = getattr(telemetry, st.TRAFFIC_LIGHT_KEY)
         io_time_in_seconds = getattr(telemetry, st.IO_TIME_KEY)
         telemetry_data = {
-            k: v.__dict__ for k, v in
-            getattr(telemetry, st.TELEMETRY_FIELD_KEY).items()
+            k: v.__dict__ for k, v in getattr(telemetry, st.TELEMETRY_FIELD_KEY).items()
         }
 
         return {
@@ -136,23 +142,31 @@ class TelemetryMongoStorage(AbstractTelemetryStorage):
         }
 
     def select_records(
-            self, telemetry_type: str, category: str, sub_category: str,
-            source_name: str, process_type: str, from_date_time: datetime,
-            to_date_time: datetime) -> Iterator:
+        self,
+        telemetry_type: str,
+        category: str,
+        sub_category: str,
+        source_name: str,
+        process_type: str,
+        from_date_time: datetime,
+        to_date_time: datetime,
+    ) -> Iterator:
         """
         Select telemetry records unique to a single process, source category
         and sub category for as specific time period.
         """
         query_details = {
-            'telemetry_type': telemetry_type,
-            'category': category, 'sub_category': sub_category,
-            'source_name': source_name, 'process_type': process_type
+            "telemetry_type": telemetry_type,
+            "category": category,
+            "sub_category": sub_category,
+            "source_name": source_name,
+            "process_type": process_type,
         }
 
         return TelemetryMongoModel.objects(
             start_date_time__gte=from_date_time,
             start_date_time__lt=to_date_time,
-            **query_details
+            **query_details,
         )
 
     @staticmethod

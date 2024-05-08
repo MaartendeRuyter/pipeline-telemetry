@@ -1,5 +1,5 @@
-"""Module to define test data for the integration tests
-"""
+"""Module to define test data for the integration tests"""
+
 from dataclasses import dataclass
 
 from pipeline_telemetry import Telemetry
@@ -45,22 +45,20 @@ BASIC_RETRIEVE_DATA_TEST = IntegrationTestData(
         }
     },
     result_field="RETRIEVE_RAW_DATA",
-    expected_result=TelemetryData(**{
-        "base_counter": 1,
-        "fail_counter": 0
-    })
+    expected_result=TelemetryData(**{"base_counter": 1, "fail_counter": 0}),
 )
 
 MISSING_KEY_RETRIEVE_DATA_TEST = IntegrationTestData(
     data={"no items key": []},
-    validation_rules={
-        "RETRIEVE_RAW_DATA": {"has_key": {"field_name": "items"}}},
+    validation_rules={"RETRIEVE_RAW_DATA": {"has_key": {"field_name": "items"}}},
     result_field="RETRIEVE_RAW_DATA",
-    expected_result=TelemetryData(**{
-        "base_counter": 1,
-        "fail_counter": 0,
-        st.ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1}
-    }),
+    expected_result=TelemetryData(
+        **{
+            "base_counter": 1,
+            "fail_counter": 0,
+            st.ERRORS_KEY: {"HAS_KEY_ERR_0001@KEY_<items>": 1},
+        }
+    ),
 )
 
 
@@ -72,11 +70,13 @@ MUST_HAVE_KEY_IN_ITEMS_TEST = IntegrationTestData(
         }
     },
     result_field="RETRIEVE_RAW_DATA",
-    expected_result=TelemetryData(**{
-        "base_counter": 1,
-        "fail_counter": 0,
-        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 1}
-    }),
+    expected_result=TelemetryData(
+        **{
+            "base_counter": 1,
+            "fail_counter": 0,
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 1},
+        }
+    ),
 )
 
 NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
@@ -87,11 +87,13 @@ NO_ITEMS_HAVE_MUST_HAVE_KEY_TEST = IntegrationTestData(
         }
     },
     result_field="RETRIEVE_RAW_DATA",
-    expected_result=TelemetryData(**{
-        "base_counter": 1,
-        "fail_counter": 0,
-        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 2}
-    }),
+    expected_result=TelemetryData(
+        **{
+            "base_counter": 1,
+            "fail_counter": 0,
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_003@KEY_<items__key>": 2},
+        }
+    ),
 )
 
 
@@ -103,9 +105,11 @@ ITEMS_FIELD_HAS_DICT_TEST = IntegrationTestData(
         }
     },
     result_field="RETRIEVE_RAW_DATA",
-    expected_result=TelemetryData(**{
-        "base_counter": 1,
-        "fail_counter": 0,
-        st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
-    }),
+    expected_result=TelemetryData(
+        **{
+            "base_counter": 1,
+            "fail_counter": 0,
+            st.ERRORS_KEY: {"ENTRIES_HAVE_KEY_ERR_002@KEY_<items>": 1},
+        }
+    ),
 )

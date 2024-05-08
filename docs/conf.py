@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-import os
-
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
+    # "sphinx.ext.autodoc",
+    # "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.doctest",
     "sphinx.ext.extlinks",
@@ -18,24 +13,19 @@ extensions = [
 source_suffix = ".rst"
 master_doc = "index"
 project = "Pipeline Telemetry"
-year = "2021"
+year = "2024"
 author = "Maarten de Ruyter"
 copyright = "{0}, {1}".format(year, author)
-version = release = "0.9.4"
+version = release = "1.0.0"
 
-pygments_style = "trac"
-templates_path = ["."]
-extlinks = {
-    "issue": ("https://github.com/MaartendeRuyter/pipeline-telemetry/issues/%s", "#"),
-    "pr": ("https://github.com/MaartendeRuyter/pipeline-telemetry/pull/%s", "PR #"),
-}
-# on_rtd is whether we are on readthedocs.org
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
+extensions = []
 
-if not on_rtd:  # only set the theme if we're building docs locally
-    html_theme = "sphinx_rtd_theme"
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-html_use_smartypants = True
+html_theme = "sphinx_rtd_theme"
+html_static_path = ['_static']
+
 html_last_updated_fmt = "%b %d, %Y"
 html_split_index = False
 html_sidebars = {
