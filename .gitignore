@@ -1,3 +1,8 @@
+# one off file
+todo.txt
+architecture.txt
+
+# pychace
 *.py[cod]
 __pycache__
 
