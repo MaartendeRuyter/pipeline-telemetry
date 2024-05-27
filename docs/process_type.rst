@@ -154,3 +154,45 @@ After registration ``GET_CLIMATE_DATA`` ProcessType can be used when creating
 
 You can now add telemetry to this telemetry object using subprocess, 'RETRIEVE_CLIMATE_OBJECT_FROM_API', 'CONVERT_TO_YEARLY_CLIMATE_OBJECT' and 
 'STORE_YEARLY_CLIMATE'.
+
+
+Registering process types using a meta class
+--------------------------------------------
+ProcessTypes register methods are dynamically evaluated. Therefore linters, codecompletion and typechecker will not recognize your custom process types and::
+
+    ProcessTypes.YOUR_PROCESS_TYPE
+
+will not pass you're type checker and linter. 
+You can solve this by defining you custom ProcessTypes class based upon the ``ProcessTypesMeta`` class and mixing in any class with ``ProcessType`` class attributes::
+
+    from pipeline_telemetry import ProcessTypesMeta
+
+    class ProcessTypesSet1():
+        CUSTOM_PROCESS = ProcessType(
+            process_type = 'CUSTOM_PROCESS',
+            subtypes = [
+                'SUB_PROCESS_1',
+                'SUB_PROCESS_2']
+        )
+
+    class ProcessTypesSet2():
+        OTHER_CUSTOM_PROCESS = ProcessType(
+            process_type = 'OTHER_CUSTOM_PROCESS',
+            subtypes = [
+                'SUB_PROCESS_1',
+                'SUB_PROCESS_2']
+        )
+
+    cls MyProcessTypes(ProcessTypesSet1, ProcessTypesSet2, metaclass=ProcessTypesMeta): ...
+
+The ``MyProcessTypes`` class now acts as a ProcessTypes class (it is actually a subclass of ProcessTypes) with CUSTOM_PROCESS and OTHER_CUSTOM_PROCESS as ProcessType attributes.::
+
+    MyProcessTypes.CUSTOM_PROCESS
+    MyProcessTypes.OTHER_CUSTOM_PROCESS
+
+Now pass your linting and type checker and will autocomplete in your IDE.
+
+
+
+
+
