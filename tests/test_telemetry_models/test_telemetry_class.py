@@ -243,7 +243,7 @@ def test_increase_sub_process_fail_not_allowed_with_closed_telemetry():
 def test_sub_process_custom_count_not_allowed_with_closed_telemetry():
     """
     check that a sub process custom count method raises an excpetion
-    when telementry object has been closed
+    when telemetry object has been closed
     """
     telemetry_inst = Telemetry(**DEFAULT_TELEMETRY_PARAMS)
     telemetry_inst.increase_sub_process_base_count("RETRIEVE_RAW_DATA")

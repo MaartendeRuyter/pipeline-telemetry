@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
 from pipeline_telemetry.data_classes import TelemetryModel
-from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, RUN_TIME
+from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, RUN_TIME, SINGLE_TELEMETRY_TYPE
 from pipeline_telemetry.storage.mongo import TelemetryMongoModel, TelemetryMongoStorage
 from pipeline_telemetry.storage.mongo_connection import get_mongo_db_port
 
@@ -52,15 +52,16 @@ def test_store_telemetry_method_processes_and_saves_telemetry(mocker):
 
 def test_telemetry_model_kwargs_method():
     """Test _telemetry_model_kwargs method returns correct kwargs."""
+    current_time = datetime.now()
     result = TelemetryMongoStorage()._telemetry_model_kwargs(
         TelemetryModel(
             **{
-                "telemetry_type": "test telemetry type",
+                "telemetry_type": SINGLE_TELEMETRY_TYPE,
                 "category": "test",
                 "sub_category": "sub_test",
                 "source_name": "tst_source_name",
                 "process_type": "tst_process_type",
-                "start_date_time": "tst_start_date_time",
+                "start_date_time": current_time,
                 "run_time_in_seconds": 1.123,
                 "io_time_in_seconds": 1.1,
                 "traffic_light": DEFAULT_TRAFIC_LIGHT_COLOR,
@@ -69,12 +70,12 @@ def test_telemetry_model_kwargs_method():
     )
 
     assert result == {
-        "telemetry_type": "test telemetry type",
+        "telemetry_type": SINGLE_TELEMETRY_TYPE,
         "category": "test",
         "sub_category": "sub_test",
         "source_name": "tst_source_name",
         "process_type": "tst_process_type",
-        "start_date_time": "tst_start_date_time",
+        "start_date_time": current_time,
         "run_time_in_seconds": "1.12",
         "io_time_in_seconds": 1.1,
         "telemetry": {},

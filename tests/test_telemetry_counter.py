@@ -222,7 +222,7 @@ def test_set_increment_method_on_telemetry_counter():
     assert new_counter.increment == 10
 
 
-def test_telementry_counter_hash():
+def test_telemetry_counter_hash():
     """Test that a TelemetryCounter object can be hashed."""
     assert TD.TEST_TELEMETRY_COUNTER.__hash__()
 
@@ -237,7 +237,7 @@ def test_tc_hash_does_include_the_increment():
 
 def test_tc_hash_works_with_errors():
     """
-    Test that a telementry counters with different errors return a different
+    Test that a telemetry counters with different errors return a different
     hash.
     """
     assert (
@@ -248,7 +248,7 @@ def test_tc_hash_works_with_errors():
 
 def test_tc_hash_works_with_counters():
     """
-    Test that a telementry counters with different counters return a different
+    Test that a telemetry counters with different counters return a different
     hash.
     """
     assert (
@@ -259,7 +259,7 @@ def test_tc_hash_works_with_counters():
 
 def test_tc_hash_does_include_process_types_field():
     """
-    Test that a telementry counters with a different list of process types
+    Test that a telemetry counters with a different list of process types
     return a different hash.
     """
     assert (
@@ -270,7 +270,7 @@ def test_tc_hash_does_include_process_types_field():
 
 def test_tc_hash_does_include_sub_process_field():
     """
-    Test that a telementry counters with a different sub_process
+    Test that a telemetry counters with a different sub_process
     return a different hash.
     """
     assert (

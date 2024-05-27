@@ -25,6 +25,13 @@ DEFAULT_TELEMETRY_PARAMS = {
     "process_type": ProcessTypes.CREATE_DATA_FROM_URL,
 }
 
+DEFAULT_TELEMETRY_SELECTOR_PARAMS = {
+    "category": "WEATHER",
+    "sub_category": "DAILY_PREDICTIONS",
+    "source_name": "load_weather_data",
+    "process_type": ProcessTypes.CREATE_DATA_FROM_URL.name,
+}
+
 DEFAULT_TELEMETRY_MODEL_PARAMS = {
     "telemetry_type": "SINGLE TELEMETRY",
     "category": "WEATHER",
