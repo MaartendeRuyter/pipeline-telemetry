@@ -121,7 +121,7 @@ class AbstractAggregator(ABC):
             **telemetry_list_params
         )
 
-        initial_telemetry_obj = self.__target_telemetry.copy()
+        initial_telemetry_obj = self.__target_telemetry.telemetry_copy()
         aggregator = self.__aggregator(initial_telemetry_obj)
         aggregated_telemetry = aggregator.aggregate(telemetry_objects)
 

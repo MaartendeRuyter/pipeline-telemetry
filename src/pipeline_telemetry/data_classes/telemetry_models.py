@@ -96,7 +96,7 @@ class TelemetryModel(BaseModel):
     traffic_light: str = st.DEFAULT_TRAFIC_LIGHT_COLOR
     telemetry: Dict[str, TelemetryData] = Field(default_factory=dict)
 
-    def copy(self) -> "TelemetryModel":
+    def telemetry_copy(self) -> "TelemetryModel":
         """
         Method to return a copy of the telemetry model. In a telemetry copy
         only the attributes telemetry_type, categroy, sub_category, source_name
