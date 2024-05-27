@@ -53,22 +53,20 @@ class ProcessTypes:
         return process_type in cls._process_types
 
 
-
 class ProcessTypesMeta(type):
     _process_types: list[ProcessType] = []
 
     def __new__(cls, name, bases, class_dict):
-
         process_types: list[ProcessType] = []
 
         for mixin_class in bases:
             for process_type_key in dir(mixin_class):
-                process_type = getattr(mixin_class, process_type_key) 
+                process_type = getattr(mixin_class, process_type_key)
                 if type(process_type) is ProcessType:
-                    process_types.append(process_type)            
+                    process_types.append(process_type)
 
         # Add the ProcesTypes class to the based so that ProcesTypes methods are included
-        # in the returned class definition.            
+        # in the returned class definition.
         bases_list = list(bases)
         bases_list.append(ProcessTypes)
         bases_with_proces_types = tuple(bases_list)
@@ -76,7 +74,7 @@ class ProcessTypesMeta(type):
         class_dict["_process_types"] = process_types
         return type.__new__(cls, name, bases_with_proces_types, class_dict)
 
-    # Empty methods defined in meta class to ensure typing and autocompletion is working        
+    # Empty methods defined in meta class to ensure typing and autocompletion is working
     @classmethod
     def register_process_type(
         cls, process_type_key: str, process_type: ProcessType
@@ -99,5 +97,4 @@ class ProcessTypesMeta(type):
         Returns:
             Bool: True of process_type is registered else False
         """
-        ...
-
+        raise NotImplementedError

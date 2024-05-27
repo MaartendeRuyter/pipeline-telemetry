@@ -1,4 +1,4 @@
-from pipeline_telemetry import ProcessTypesMeta, ProcessType, ProcessTypes
+from pipeline_telemetry import ProcessType, ProcessTypes, ProcessTypesMeta
 
 FLOW_1 = [
     "GET_DATA_RESPONSES",
@@ -34,20 +34,20 @@ def test_process_type_meta_exists():
 
 
 def test_meta_class_adds_process_types_to_registered_list():
-    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...
+    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...  # noqa: E701
 
     # assert NewClass.is_registered(TestTypesOne.FLOW_ONE)
     assert NewClass.is_registered(TestTypesTwo.FLOW_TWO)
 
 
 def test_meta_class_skips_non_process_types_attributes():
-    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...
+    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...  # noqa: E701
 
     assert hasattr(TestTypesTwo, "NO_PROCESS_TYPE")
     assert not NewClass.is_registered(TestTypesTwo.NO_PROCESS_TYPE)  # type: ignore
 
 
 def test_class_from_metaclass_issubclass_process_types_class():
-    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...
+    class NewClass(TestTypesOne, TestTypesTwo, metaclass=ProcessTypesMeta): ...  # noqa: E701
 
     assert issubclass(NewClass, ProcessTypes)
