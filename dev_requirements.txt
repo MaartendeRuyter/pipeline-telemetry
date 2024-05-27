@@ -16,3 +16,4 @@ wheel
 error-manager 
 mongoengine
 jmespath
+bunnet
