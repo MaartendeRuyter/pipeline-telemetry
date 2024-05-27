@@ -1,12 +1,12 @@
 from datetime import date, datetime, timedelta
 from typing import Iterator, List
 
-from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS, DEFAULT_TELEMETRY_PARAMS
+from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS, DEFAULT_TELEMETRY_SELECTOR_PARAMS
 
 from pipeline_telemetry import TelemetrySelector
 from pipeline_telemetry.data_classes import TelemetryData, TelemetryModel
 
-TEST_TELEMETRY_SELECTOR = TelemetrySelector(**DEFAULT_TELEMETRY_PARAMS)
+TEST_TELEMETRY_SELECTOR = TelemetrySelector(**DEFAULT_TELEMETRY_SELECTOR_PARAMS)
 
 TODAY = date.today()
 YESTERDAY = date.today() - timedelta(days=1)

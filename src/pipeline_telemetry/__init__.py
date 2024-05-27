@@ -11,7 +11,7 @@ Main usage:
 
 In this example a telemetry object is created, the result of a sub_process is
 then added with either the data resulting from this sub process or the error
-that the sub process returned. In the final step the telementry is saved and
+that the sub process returned. In the final step the telemetry is saved and
 closed
 
 Arguments
@@ -67,6 +67,11 @@ from .settings.data_class import ProcessType, TelemetryCounter
 from .settings.process_type import ProcessTypes, ProcessTypesMeta
 from .settings.settings import BaseEnumerator, DefaultProcessTypes
 from .settings.telemetry_errors import ValidationErrors
+from .storage.mongo_bunnet import (
+    TelemetryBunnetModel,
+    TelemetryBunnetStorage,
+    init_database,
+)
 from .validators import DictValidator, EntriesHaveKey, HasKey, ValidateEntries
 
 __all__ = [
@@ -92,6 +97,9 @@ __all__ = [
     "ProcessTypesMeta",
     "TelemetryCounter",
     "BaseEnumerator",
+    "init_database",
+    "TelemetryBunnetModel",
+    "TelemetryBunnetStorage",
 ]
 
 ProcessTypes.register_process_types(DefaultProcessTypes)

@@ -51,7 +51,6 @@ class Telemetry:
             source_name=source_name,
             process_type=process_type.name,
         )
-        self._telemetry.validate()
 
     @classmethod
     def add_process_type(cls, process_type_key: str, process_type: ProcessType) -> None:
