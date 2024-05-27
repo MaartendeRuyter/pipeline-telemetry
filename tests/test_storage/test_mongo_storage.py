@@ -48,7 +48,8 @@ def test_store_telemetry_method_processes_and_saves_telemetry(mocker):
     )
     _telemetry_mongo_model_new_spy = mocker.spy(TelemetryMongoModel, "__new__")
     _telemetry_mongo_model_save_spy = mocker.spy(TelemetryMongoModel, "save")
-    TelemetryMongoStorage().store_telemetry(telemetry={"source_name": "test"})
+    TelemetryMongoStorage().store_telemetry(telemetry={
+        "source_name": "test"}) # type: ignore
     assert _telemetry_model_kwargs_spy.called
     assert _telemetry_mongo_model_new_spy.called
     assert _telemetry_mongo_model_save_spy.called
