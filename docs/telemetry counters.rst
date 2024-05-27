@@ -26,7 +26,7 @@ In this example two telemetry_counters define in a counters module are added to 
 set_increment
 -------------
 
-When a telemetry counter is added to a result in a different class from where the telementry object is stored you will not be able to overide the increment when adding the counter to the telemetry object (See previous example). As ``TelementryCounter`` object is non mutable is not possible to update the increment in the predefined counter object. The ``set_increment`` method was created to bypass this. Calling the method with the new increment as argument on an existing counter will return a copy of that counter with an updated increment.::
+When a telemetry counter is added to a result in a different class from where the telemetry object is stored you will not be able to overide the increment when adding the counter to the telemetry object (See previous example). As ``TelemetryCounter`` object is non mutable is not possible to update the increment in the predefined counter object. The ``set_increment`` method was created to bypass this. Calling the method with the new increment as argument on an existing counter will return a copy of that counter with an updated increment.::
 
     >>> form settings import PREDEFINED_COUNTER
     >>> PREDEFINED_COUNTER.increment
