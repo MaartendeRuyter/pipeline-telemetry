@@ -1,6 +1,12 @@
 
 Changelog
 =========
+1.1.0 (2024-05-27)
+-------------------
+* Added support for Bunnet with pydantic and mongo storage.
+* Added ProcessTypesMeta class to allow for ProcessTypes definition that are recognized by typechecking and linting.
+
+
 1.0.0 (2024-05-08)
 -------------------
 * Added python 3.12 support
