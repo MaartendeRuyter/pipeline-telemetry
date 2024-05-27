@@ -12,18 +12,17 @@ Dataclasses defined in Module
 """
 
 from collections import defaultdict
-from dataclasses import dataclass, field
 from datetime import datetime
-from typing import DefaultDict, Dict, Optional
+from typing import DefaultDict, Dict
 
 from errors import ErrorCode
+from pydantic import BaseModel, Field, field_validator
 
 from pipeline_telemetry.settings import exceptions
 from pipeline_telemetry.settings import settings as st
 
 
-@dataclass
-class TelemetryData:
+class TelemetryData(BaseModel):
     """
     Class to define the telemetry (error)counters.
 
@@ -46,8 +45,8 @@ class TelemetryData:
 
     base_counter: int = 0
     fail_counter: int = 0
-    counters: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
-    errors: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
+    counters: DefaultDict[str, int] = Field(default_factory=lambda: defaultdict(int))
+    errors: DefaultDict[str, int] = Field(default_factory=lambda: defaultdict(int))
 
     def increase_base_count(self, increment: int) -> None:
         """Increase the base counter with a given increment."""
@@ -85,21 +84,17 @@ class TelemetryData:
         return self
 
 
-@dataclass
-class TelemetryModel:
+class TelemetryModel(BaseModel):
     telemetry_type: str
     category: str
     sub_category: str
     source_name: str
     process_type: str
     start_date_time: datetime = datetime.now()
-    run_time_in_seconds: Optional[float] = None
+    run_time_in_seconds: float = 0
     io_time_in_seconds: float = 0
     traffic_light: str = st.DEFAULT_TRAFIC_LIGHT_COLOR
-    telemetry: Dict[str, TelemetryData] = field(default_factory=dict)
-
-    def validate(self) -> None:
-        self._check_telemetry_type()
+    telemetry: Dict[str, TelemetryData] = Field(default_factory=dict)
 
     def copy(self) -> "TelemetryModel":
         """
@@ -115,7 +110,8 @@ class TelemetryModel:
             process_type=self.process_type,
         )
 
-    def _check_telemetry_type(self) -> None:
+    @field_validator("telemetry_type")
+    def _check_telemetry_type(cls, value) -> None:
         """Check validaty of provided telemetry type.
 
         Raises exception if not valid. Returns non if telemetry type is valid.
@@ -126,8 +122,9 @@ class TelemetryModel:
         Raises:
             exceptions.InvalidTelemetryType: When telemetry type is not valid.
         """
-        if self.telemetry_type not in st.TELEMETRY_TYPES:
+        if value not in st.TELEMETRY_TYPES:
             raise exceptions.InvalidTelemetryType(st.TELEMETRY_TYPES)
+        return value
 
     def set_orange_traffic_light(self) -> None:
         """Sets traffic light attribute to orange."""
@@ -139,7 +136,7 @@ class TelemetryModel:
 
     def __add__(self, telemetry_model_to_add: "TelemetryModel") -> "TelemetryModel":
         """
-        Method to add to telementry model instances.
+        Method to add to telemetry model instances.
         Adding a 2 telemetry model instances implies adding all telemetry data
         objects and adding iotime, run time and traffic light attributes to a
         specific counter.
