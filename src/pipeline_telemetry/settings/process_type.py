@@ -63,6 +63,10 @@ class ProcessTypesMeta(type):
             for process_type_key in dir(mixin_class):
                 process_type = getattr(mixin_class, process_type_key)
                 if type(process_type) is ProcessType:
+                    # ensure that all process types are registered in the ProcesTypes class
+                    # also when using the metaclass. Other wise use of a ProcesType defined
+                    # via the metaclass will be found invalidat when used in Telemetry Class
+                    ProcessTypes.register_process_type(process_type_key, process_type)
                     process_types.append(process_type)
 
         # Add the ProcesTypes class to the based so that ProcesTypes methods are included
