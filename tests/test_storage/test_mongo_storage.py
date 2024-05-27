@@ -5,7 +5,11 @@ from datetime import datetime, timedelta
 from test_data import DEFAULT_TELEMETRY_MODEL_PARAMS
 
 from pipeline_telemetry.data_classes import TelemetryModel
-from pipeline_telemetry.settings.settings import DEFAULT_TRAFIC_LIGHT_COLOR, RUN_TIME, SINGLE_TELEMETRY_TYPE
+from pipeline_telemetry.settings.settings import (
+    DEFAULT_TRAFIC_LIGHT_COLOR,
+    RUN_TIME,
+    SINGLE_TELEMETRY_TYPE,
+)
 from pipeline_telemetry.storage.mongo import TelemetryMongoModel, TelemetryMongoStorage
 from pipeline_telemetry.storage.mongo_connection import get_mongo_db_port
 
