@@ -66,6 +66,10 @@ mypy-html.css
 output/*.html
 output/*/index.html
 
+# virtual environment
+.venv_pt/pyvenv.cfg
+.venv_pt/.lock
+
 # Sphinx
 docs/_build
 
