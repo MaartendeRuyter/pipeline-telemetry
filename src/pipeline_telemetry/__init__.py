@@ -64,7 +64,7 @@ from .helper import (
 from .main import Telemetry
 from .mixin import TelemetryMixin
 from .settings.data_class import ProcessType, TelemetryCounter
-from .settings.process_type import ProcessTypes
+from .settings.process_type import ProcessTypes, ProcessTypesMeta
 from .settings.settings import BaseEnumerator, DefaultProcessTypes
 from .settings.telemetry_errors import ValidationErrors
 from .validators import DictValidator, EntriesHaveKey, HasKey, ValidateEntries
@@ -89,6 +89,7 @@ __all__ = [
     "Telemetry",
     "TelemetryMixin",
     "ProcessType",
+    "ProcessTypesMeta",
     "TelemetryCounter",
     "BaseEnumerator",
 ]
